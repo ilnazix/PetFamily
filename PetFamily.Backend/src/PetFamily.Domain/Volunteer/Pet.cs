@@ -9,7 +9,7 @@ namespace PetFamily.Domain.Volunteer
         //ef core
         private Pet() { }
 
-        private Pet(string name, string type, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
+        private Pet(PetId id, string name, string type, string description, PhoneNumber ownerPhoneNumber, PetStatus status) : base(id)
         {
             Name = name;
             Type = type;
@@ -42,7 +42,7 @@ namespace PetFamily.Domain.Volunteer
 
         public IReadOnlyCollection<Requisite> Requisites => _requisites;
 
-        public static Result<Pet> Create(string name, string type, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
+        public static Result<Pet> Create(PetId id, string name, string type, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
         {
             string errors = string.Empty;
 
@@ -68,7 +68,7 @@ namespace PetFamily.Domain.Volunteer
 
             if (string.IsNullOrEmpty(errors))
             {
-                return Result.Success<Pet>(new Pet(name, type, description, ownerPhoneNumber, status));
+                return Result.Success<Pet>(new Pet(name, type, description, ownerPhoneNumber!, status));
             }
 
             return Result.Failure<Pet>(errors);
