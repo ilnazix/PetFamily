@@ -1,6 +1,4 @@
-﻿using PetFamily.Domain.Volunteer;
-
-namespace PetFamily.Domain.Species
+﻿namespace PetFamily.Domain.Species
 {
     public record SpeciesId : IComparable<SpeciesId>
     {
