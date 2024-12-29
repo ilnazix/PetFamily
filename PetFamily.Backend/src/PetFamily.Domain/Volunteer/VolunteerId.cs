@@ -9,7 +9,7 @@
 
         Guid Value { get; }
 
-        public static VolunteerId NewPetId => new VolunteerId(Guid.NewGuid());
+        public static VolunteerId NewVolunteerId => new VolunteerId(Guid.NewGuid());
         public static VolunteerId Empty => new VolunteerId(Guid.Empty);
 
         public int CompareTo(VolunteerId? other)
