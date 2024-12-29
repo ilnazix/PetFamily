@@ -17,6 +17,7 @@ namespace PetFamily.Domain.Species
         }
 
         public string Title { get; private set; }
+        public IReadOnlyList<Breed> Breeds => _breeds;
 
         public static Result<Species> Create(string title) 
         {
