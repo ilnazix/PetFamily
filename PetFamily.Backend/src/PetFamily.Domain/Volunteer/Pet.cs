@@ -68,7 +68,7 @@ namespace PetFamily.Domain.Volunteer
 
             if (string.IsNullOrEmpty(errors))
             {
-                return Result.Success<Pet>(new Pet(name, type, description, ownerPhoneNumber!, status));
+                return Result.Success<Pet>(new Pet(id, name, type, description, ownerPhoneNumber!, status));
             }
 
             return Result.Failure<Pet>(errors);

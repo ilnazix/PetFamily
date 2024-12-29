@@ -30,7 +30,7 @@ namespace PetFamily.Domain.Volunteer
 
             if (string.IsNullOrWhiteSpace(healthInformation))
             {
-                errors += "Health infprmation cannot be empty\n";
+                errors += "Health information cannot be empty\n";
             }
 
             if (height <= 0)
