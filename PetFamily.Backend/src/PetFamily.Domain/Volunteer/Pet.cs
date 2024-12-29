@@ -9,10 +9,10 @@ namespace PetFamily.Domain.Volunteer
         //ef core
         private Pet() { }
 
-        private Pet(PetId id, string name, string type, string description, PhoneNumber ownerPhoneNumber, PetStatus status) : base(id)
+        private Pet(PetId id, string name, PetType petType, string description, PhoneNumber ownerPhoneNumber, PetStatus status) : base(id)
         {
             Name = name;
-            Type = type;
+            PetType = petType;
             Description = description;
             OwnerPhoneNumber = ownerPhoneNumber;
             Status = status;
@@ -20,11 +20,9 @@ namespace PetFamily.Domain.Volunteer
 
         public string Name { get; private set; } = string.Empty;
 
-        public string Type { get; private set; } = string.Empty;
+        public PetType? PetType {  get; private set; }         
 
         public string Description { get; private set; } = string.Empty;
-
-        public string Breed { get; private set; } = string.Empty;
 
         public string Color { get; private set; } = string.Empty;
 
@@ -42,7 +40,7 @@ namespace PetFamily.Domain.Volunteer
 
         public IReadOnlyCollection<Requisite> Requisites => _requisites;
 
-        public static Result<Pet> Create(PetId id, string name, string type, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
+        public static Result<Pet> Create(PetId id, string name, PetType petType, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
         {
             string errors = string.Empty;
 
@@ -56,9 +54,9 @@ namespace PetFamily.Domain.Volunteer
                 errors += "Description cannot be empty\n";
             }
             
-            if (string.IsNullOrWhiteSpace(type))
+            if (petType is null)
             {
-                errors += "Type cannot be empty\n";
+                errors += "Pet type is not provided\n";
             }
 
             if (ownerPhoneNumber == null) 
@@ -68,7 +66,7 @@ namespace PetFamily.Domain.Volunteer
 
             if (string.IsNullOrEmpty(errors))
             {
-                return Result.Success<Pet>(new Pet(id, name, type, description, ownerPhoneNumber!, status));
+                return Result.Success<Pet>(new Pet(id, name, petType!, description, ownerPhoneNumber!, status));
             }
 
             return Result.Failure<Pet>(errors);
