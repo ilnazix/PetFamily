@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Volunteer
 {
-    public record Address
+    public class Address : ComparableValueObject
     {
         string Country { get; }
         string State { get; }
@@ -61,6 +61,16 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<Address>(errors);
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return Country;
+            yield return State;
+            yield return City;
+            yield return Street;
+            yield return HouseNumber;
+            yield return ApartmentNumber;
         }
     }
 }

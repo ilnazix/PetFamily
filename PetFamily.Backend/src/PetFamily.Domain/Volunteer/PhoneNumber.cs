@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace PetFamily.Domain.Volunteer
 {
-    public class PhoneNumber
+    public class PhoneNumber : ComparableValueObject
     {
         string Value { get;  }
 
@@ -22,6 +22,11 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<PhoneNumber>("Phone number has incorrect format");
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return Value;
         }
     }
 }

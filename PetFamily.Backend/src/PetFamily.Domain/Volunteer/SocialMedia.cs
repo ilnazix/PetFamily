@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Volunteer
 {
-    public record SocialMedia
+    public class SocialMedia : ComparableValueObject
     {
         string Link { get; }
         string Title { get; }
@@ -33,6 +33,12 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<SocialMedia>(errors);
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return Link;
+            yield return Title;
         }
     }
 }

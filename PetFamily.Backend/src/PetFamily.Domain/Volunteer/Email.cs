@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace PetFamily.Domain.Volunteer
 {
-    public record Email
+    public class Email : ComparableValueObject
     {
         string Value { get; }
 
@@ -22,6 +22,11 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<Email>("Email is not valid");
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return Value;
         }
     }
 }

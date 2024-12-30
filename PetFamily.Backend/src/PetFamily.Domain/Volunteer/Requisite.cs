@@ -2,10 +2,10 @@
 
 namespace PetFamily.Domain.Volunteer
 {
-    public record Requisite
+    public class Requisite : ComparableValueObject
     {
-        string Title { get;  } = string.Empty;
-        string Description { get; } = string.Empty;
+        string Title { get;  }
+        string Description { get; }
 
         private Requisite(string title, string description)
         {
@@ -33,6 +33,12 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<Requisite>(errors);
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return Title;
+            yield return Description;
         }
     }
 }

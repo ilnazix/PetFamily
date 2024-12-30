@@ -1,6 +1,8 @@
-﻿namespace PetFamily.Domain.Species
+﻿using CSharpFunctionalExtensions;
+
+namespace PetFamily.Domain.Species
 {
-    public record SpeciesId : IComparable<SpeciesId>
+    public class SpeciesId : ComparableValueObject
     {
         private SpeciesId(Guid value)
         {
@@ -12,9 +14,9 @@
         public static SpeciesId NewSpeciesId => new SpeciesId(Guid.NewGuid());
         public static SpeciesId Empty => new SpeciesId(Guid.Empty);
 
-        public int CompareTo(SpeciesId? other)
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
         {
-            return Value.CompareTo(other?.Value);
+            yield return Value;
         }
     }
 }

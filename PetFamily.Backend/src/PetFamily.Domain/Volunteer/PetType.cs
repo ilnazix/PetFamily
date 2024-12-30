@@ -3,7 +3,7 @@ using PetFamily.Domain.Species;
 
 namespace PetFamily.Domain.Volunteer
 {
-    public record PetType
+    public class PetType : ComparableValueObject
     {
         private PetType(SpeciesId speciesId, BreedId breedId)
         {
@@ -34,6 +34,12 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<PetType>(errors);
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return SpeciesId;
+            yield return BreedId;
         }
     }
 }

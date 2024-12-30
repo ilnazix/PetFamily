@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Volunteer
 {
-    public record MedicalInformation
+    public class MedicalInformation : ComparableValueObject
     {
         bool IsCastrated { get; }
         bool IsVaccinated { get; }
@@ -44,6 +44,15 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<MedicalInformation>(errors);
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return IsCastrated;
+            yield return IsVaccinated;
+            yield return HealthInformation;
+            yield return Height;
+            yield return Weight;
         }
     }
 }

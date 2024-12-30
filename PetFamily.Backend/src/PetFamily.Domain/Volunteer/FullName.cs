@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Volunteer
 {
-    public record class FullName
+    public class FullName : ComparableValueObject
     {
         string FirstName { get;  } 
         string LastName { get; } 
@@ -40,6 +40,13 @@ namespace PetFamily.Domain.Volunteer
             }
 
             return Result.Failure<FullName>(errors);
+        }
+
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        {
+            yield return FirstName;
+            yield return LastName;  
+            yield return MiddleName;
         }
     }
 }
