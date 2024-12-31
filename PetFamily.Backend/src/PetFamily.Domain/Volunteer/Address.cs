@@ -11,6 +11,8 @@ namespace PetFamily.Domain.Volunteer
         public string HouseNumber { get; }
         public int? ApartmentNumber { get; }
 
+        private Address() { }
+
         private Address(string country, string state, string city, string street, string houseNumber, int? apartmentNumber)
         {
             Country = country;

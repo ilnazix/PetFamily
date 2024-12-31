@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteer;
 
 namespace PetFamily.Infrastructure.Configurations
@@ -22,9 +23,20 @@ namespace PetFamily.Infrastructure.Configurations
 
             builder.ComplexProperty(p => p.PetType, ptb =>
             {
-                ptb.Property(pt => pt.SpeciesId).IsRequired().HasColumnName("species_id");
-                ptb.Property(pt => pt.BreedId).IsRequired().HasColumnName("breeed_id");
+                ptb.Property(pt => pt.SpeciesId)
+                    .IsRequired()
+                    .HasColumnName("species_id")
+                    .HasConversion(speciesId => speciesId.Value, value => SpeciesId.Create(value));
+
+                ptb.Property(pt => pt.BreedId)
+                    .IsRequired()
+                    .HasColumnName("breeed_id")
+                    .HasConversion(breedId => breedId.Value, value => BreedId.Create(value)); ;
             });
+
+            builder
+                .Property(p => p.Status)
+                .HasConversion(status => status.Value, value => PetStatus.Create(value).Value);
 
             builder.Property(p => p.Description)
                 .IsRequired()
@@ -34,7 +46,7 @@ namespace PetFamily.Infrastructure.Configurations
                 .IsRequired(false)
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
 
-            builder.ComplexProperty(p => p.MedicalInformation, mib =>
+            builder.OwnsOne(p => p.MedicalInformation, mib =>
             {
                 mib.Property(mi => mi.IsVaccinated).HasColumnName("is_vaccinated");
                 mib.Property(mi => mi.IsCastrated).HasColumnName("is_castrated");
@@ -44,7 +56,7 @@ namespace PetFamily.Infrastructure.Configurations
                     .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
             });
 
-            builder.ComplexProperty(p => p.Address, ab =>
+            builder.OwnsOne(p => p.Address, ab =>
             {
                 ab.Property(a => a.Country).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("country");
                 ab.Property(a => a.State).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("state");
