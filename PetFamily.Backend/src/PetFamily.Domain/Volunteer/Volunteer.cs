@@ -23,9 +23,9 @@ namespace PetFamily.Domain.Volunteer
         public string Description { get; private set; } = string.Empty;
         public int WorkExperienceInYears { get; set; } = 0;
         public PhoneNumber PhoneNumber { get; private set; }
-        public RequisitesList Requisites { get; private set; }
+        public RequisitesList? Requisites { get; private set; }
         public IReadOnlyList<Pet> Pets => _pets;
-        public SocialMediaList SocialMediaList { get; private set; }
+        public SocialMediaList? SocialMediaList { get; private set; }
 
         public int PetsFoundHomeCount => _pets.Where(p => p.Status == PetStatus.FoundHome).Count();
         public int HomelessPetsCount => _pets.Where(p => p.Status == PetStatus.SearchingForHome).Count();
