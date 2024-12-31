@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteer;
+using EFCore.NamingConventions;
 
 namespace PetFamily.Infrastructure
 {
@@ -21,9 +22,10 @@ namespace PetFamily.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_configuration.GetConnectionString(DATABASE));
-            optionsBuilder.UseSnakeCaseNamingConvention();
-            optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+            optionsBuilder
+                .UseNpgsql(_configuration.GetConnectionString(DATABASE))
+                .UseLoggerFactory(CreateLoggerFactory())
+                .UseSnakeCaseNamingConvention();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
