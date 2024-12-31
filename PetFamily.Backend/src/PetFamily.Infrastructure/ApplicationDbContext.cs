@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace PetFamily.Infrastructure
 {
@@ -15,7 +16,17 @@ namespace PetFamily.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Database"));
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString(DATABASE));
+            optionsBuilder.UseSnakeCaseNamingConvention();
+            optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+        }
+
+        private ILoggerFactory CreateLoggerFactory()
+        {
+            return LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            });
         }
     }
 }
