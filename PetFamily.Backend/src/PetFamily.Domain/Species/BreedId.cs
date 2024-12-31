@@ -9,14 +9,16 @@ namespace PetFamily.Domain.Species
             Value = value;
         }
 
-        Guid Value { get; }
+        public Guid Value { get; }
 
         public static BreedId NewBreedId => new BreedId(Guid.NewGuid());
         public static BreedId Empty => new BreedId(Guid.Empty);
+        public static BreedId Create(Guid value) => new BreedId(value);
 
         protected override IEnumerable<IComparable> GetComparableEqualityComponents()
         {
             yield return Value;
         }
+
     }
 }
