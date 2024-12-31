@@ -4,8 +4,8 @@ namespace PetFamily.Domain.Volunteer
 {
     public class Requisite : ComparableValueObject
     {
-        string Title { get;  }
-        string Description { get; }
+        public string Title { get;  }
+        public string Description { get; }
 
         private Requisite(string title, string description)
         {
@@ -19,12 +19,12 @@ namespace PetFamily.Domain.Volunteer
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                errors += "Название реквизита не может быть пустым\n";
+                errors += "Requisites title cannot be empty\n";
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                errors += "Описание реквизита не может быть пустым\n";
+                errors += "Requisites description cannot be empty\n";
             }
 
             if (string.IsNullOrEmpty(errors))
