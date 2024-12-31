@@ -4,11 +4,11 @@ namespace PetFamily.Domain.Volunteer
 {
     public class MedicalInformation : ComparableValueObject
     {
-        bool IsCastrated { get; }
-        bool IsVaccinated { get; }
-        string HealthInformation { get; }
-        int Height { get; }
-        int Weight { get; }
+        public bool IsCastrated { get; }
+        public bool IsVaccinated { get; }
+        public string HealthInformation { get; }
+        public int Height { get; }
+        public int Weight { get; }
 
         private MedicalInformation(string healthInformation, int height, int weight, bool isVaccinated, bool isCastrated)
         {
