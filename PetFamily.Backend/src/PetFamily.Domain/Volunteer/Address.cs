@@ -70,7 +70,7 @@ namespace PetFamily.Domain.Volunteer
             yield return City;
             yield return Street;
             yield return HouseNumber;
-            yield return ApartmentNumber;
+            yield return ApartmentNumber!;
         }
     }
 }
