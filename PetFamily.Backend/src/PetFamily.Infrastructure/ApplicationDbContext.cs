@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PetFamily.Domain.Species;
+using PetFamily.Domain.Volunteer;
 
 namespace PetFamily.Infrastructure
 {
@@ -8,6 +10,9 @@ namespace PetFamily.Infrastructure
     {
         private const string DATABASE = "Database";
         private readonly IConfiguration _configuration;
+
+        public DbSet<Volunteer> Volunteers { get; set; }
+        public DbSet<Species> Species { get; set; }
 
         public ApplicationDbContext(IConfiguration configuration)
         {
@@ -19,6 +24,11 @@ namespace PetFamily.Infrastructure
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString(DATABASE));
             optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
 
         private ILoggerFactory CreateLoggerFactory()
