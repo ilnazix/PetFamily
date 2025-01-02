@@ -11,8 +11,8 @@ namespace PetFamily.Domain.Volunteer
             BreedId = breedId;
         }
 
-        SpeciesId SpeciesId { get; }
-        BreedId BreedId { get; }
+        public SpeciesId SpeciesId { get; }
+        public BreedId BreedId { get; }
 
         public static Result<PetType> Create(SpeciesId speciesId, BreedId breedId)
         {

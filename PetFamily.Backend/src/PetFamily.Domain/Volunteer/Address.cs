@@ -4,12 +4,14 @@ namespace PetFamily.Domain.Volunteer
 {
     public class Address : ComparableValueObject
     {
-        string Country { get; }
-        string State { get; }
-        string City { get; }
-        string Street { get; }
-        string HouseNumber { get; }
-        int? ApartmentNumber { get; }
+        public string Country { get; }
+        public string State { get; }
+        public string City { get; }
+        public string Street { get; }
+        public string HouseNumber { get; }
+        public int? ApartmentNumber { get; }
+
+        private Address() { }
 
         private Address(string country, string state, string city, string street, string houseNumber, int? apartmentNumber)
         {
@@ -70,7 +72,7 @@ namespace PetFamily.Domain.Volunteer
             yield return City;
             yield return Street;
             yield return HouseNumber;
-            yield return ApartmentNumber;
+            yield return ApartmentNumber!;
         }
     }
 }

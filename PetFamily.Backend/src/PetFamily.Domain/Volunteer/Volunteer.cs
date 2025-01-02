@@ -4,10 +4,13 @@ namespace PetFamily.Domain.Volunteer
 {
     public class Volunteer : Entity<VolunteerId>
     {
-        private readonly List<Requisite> _requisites = new();
         private readonly List<Pet> _pets = new();
-        private readonly List<SocialMedia> _socialMedias = new();
         
+        //ef core
+        private Volunteer(VolunteerId id) : base(id)
+        {
+        }
+
         private Volunteer(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber) : base(id)
         {
             FullName = fullName;
@@ -20,9 +23,9 @@ namespace PetFamily.Domain.Volunteer
         public string Description { get; private set; } = string.Empty;
         public int WorkExperienceInYears { get; set; } = 0;
         public PhoneNumber PhoneNumber { get; private set; }
-        public IReadOnlyList<Requisite> Requisites => _requisites;
+        public RequisitesList? Requisites { get; private set; }
         public IReadOnlyList<Pet> Pets => _pets;
-        public IReadOnlyList<SocialMedia> SocialMedias => _socialMedias;
+        public SocialMediaList? SocialMediaList { get; private set; }
 
         public int PetsFoundHomeCount => _pets.Where(p => p.Status == PetStatus.FoundHome).Count();
         public int HomelessPetsCount => _pets.Where(p => p.Status == PetStatus.SearchingForHome).Count();

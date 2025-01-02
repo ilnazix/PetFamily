@@ -4,8 +4,6 @@ namespace PetFamily.Domain.Volunteer
 {
     public class Pet : Entity<PetId>
     {
-        private readonly List<Requisite> _requisites = new List<Requisite>();
-
         //ef core
         private Pet() { }
 
@@ -20,7 +18,7 @@ namespace PetFamily.Domain.Volunteer
 
         public string Name { get; private set; } = string.Empty;
 
-        public PetType? PetType {  get; private set; }         
+        public PetType PetType {  get; private set; }         
 
         public string Description { get; private set; } = string.Empty;
 
@@ -30,15 +28,15 @@ namespace PetFamily.Domain.Volunteer
 
         public Address? Address { get; private set; }
 
-        public PhoneNumber? OwnerPhoneNumber { get; private set; }
+        public PhoneNumber OwnerPhoneNumber { get; private set; }
 
-        public DateTime DateofBirth { get; private set; }
+        public DateTime DateOfBirth { get; private set; }
 
         public PetStatus Status { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
 
-        public IReadOnlyCollection<Requisite> Requisites => _requisites;
+        public RequisitesList? RequisitesList { get; private set; }
 
         public static Result<Pet> Create(PetId id, string name, PetType petType, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
         {

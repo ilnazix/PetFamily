@@ -5,7 +5,7 @@ namespace PetFamily.Domain.Volunteer
 {
     public class Email : ComparableValueObject
     {
-        string Value { get; }
+        public string Value { get; }
 
         private Email(string value)
         {

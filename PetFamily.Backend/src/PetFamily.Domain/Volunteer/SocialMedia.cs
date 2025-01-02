@@ -4,8 +4,8 @@ namespace PetFamily.Domain.Volunteer
 {
     public class SocialMedia : ComparableValueObject
     {
-        string Link { get; }
-        string Title { get; }
+        public string Link { get; }
+        public string Title { get; }
 
         private SocialMedia(string link, string title)
         {
