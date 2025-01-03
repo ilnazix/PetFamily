@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Volunteer;
-using System.Net;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
@@ -15,7 +14,6 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
         public async Task<Result<Guid, string>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
         {
-            //создать доменную модель
             var volunteerId = VolunteerId.NewVolunteerId();
 
             var fullName = FullName.Create(command.FirstName, command.LastName, command.MiddleName);
@@ -40,6 +38,24 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             }
 
             var volunteer = new Volunteer(volunteerId, fullName.Value, emailResult.Value, phoneNumberResult.Value);
+
+            var socialMediasResults = command.SocialMedias.Select(sm => SocialMedia.Create(sm.Link, sm.Title));
+
+            if(socialMediasResults.Any(sm => sm.IsFailure))
+            {
+                return socialMediasResults.First(sm => sm.IsFailure).Error;
+            }
+
+            volunteer.AddSocialMedias(socialMediasResults.Select(sm => sm.Value));
+
+            var requiesitesResults = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description));
+
+            if (requiesitesResults.Any(r => r.IsFailure))
+            {
+                return requiesitesResults.First(r => r.IsFailure).Error;
+            }
+
+            volunteer.AddRequisites(requiesitesResults.Select(r => r.Value));
 
             var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
 

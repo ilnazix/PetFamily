@@ -5,6 +5,8 @@
         string LastName, 
         string MiddleName,
         string PhoneNumber,
-        string Email
+        string Email,
+        IEnumerable<CreateSocialMediaCommand> SocialMedias,
+        IEnumerable<CreateRequisiteCommand> Requisites
         );
 }
