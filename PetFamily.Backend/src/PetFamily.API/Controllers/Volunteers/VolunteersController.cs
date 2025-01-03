@@ -9,11 +9,29 @@ namespace PetFamily.API.Controllers.Volunteers
     {
 
         [HttpPost]
-        public async Task<IActionResult> Create(
+        public async Task<ActionResult<Guid>> Create(
             [FromServices] CreateVolunteerHandler handler,
-            [FromBody] CreateVolunteerRequest request)
+            [FromBody] CreateVolunteerRequest request,
+            CancellationToken cancellationToken)
         {
-            return Ok("Hello");
+            var command = new CreateVolunteerCommand(
+                FirstName: request.FirstName,
+                LastName: request.LastName,
+                MiddleName: request.MiddleName,
+                PhoneNumber: request.PhoneNumber,
+                Email: request.Email,
+                SocialMedias: request.SocialMedias.Select(sm => new CreateSocialMediaCommand(sm.Link, sm.Title)),
+                Requisites: request.Requisites.Select(r => new CreateRequisiteCommand(r.Title, r.Description))
+            ); 
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
         }
     }
 }
