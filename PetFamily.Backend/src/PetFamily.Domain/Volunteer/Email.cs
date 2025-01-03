@@ -14,9 +14,9 @@ namespace PetFamily.Domain.Volunteer
 
         public static Result<Email> Create(string email)
         {
-            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
 
-            if(Regex.IsMatch(email, pattern))
+            if (regex.IsMatch(email))
             {
                 return Result.Success<Email>(new Email(email));
             }
