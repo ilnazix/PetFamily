@@ -30,5 +30,14 @@ namespace PetFamily.Domain.Volunteer
         public int PetsFoundHomeCount => _pets.Where(p => p.Status == PetStatus.FoundHome).Count();
         public int HomelessPetsCount => _pets.Where(p => p.Status == PetStatus.SearchingForHome).Count();
         public int PetsInTreatmentCount => _pets.Where(p => p.Status == PetStatus.NeedsHelp).Count();
+
+        public void AddSocialMedias(IEnumerable<SocialMedia> newSocialMedias)
+        {
+            SocialMediaList = new SocialMediaList(newSocialMedias.ToList());
+        }
+        public void AddRequisites(IEnumerable<Requisite> newRequiesites)
+        {
+            Requisites = new RequisitesList(newRequiesites.ToList());
+        }
     }
 }
