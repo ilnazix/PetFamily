@@ -5,6 +5,7 @@ namespace PetFamily.Domain.Species
 {
     public class Breed : Entity<BreedId>
     {
+        public const int MAX_BREED_TITLE_LENGTH = 100;
         private Breed(string title)
         {
             Title = title;
@@ -12,14 +13,14 @@ namespace PetFamily.Domain.Species
 
         public string Title { get; private set; }
 
-        public static Result<Breed, Error> Create(string title)
+        public static Result<Breed, Error> Create(string breedTitle)
         {
-            if (string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(breedTitle) || breedTitle.Length > MAX_BREED_TITLE_LENGTH)
             {
-                return Errors.General.ValueIsRequired(nameof(title));
+                return Errors.General.ValueIsInvalid(nameof(breedTitle));
             }
 
-            return new Breed(title);
+            return new Breed(breedTitle);
         }
     }
 }

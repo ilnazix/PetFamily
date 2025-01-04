@@ -15,7 +15,7 @@ namespace PetFamily.Infrastructure.Configurations
 
             builder.Property(s => s.Id).HasConversion(id => id.Value, value => SpeciesId.Create(value));
 
-            builder.Property(s => s.Title).IsRequired().HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+            builder.Property(s => s.Title).IsRequired().HasMaxLength(Species.SPECIES_TITLE_MAX_LENGTH);
 
             builder.HasMany(s => s.Breeds)
                 .WithOne()
