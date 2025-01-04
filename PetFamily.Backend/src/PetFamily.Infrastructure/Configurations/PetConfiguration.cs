@@ -53,7 +53,7 @@ namespace PetFamily.Infrastructure.Configurations
                 mib.Property(mi => mi.Height).HasColumnName("height");
                 mib.Property(mi => mi.Weight).HasColumnName("weight");
                 mib.Property(mi => mi.HealthInformation)
-                    .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                    .HasMaxLength(MedicalInformation.MAX_HEALTH_INFO_LENGTH);
             });
 
             builder.OwnsOne(p => p.Address, ab =>
