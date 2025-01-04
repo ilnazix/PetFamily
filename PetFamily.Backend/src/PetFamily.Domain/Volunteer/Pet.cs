@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Shared;
+
 
 namespace PetFamily.Domain.Volunteer
 {
@@ -8,7 +8,7 @@ namespace PetFamily.Domain.Volunteer
         //ef core
         private Pet() { }
 
-        private Pet(PetId id, string name, PetType petType, string description, PhoneNumber ownerPhoneNumber, PetStatus status) : base(id)
+        public Pet(PetId id, PetName name, PetType petType, Description description, PhoneNumber ownerPhoneNumber, PetStatus status) : base(id)
         {
             Name = name;
             PetType = petType;
@@ -17,13 +17,13 @@ namespace PetFamily.Domain.Volunteer
             Status = status;
         }
 
-        public string Name { get; private set; } = string.Empty;
+        public PetName Name { get; private set; }
 
         public PetType PetType {  get; private set; }         
 
-        public string Description { get; private set; } = string.Empty;
+        public Description Description { get; private set; }
 
-        public string Color { get; private set; } = string.Empty;
+        public Color Color { get; private set; } = Color.DefaultColor;
 
         public MedicalInformation? MedicalInformation { get; private set; }
 
@@ -38,20 +38,5 @@ namespace PetFamily.Domain.Volunteer
         public DateTime CreatedAt { get; private set; }
 
         public RequisitesList? RequisitesList { get; private set; }
-
-        public static Result<Pet, Error> Create(PetId id, string name, PetType petType, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return Errors.General.ValueIsRequired(nameof(name));
-            }
-
-            if (string.IsNullOrWhiteSpace(description))
-            {
-                return Errors.General.ValueIsRequired(nameof(description));
-            }
-
-            return new Pet(id, name, petType, description, ownerPhoneNumber, status);
-        }
     }
 }

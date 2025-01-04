@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteer;
-using System.Net;
 
 namespace PetFamily.Infrastructure.Configurations
 {
@@ -19,8 +18,9 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasConversion(id => id.Value, value => PetId.Create(value));
 
             builder.Property(p => p.Name)
+                .HasConversion(name => name.Value, value => PetName.Create(value).Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(PetName.PET_NAME_MAX_LENGTH);
 
             builder.ComplexProperty(p => p.PetType, ptb =>
             {
@@ -39,12 +39,14 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasConversion(status => status.Value, value => PetStatus.Create(value).Value);
 
             builder.Property(p => p.Description)
+                .HasConversion(description => description.Value, value => Description.Create(value).Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                .HasMaxLength(Description.DESCRIPTION_MAX_LENGTH);
 
             builder.Property(p => p.Color)
+                .HasConversion(color => color.Title, title => Color.Create(title).Value)
                 .IsRequired(false)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(Color.MAX_COLOR_TITLE_LENGTH);
 
             builder.OwnsOne(p => p.MedicalInformation, mib =>
             {
