@@ -20,7 +20,7 @@ namespace PetFamily.Domain.Volunteer
 
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
-        public string Description { get; private set; } = string.Empty;
+        public Description? Description { get; private set; }
         public int WorkExperienceInYears { get; set; } = 0;
         public PhoneNumber PhoneNumber { get; private set; }
         public RequisitesList? Requisites { get; private set; }

@@ -82,11 +82,11 @@ namespace PetFamily.Infrastructure.Configurations
                 {
                     rb.Property(r => r.Title)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                        .HasMaxLength(Requisite.REQUISITE_TITLE_MAX_LENGTH);
 
                     rb.Property(r => r.Description)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                        .HasMaxLength(Requisite.REQUISITE_DESCRIPTION_MAX_LENGTH);
                 });
             });
         }
