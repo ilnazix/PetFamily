@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteer;
+
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
@@ -12,7 +14,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             _volunteersRepository = volunteersRepository;
         }
 
-        public async Task<Result<Guid, string>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
         {
             var volunteerId = VolunteerId.NewVolunteerId();
 
