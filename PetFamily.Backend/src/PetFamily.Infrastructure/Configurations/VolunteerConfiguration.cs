@@ -23,17 +23,17 @@ namespace PetFamily.Infrastructure.Configurations
             {
                 fnb.Property(fn => fn.FirstName)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                    .HasMaxLength(FullName.NAME_MAX_LENGTH)
                     .HasColumnName("first_name");
 
                 fnb.Property(fn => fn.LastName)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                    .HasMaxLength(FullName.NAME_MAX_LENGTH)
                     .HasColumnName("last_name");
 
                 fnb.Property(fn => fn.MiddleName)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                    .HasMaxLength(FullName.NAME_MAX_LENGTH)
                     .HasColumnName("middle_name");
             });
 
