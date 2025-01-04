@@ -1,10 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
+using System.Dynamic;
 
 namespace PetFamily.Domain.Volunteer
 {
     public class Address : ComparableValueObject
     {
+        public const int FIELD_MAX_LENGTH = 50;
+
         public string Country { get; }
         public string State { get; }
         public string City { get; }
@@ -26,27 +29,27 @@ namespace PetFamily.Domain.Volunteer
 
         public static Result<Address, Error> Create(string country, string state, string city, string street, string houseNumber, int? apartmentNumber)
         {
-            if (string.IsNullOrWhiteSpace(country))
+            if (string.IsNullOrWhiteSpace(country) || country.Length > FIELD_MAX_LENGTH)
             {
-                return Errors.General.ValueIsRequired(nameof(country));
+                return Errors.General.ValueIsInvalid(nameof(country));
             }
 
-            if (string.IsNullOrWhiteSpace(state))
+            if (string.IsNullOrWhiteSpace(state) || state.Length > FIELD_MAX_LENGTH)
+            {
+                return Errors.General.ValueIsInvalid(nameof(state));
+            }
+
+            if (string.IsNullOrWhiteSpace(city) || city.Length > FIELD_MAX_LENGTH)
+            {
+                return Errors.General.ValueIsInvalid(nameof(city));
+            }
+
+            if (string.IsNullOrWhiteSpace(street) || street.Length > FIELD_MAX_LENGTH)
             {
                 return Errors.General.ValueIsRequired(nameof(state));
             }
 
-            if (string.IsNullOrWhiteSpace(city))
-            {
-                return Errors.General.ValueIsRequired(nameof(city));
-            }
-
-            if (string.IsNullOrWhiteSpace(street))
-            {
-                return Errors.General.ValueIsRequired(nameof(state));
-            }
-
-            if (string.IsNullOrWhiteSpace(houseNumber))
+            if (string.IsNullOrWhiteSpace(houseNumber) || houseNumber.Length > FIELD_MAX_LENGTH)
             {
                 return Errors.General.ValueIsRequired(nameof(houseNumber));
             }

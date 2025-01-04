@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteer;
+using System.Net;
 
 namespace PetFamily.Infrastructure.Configurations
 {
@@ -57,11 +58,11 @@ namespace PetFamily.Infrastructure.Configurations
 
             builder.OwnsOne(p => p.Address, ab =>
             {
-                ab.Property(a => a.Country).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("country");
-                ab.Property(a => a.State).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("state");
-                ab.Property(a => a.City).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("city");
-                ab.Property(a => a.Street).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("street");
-                ab.Property(a => a.HouseNumber).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("house_number");
+                ab.Property(a => a.Country).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("country");
+                ab.Property(a => a.State).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("state");
+                ab.Property(a => a.City).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("city");
+                ab.Property(a => a.Street).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("street");
+                ab.Property(a => a.HouseNumber).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("house_number");
                 ab.Property(a => a.HouseNumber).HasColumnName("apartment_number");
             });
 
