@@ -11,7 +11,7 @@ namespace PetFamily.Domain.Volunteer
         {
         }
 
-        private Volunteer(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber) : base(id)
+        public Volunteer(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber) : base(id)
         {
             FullName = fullName;
             Email = email;
@@ -31,31 +31,13 @@ namespace PetFamily.Domain.Volunteer
         public int HomelessPetsCount => _pets.Where(p => p.Status == PetStatus.SearchingForHome).Count();
         public int PetsInTreatmentCount => _pets.Where(p => p.Status == PetStatus.NeedsHelp).Count();
 
-        public static Result<Volunteer> Create(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber)
+        public void AddSocialMedias(IEnumerable<SocialMedia> newSocialMedias)
         {
-            string errors = string.Empty;
-
-            if(fullName is null)
-            {
-                errors += "Fullname must be provided";
-            }
-
-            if(email is null)
-            {
-                errors += "Email must be provided";
-            }
-
-            if(phoneNumber is null)
-            {
-                errors += "Phone number must be provided";
-            }
-
-            if (string.IsNullOrEmpty(errors))
-            {
-                return Result.Success(new Volunteer(id, fullName!, email!, phoneNumber!));
-            }
-
-            return Result.Failure<Volunteer>(errors);
+            SocialMediaList = new SocialMediaList(newSocialMedias.ToList());
+        }
+        public void AddRequisites(IEnumerable<Requisite> newRequiesites)
+        {
+            Requisites = new RequisitesList(newRequiesites.ToList());
         }
     }
 }

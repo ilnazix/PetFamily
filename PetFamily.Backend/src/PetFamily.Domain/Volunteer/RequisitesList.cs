@@ -1,7 +1,24 @@
-﻿namespace PetFamily.Domain.Volunteer
+﻿
+using CSharpFunctionalExtensions;
+
+namespace PetFamily.Domain.Volunteer
 {
-    public record RequisitesList
+    public class RequisitesList : ValueObject 
     {
-       public List<Requisite> Requisites { get; private set; }
+        public IReadOnlyList<Requisite> Requisites { get;  }
+
+        public RequisitesList() { }
+        public RequisitesList(List<Requisite> requisites)
+        {
+            Requisites = requisites;
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            foreach (var requisite in Requisites)
+            {
+                yield return requisite;
+            }
+        }
     }
 }

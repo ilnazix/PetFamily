@@ -1,7 +1,24 @@
-﻿namespace PetFamily.Domain.Volunteer
+﻿using CSharpFunctionalExtensions;
+
+namespace PetFamily.Domain.Volunteer
 {
-    public record SocialMediaList
+    public class SocialMediaList : ValueObject
     {
-        public List<SocialMedia> SocialMedias { get; private set; }
+        public IReadOnlyList<SocialMedia> SocialMedias { get; }
+
+        public SocialMediaList() {}
+
+        public SocialMediaList(List<SocialMedia> socialMedias)
+        {
+            SocialMedias = socialMedias;
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            foreach(var media in SocialMedias)
+            {
+                yield return media;
+            }
+        }
     }
 }
