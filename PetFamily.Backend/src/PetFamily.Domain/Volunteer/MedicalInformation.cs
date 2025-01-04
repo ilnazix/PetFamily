@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteer
 {
@@ -19,31 +20,24 @@ namespace PetFamily.Domain.Volunteer
             Weight = weight;
         }
 
-        public static Result<MedicalInformation> Create(string healthInformation, int height, int weight, bool isVaccinated, bool isCastrated)
+        public static Result<MedicalInformation, Error> Create(string healthInformation, int height, int weight, bool isVaccinated, bool isCastrated)
         {
-            string errors = string.Empty;
-
             if (string.IsNullOrWhiteSpace(healthInformation))
             {
-                errors += "Health information cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(healthInformation));
             }
 
             if (height <= 0)
             {
-                errors += "Height cannot be less or equal zero\n";
+                return Errors.General.ValueIsInvalid(nameof(height));
             }
 
             if (weight <= 0)
             {
-                errors += "Weight cannot be less or equal zero\n";
+                return Errors.General.ValueIsInvalid(nameof(weight));
             }
 
-            if (string.IsNullOrEmpty(errors))
-            { 
-                return Result.Success<MedicalInformation>(new MedicalInformation(healthInformation, height, weight, isVaccinated, isCastrated));
-            }
-
-            return Result.Failure<MedicalInformation>(errors);
+            return new MedicalInformation(healthInformation, height, weight, isVaccinated, isCastrated);
         }
 
         protected override IEnumerable<IComparable> GetComparableEqualityComponents()

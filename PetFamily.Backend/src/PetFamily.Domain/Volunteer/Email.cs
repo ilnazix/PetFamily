@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System.Text.RegularExpressions;
 
 namespace PetFamily.Domain.Volunteer
@@ -12,16 +13,16 @@ namespace PetFamily.Domain.Volunteer
             Value = value;
         }
 
-        public static Result<Email> Create(string email)
+        public static Result<Email, Error> Create(string email)
         {
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
 
-            if (regex.IsMatch(email))
+            if (!regex.IsMatch(email))
             {
-                return Result.Success<Email>(new Email(email));
+                Errors.General.ValueIsInvalid(nameof(email));
             }
 
-            return Result.Failure<Email>("Email is not valid");
+            return new Email(email);
         }
 
         protected override IEnumerable<IComparable> GetComparableEqualityComponents()

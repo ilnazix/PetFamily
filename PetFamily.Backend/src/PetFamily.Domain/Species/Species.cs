@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Species
 {
@@ -14,14 +15,14 @@ namespace PetFamily.Domain.Species
         public string Title { get; private set; }
         public IReadOnlyList<Breed> Breeds => _breeds;
 
-        public static Result<Species> Create(string title) 
+        public static Result<Species, Error> Create(string title) 
         {
             if (string.IsNullOrWhiteSpace(title))
             {
-                return Result.Failure<Species>("Species title cannot be empty");
+                return Errors.General.ValueIsRequired(nameof(title));
             }
 
-            return Result.Success(new Species(title));
+            return new Species(title);
         }
     }
 }

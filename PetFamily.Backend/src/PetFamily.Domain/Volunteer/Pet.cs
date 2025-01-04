@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteer
 {
@@ -38,36 +39,19 @@ namespace PetFamily.Domain.Volunteer
 
         public RequisitesList? RequisitesList { get; private set; }
 
-        public static Result<Pet> Create(PetId id, string name, PetType petType, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
+        public static Result<Pet, Error> Create(PetId id, string name, PetType petType, string description, PhoneNumber ownerPhoneNumber, PetStatus status)
         {
-            string errors = string.Empty;
-
             if (string.IsNullOrWhiteSpace(name))
             {
-                errors += "Pet's name cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(name));
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                errors += "Description cannot be empty\n";
-            }
-            
-            if (petType is null)
-            {
-                errors += "Pet type is not provided\n";
+                return Errors.General.ValueIsRequired(nameof(description));
             }
 
-            if (ownerPhoneNumber == null) 
-            {
-                errors += "Owner's phone number must be provided\n";
-            }
-
-            if (string.IsNullOrEmpty(errors))
-            {
-                return Result.Success<Pet>(new Pet(id, name, petType!, description, ownerPhoneNumber!, status));
-            }
-
-            return Result.Failure<Pet>(errors);
+            return new Pet(id, name, petType, description, ownerPhoneNumber, status);
         }
     }
 }

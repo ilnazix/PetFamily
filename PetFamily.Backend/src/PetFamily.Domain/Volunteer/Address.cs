@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteer
 {
@@ -23,46 +24,39 @@ namespace PetFamily.Domain.Volunteer
             ApartmentNumber = apartmentNumber;
         }
 
-        public static Result<Address> Create(string country, string state, string city, string street, string houseNumber, int? apartmentNumber)
+        public static Result<Address, Error> Create(string country, string state, string city, string street, string houseNumber, int? apartmentNumber)
         {
-            string errors = string.Empty;
-
             if (string.IsNullOrWhiteSpace(country))
             {
-                errors += "Country can not be empty\n";
+                return Errors.General.ValueIsRequired(nameof(country));
             }
 
             if (string.IsNullOrWhiteSpace(state))
             {
-                errors += "State can not be empty\n";
+                return Errors.General.ValueIsRequired(nameof(state));
             }
 
             if (string.IsNullOrWhiteSpace(city))
             {
-                errors += "City cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(city));
             }
 
             if (string.IsNullOrWhiteSpace(street))
             {
-                errors += "Street cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(state));
             }
 
             if (string.IsNullOrWhiteSpace(houseNumber))
             {
-                errors += "House number cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(houseNumber));
             }
 
             if(apartmentNumber < 0)
             {
-                errors += "Appartment number cannot be less then 1\n";
+                return Errors.General.ValueIsInvalid(nameof(apartmentNumber));
             }
 
-            if (string.IsNullOrEmpty(errors))
-            {
-                return Result.Success<Address>(new Address(country, state, city, street, houseNumber, apartmentNumber));
-            }
-
-            return Result.Failure<Address>(errors);
+            return new Address(country, state, city, street, houseNumber, apartmentNumber);
         }
 
         protected override IEnumerable<IComparable> GetComparableEqualityComponents()
