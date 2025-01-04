@@ -30,8 +30,7 @@ namespace PetFamily.Infrastructure.Configurations
 
                 ptb.Property(pt => pt.BreedId)
                     .IsRequired()
-                    .HasColumnName("breeed_id")
-                    .HasConversion(breedId => breedId.Value, value => BreedId.Create(value)); ;
+                    .HasColumnName("breeed_id");
             });
 
             builder
