@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteer
 {
@@ -13,26 +14,19 @@ namespace PetFamily.Domain.Volunteer
             Description = description;
         }
 
-        public static Result<Requisite> Create(string title, string description)
+        public static Result<Requisite, Error> Create(string title, string description)
         {
-            string errors = string.Empty;
-
             if (string.IsNullOrWhiteSpace(title))
             {
-                errors += "Requisites title cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(title));
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                errors += "Requisites description cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(description));
             }
 
-            if (string.IsNullOrEmpty(errors))
-            {
-                return Result.Success<Requisite>(new Requisite(title, description));
-            }
-
-            return Result.Failure<Requisite>(errors);
+            return new Requisite(title, description);
         }
 
         protected override IEnumerable<IComparable> GetComparableEqualityComponents()

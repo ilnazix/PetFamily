@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteer
 {
@@ -13,26 +14,19 @@ namespace PetFamily.Domain.Volunteer
             Title = title;
         }
 
-        public static Result<SocialMedia> Create(string link, string title)
+        public static Result<SocialMedia, Error> Create(string link, string title)
         {
-            string errors = string.Empty;
-
             if (string.IsNullOrWhiteSpace(link))
             {
-                errors += "Link cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(link));
             }
             
             if (string.IsNullOrWhiteSpace(title))
             {
-                errors += "Title cannot be empty\n";
+                return Errors.General.ValueIsRequired(nameof(title));
             }
-
-            if (string.IsNullOrWhiteSpace(errors))
-            {
-                return Result.Success(new SocialMedia(link, title));
-            }
-
-            return Result.Failure<SocialMedia>(errors);
+            
+            return new SocialMedia(link, title);
         }
 
         protected override IEnumerable<IComparable> GetComparableEqualityComponents()

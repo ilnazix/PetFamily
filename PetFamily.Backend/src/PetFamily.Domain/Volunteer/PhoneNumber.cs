@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System.Text.RegularExpressions;
 
 namespace PetFamily.Domain.Volunteer
@@ -12,16 +13,16 @@ namespace PetFamily.Domain.Volunteer
             Value = value;
         }
 
-        public static Result<PhoneNumber> Create(string value)
+        public static Result<PhoneNumber, Error> Create(string phoneNumber)
         {
             string pattern = @"^\+?\d{1,4}?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$";
             
-            if(Regex.IsMatch(value, pattern))
+            if(!Regex.IsMatch(phoneNumber, pattern))
             {
-                return Result.Success<PhoneNumber>(new PhoneNumber(value));
+                return Errors.General.ValueIsInvalid(nameof(phoneNumber));
             }
 
-            return Result.Failure<PhoneNumber>("Phone number has incorrect format");
+            return new PhoneNumber(phoneNumber);
         }
 
         protected override IEnumerable<IComparable> GetComparableEqualityComponents()
