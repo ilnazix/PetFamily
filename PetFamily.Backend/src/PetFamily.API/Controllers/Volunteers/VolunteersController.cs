@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
+using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 
 namespace PetFamily.API.Controllers.Volunteers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class VolunteersController : ControllerBase
+    [Route("[controller]")]
+    public class VolunteersController : ApplicationController
     {
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create(
+        public async Task<ActionResult<Envelope>> Create(
             [FromServices] CreateVolunteerHandler handler,
             [FromBody] CreateVolunteerRequest request,
             CancellationToken cancellationToken)
