@@ -5,6 +5,7 @@ namespace PetFamily.Domain.Volunteer
 {
     public class MedicalInformation : ComparableValueObject
     {
+        public const int MAX_HEALTH_INFO_LENGTH = 2000;
         public bool IsCastrated { get; }
         public bool IsVaccinated { get; }
         public string HealthInformation { get; }
@@ -22,9 +23,9 @@ namespace PetFamily.Domain.Volunteer
 
         public static Result<MedicalInformation, Error> Create(string healthInformation, int height, int weight, bool isVaccinated, bool isCastrated)
         {
-            if (string.IsNullOrWhiteSpace(healthInformation))
+            if (string.IsNullOrWhiteSpace(healthInformation) || healthInformation.Length > MAX_HEALTH_INFO_LENGTH)
             {
-                return Errors.General.ValueIsRequired(nameof(healthInformation));
+                return Errors.General.ValueIsInvalid(nameof(healthInformation));
             }
 
             if (height <= 0)

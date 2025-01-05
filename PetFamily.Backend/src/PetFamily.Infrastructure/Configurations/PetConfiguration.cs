@@ -18,8 +18,9 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasConversion(id => id.Value, value => PetId.Create(value));
 
             builder.Property(p => p.Name)
+                .HasConversion(name => name.Value, value => PetName.Create(value).Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(PetName.PET_NAME_MAX_LENGTH);
 
             builder.ComplexProperty(p => p.PetType, ptb =>
             {
@@ -38,12 +39,14 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasConversion(status => status.Value, value => PetStatus.Create(value).Value);
 
             builder.Property(p => p.Description)
+                .HasConversion(description => description.Value, value => Description.Create(value).Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                .HasMaxLength(Description.DESCRIPTION_MAX_LENGTH);
 
             builder.Property(p => p.Color)
+                .HasConversion(color => color.Title, title => Color.Create(title).Value)
                 .IsRequired(false)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(Color.MAX_COLOR_TITLE_LENGTH);
 
             builder.OwnsOne(p => p.MedicalInformation, mib =>
             {
@@ -52,16 +55,16 @@ namespace PetFamily.Infrastructure.Configurations
                 mib.Property(mi => mi.Height).HasColumnName("height");
                 mib.Property(mi => mi.Weight).HasColumnName("weight");
                 mib.Property(mi => mi.HealthInformation)
-                    .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                    .HasMaxLength(MedicalInformation.MAX_HEALTH_INFO_LENGTH);
             });
 
             builder.OwnsOne(p => p.Address, ab =>
             {
-                ab.Property(a => a.Country).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("country");
-                ab.Property(a => a.State).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("state");
-                ab.Property(a => a.City).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("city");
-                ab.Property(a => a.Street).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("street");
-                ab.Property(a => a.HouseNumber).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH).HasColumnName("house_number");
+                ab.Property(a => a.Country).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("country");
+                ab.Property(a => a.State).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("state");
+                ab.Property(a => a.City).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("city");
+                ab.Property(a => a.Street).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("street");
+                ab.Property(a => a.HouseNumber).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("house_number");
                 ab.Property(a => a.HouseNumber).HasColumnName("apartment_number");
             });
 
@@ -79,11 +82,11 @@ namespace PetFamily.Infrastructure.Configurations
                 {
                     rb.Property(r => r.Title)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                        .HasMaxLength(Requisite.REQUISITE_TITLE_MAX_LENGTH);
 
                     rb.Property(r => r.Description)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                        .HasMaxLength(Requisite.REQUISITE_DESCRIPTION_MAX_LENGTH);
                 });
             });
         }

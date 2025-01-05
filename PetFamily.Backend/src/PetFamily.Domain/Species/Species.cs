@@ -5,6 +5,8 @@ namespace PetFamily.Domain.Species
 {
     public class Species : Entity<SpeciesId>
     {
+        public const int SPECIES_TITLE_MAX_LENGTH = 100;
+
         private readonly List<Breed> _breeds = new();
 
         public Species(string title)
@@ -15,14 +17,14 @@ namespace PetFamily.Domain.Species
         public string Title { get; private set; }
         public IReadOnlyList<Breed> Breeds => _breeds;
 
-        public static Result<Species, Error> Create(string title) 
+        public static Result<Species, Error> Create(string speciesTitle) 
         {
-            if (string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(speciesTitle) || speciesTitle.Length > SPECIES_TITLE_MAX_LENGTH)
             {
-                return Errors.General.ValueIsRequired(nameof(title));
+                return Errors.General.ValueIsInvalid(nameof(speciesTitle));
             }
 
-            return new Species(title);
+            return new Species(speciesTitle);
         }
     }
 }

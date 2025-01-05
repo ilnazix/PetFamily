@@ -23,17 +23,17 @@ namespace PetFamily.Infrastructure.Configurations
             {
                 fnb.Property(fn => fn.FirstName)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                    .HasMaxLength(FullName.NAME_MAX_LENGTH)
                     .HasColumnName("first_name");
 
                 fnb.Property(fn => fn.LastName)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                    .HasMaxLength(FullName.NAME_MAX_LENGTH)
                     .HasColumnName("last_name");
 
                 fnb.Property(fn => fn.MiddleName)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                    .HasMaxLength(FullName.NAME_MAX_LENGTH)
                     .HasColumnName("middle_name");
             });
 
@@ -42,8 +42,10 @@ namespace PetFamily.Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property(v => v.Description)
+                .HasConversion(description => description == null ? null : description.Value,
+                    value => string.IsNullOrEmpty(value) ? null : Description.Create(value).Value)
                 .IsRequired(false)
-                .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                .HasMaxLength(Description.DESCRIPTION_MAX_LENGTH);
 
             builder.Property(v => v.WorkExperienceInYears);
 
@@ -64,11 +66,11 @@ namespace PetFamily.Infrastructure.Configurations
                     {
                         rb.Property(r => r.Title)
                             .IsRequired()
-                            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                            .HasMaxLength(Requisite.REQUISITE_TITLE_MAX_LENGTH);
 
                         rb.Property(r => r.Description)
                             .IsRequired()
-                            .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH);
+                            .HasMaxLength(Requisite.REQUISITE_DESCRIPTION_MAX_LENGTH);
                     });
                 });
 
@@ -81,11 +83,11 @@ namespace PetFamily.Infrastructure.Configurations
                     {
                         sb.Property(s => s.Link)
                             .IsRequired()
-                            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                            .HasMaxLength(SocialMedia.SOCIAL_MEDIA_LINK_MAX_LENGTH);
 
                         sb.Property(s => s.Title)
                             .IsRequired()
-                            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                            .HasMaxLength(SocialMedia.SOCIAL_MEDIA_TITLE_MAX_LENGTH);
                     });
                 });
         }

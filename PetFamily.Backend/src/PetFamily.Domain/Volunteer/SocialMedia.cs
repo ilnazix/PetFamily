@@ -5,6 +5,9 @@ namespace PetFamily.Domain.Volunteer
 {
     public class SocialMedia : ComparableValueObject
     {
+        public const int SOCIAL_MEDIA_LINK_MAX_LENGTH = 2000;
+        public const int SOCIAL_MEDIA_TITLE_MAX_LENGTH = 100;
+
         public string Link { get; }
         public string Title { get; }
 
@@ -16,14 +19,14 @@ namespace PetFamily.Domain.Volunteer
 
         public static Result<SocialMedia, Error> Create(string link, string title)
         {
-            if (string.IsNullOrWhiteSpace(link))
+            if (string.IsNullOrWhiteSpace(link) || link.Length > SOCIAL_MEDIA_LINK_MAX_LENGTH)
             {
-                return Errors.General.ValueIsRequired(nameof(link));
+                return Errors.General.ValueIsInvalid(nameof(link));
             }
             
-            if (string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(title) || title.Length > SOCIAL_MEDIA_TITLE_MAX_LENGTH)
             {
-                return Errors.General.ValueIsRequired(nameof(title));
+                return Errors.General.ValueIsInvalid(nameof(title));
             }
             
             return new SocialMedia(link, title);
