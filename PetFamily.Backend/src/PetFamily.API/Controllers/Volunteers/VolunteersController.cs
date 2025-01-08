@@ -1,18 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
+using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.API.Controllers.Volunteers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class VolunteersController : ControllerBase
+    [Route("[controller]")]
+    public class VolunteersController : ApplicationController
     {
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create(
+        public async Task<ActionResult<Envelope>> Create(
             [FromServices] CreateVolunteerHandler handler,
             [FromBody] CreateVolunteerRequest request,
+            [FromServices] IValidator<CreateVolunteerCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new CreateVolunteerCommand(
@@ -25,7 +28,7 @@ namespace PetFamily.API.Controllers.Volunteers
                 Requisites: request.Requisites.Select(r => new CreateRequisiteCommand(r.Title, r.Description))
             ); 
 
-            var result = await handler.Handle(command, cancellationToken);
+            var result = await handler.Handle(command, validator, cancellationToken);
 
             if (result.IsFailure)
             {

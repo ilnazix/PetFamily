@@ -12,8 +12,8 @@ builder.Services.AddRouting(opt =>
 });
 
 builder.Services
-    .AddInfrastructure()
-    .AddApplication();
+    .AddApplication()
+    .AddInfrastructure();
 
 var app = builder.Build();
 

@@ -1,4 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteer;
 
@@ -14,50 +17,34 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             _volunteersRepository = volunteersRepository;
         }
 
-        public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ValidationResult>> Handle(
+            CreateVolunteerCommand command,
+            IValidator<CreateVolunteerCommand> validator,
+            CancellationToken cancellationToken = default)
         {
+            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                return validationResult;
+            }
+
+
             var volunteerId = VolunteerId.NewVolunteerId();
+            var fullName = FullName.Create(command.FirstName, command.LastName, command.MiddleName).Value;
+            var email = Email.Create(command.Email).Value;
+            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
 
-            var fullName = FullName.Create(command.FirstName, command.LastName, command.MiddleName);
 
-            if (fullName.IsFailure)
-            {
-                return fullName.Error;
-            }
+            var volunteer = new Volunteer(volunteerId, fullName, email, phoneNumber);
 
-            var emailResult = Email.Create(command.Email);
 
-            if (emailResult.IsFailure)
-            {
-                return emailResult.Error;
-            }
+            var socialMedias = command.SocialMedias.Select(sm => SocialMedia.Create(sm.Link, sm.Title).Value);
+            volunteer.AddSocialMedias(socialMedias);
 
-            var phoneNumberResult = PhoneNumber.Create(command.PhoneNumber);
 
-            if (phoneNumberResult.IsFailure)
-            {
-                return phoneNumberResult.Error;
-            }
-
-            var volunteer = new Volunteer(volunteerId, fullName.Value, emailResult.Value, phoneNumberResult.Value);
-
-            var socialMediasResults = command.SocialMedias.Select(sm => SocialMedia.Create(sm.Link, sm.Title));
-
-            if(socialMediasResults.Any(sm => sm.IsFailure))
-            {
-                return socialMediasResults.First(sm => sm.IsFailure).Error;
-            }
-
-            volunteer.AddSocialMedias(socialMediasResults.Select(sm => sm.Value));
-
-            var requiesitesResults = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description));
-
-            if (requiesitesResults.Any(r => r.IsFailure))
-            {
-                return requiesitesResults.First(r => r.IsFailure).Error;
-            }
-
-            volunteer.AddRequisites(requiesitesResults.Select(r => r.Value));
+            var requiesites = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description).Value);
+            volunteer.AddRequisites(requiesites);
 
             var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
 
