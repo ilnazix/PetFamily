@@ -1,3 +1,4 @@
+using PetFamily.API.Middlewares;
 using PetFamily.Application;
 using PetFamily.Infrastructure;
 using Serilog;
@@ -28,6 +29,7 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseExceptionMiddleware();
 app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
