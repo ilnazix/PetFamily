@@ -1,8 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc;
-using PetFamily.Domain.Shared;
+using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Volunteer;
 
 
@@ -11,10 +10,12 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
     public class CreateVolunteerHandler
     {
         private readonly IVolunteersRepository _volunteersRepository;
+        private readonly ILogger<CreateVolunteerHandler> _logger;
 
-        public CreateVolunteerHandler(IVolunteersRepository volunteersRepository)
+        public CreateVolunteerHandler(IVolunteersRepository volunteersRepository, ILogger<CreateVolunteerHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
+            _logger = logger;
         }
 
         public async Task<Result<Guid, ValidationResult>> Handle(
@@ -47,6 +48,9 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             volunteer.AddRequisites(requiesites);
 
             var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
+
+            _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {id})", 
+                fullName.FirstName, fullName.LastName, fullName.MiddleName, volunteerGuid);
 
             return volunteerGuid;
         }
