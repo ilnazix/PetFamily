@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
-using PetFamily.Domain.Shared;
 
 namespace PetFamily.API.Controllers.Volunteers
 {
