@@ -21,7 +21,7 @@ namespace PetFamily.Domain.Volunteer
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
         public Description? Description { get; private set; }
-        public int WorkExperienceInYears { get; set; } = 0;
+        public Experience WorkExperienceInYears { get; set; } = Experience.Default();
         public PhoneNumber PhoneNumber { get; private set; }
         public RequisitesList? Requisites { get; private set; }
         public IReadOnlyList<Pet> Pets => _pets;
@@ -38,6 +38,20 @@ namespace PetFamily.Domain.Volunteer
         public void AddRequisites(IEnumerable<Requisite> newRequiesites)
         {
             Requisites = new RequisitesList(newRequiesites.ToList());
+        }
+
+        public void UpdateMainInfo(
+            FullName fullName, 
+            Description description,
+            Email email, 
+            PhoneNumber phoneNumber, 
+            Experience experience)
+        {
+            FullName = fullName;
+            Description = description;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            WorkExperienceInYears = experience;
         }
     }
 }
