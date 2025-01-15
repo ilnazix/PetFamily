@@ -1,4 +1,5 @@
-﻿using PetFamily.Application.Volunteers.Shared;
+﻿using PetFamily.API.Controllers.Volunteers;
+using PetFamily.Application.Volunteers.Shared;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
@@ -10,6 +11,6 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
         string PhoneNumber,
         string Email,
         IEnumerable<SocialMediaDto> SocialMedias,
-        IEnumerable<CreateRequisiteCommand> Requisites
+        IEnumerable<RequisitesDto> Requisites
         );
 }

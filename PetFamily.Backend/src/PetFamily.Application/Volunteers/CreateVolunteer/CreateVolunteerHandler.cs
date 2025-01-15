@@ -45,7 +45,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
 
             var requiesites = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description).Value);
-            volunteer.AddRequisites(requiesites);
+            volunteer.UpdateRequisites(requiesites);
 
             var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
 
