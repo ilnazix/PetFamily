@@ -35,7 +35,7 @@ namespace PetFamily.Domain.Volunteer
         {
             SocialMediaList = new SocialMediaList(newSocialMedias.ToList());
         }
-        public void AddRequisites(IEnumerable<Requisite> newRequiesites)
+        public void UpdateRequisites(IEnumerable<Requisite> newRequiesites)
         {
             Requisites = new RequisitesList(newRequiesites.ToList());
         }
