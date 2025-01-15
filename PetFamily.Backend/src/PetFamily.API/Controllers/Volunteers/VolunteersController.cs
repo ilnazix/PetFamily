@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Shared;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
+using PetFamily.Application.Volunteers.UpdateSocialMedias;
 
 namespace PetFamily.API.Controllers.Volunteers
 {
@@ -24,9 +26,9 @@ namespace PetFamily.API.Controllers.Volunteers
                 MiddleName: request.MiddleName,
                 PhoneNumber: request.PhoneNumber,
                 Email: request.Email,
-                SocialMedias: request.SocialMedias.Select(sm => new CreateSocialMediaCommand(sm.Link, sm.Title)),
+                SocialMedias: request.SocialMedias.Select(sm => new SocialMediaDto(sm.Link, sm.Title)),
                 Requisites: request.Requisites.Select(r => new CreateRequisiteCommand(r.Title, r.Description))
-            ); 
+            );
 
             var result = await handler.Handle(command, validator, cancellationToken);
 
@@ -43,13 +45,39 @@ namespace PetFamily.API.Controllers.Volunteers
             [FromRoute] Guid id,
             [FromBody] UpdateMainInfoDto dto,
             [FromServices] UpdateMainInfoHandler handler,
-            [FromServices] IValidator<UpdateMainInfoCommand> validator, 
+            [FromServices] IValidator<UpdateMainInfoCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new UpdateMainInfoCommand(id, dto);
             var validationResult = await validator.ValidateAsync(command, cancellationToken);
 
             if (validationResult.IsValid == false)
+            {
+                return validationResult.ToResponse();
+            }
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return result.Error.ToResponse();
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpPut("{id:guid}/social-medias")]
+        public async Task<ActionResult<Envelope>> UpdateSocialMediasList(
+            [FromRoute] Guid id,
+            [FromBody] UpdateSocialMediaDto dto,
+            [FromServices] UpdateSocialMediasCommandHandler handler,
+            [FromServices] IValidator<UpdateSocialMediasCommand> validator,
+            CancellationToken cancellationToken)
+        {
+            var command = new UpdateSocialMediasCommand(id, dto);
+            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+
+            if(validationResult.IsValid == false)
             {
                 return validationResult.ToResponse();
             }
