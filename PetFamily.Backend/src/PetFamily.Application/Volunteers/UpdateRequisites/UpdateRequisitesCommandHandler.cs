@@ -35,8 +35,7 @@ namespace PetFamily.Application.Volunteers.UpdateRequisites
 
             var requisitesDtos = command.Dto.Requisites;
             var requisites = requisitesDtos.Select(r => Requisite.Create(r.Title, r.Description).Value).ToList();
-            var requisitesList = new RequisitesList(requisites);
-
+            
             volunteerResult.Value.UpdateRequisites(requisites);
 
             var guid = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);

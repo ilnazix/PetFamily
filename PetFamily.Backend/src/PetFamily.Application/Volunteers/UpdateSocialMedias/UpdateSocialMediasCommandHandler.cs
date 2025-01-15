@@ -32,7 +32,6 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedias
 
             var socialMediaDtos = command.Dto.SocialMedias;
             var socialMedias = socialMediaDtos.Select(sm => SocialMedia.Create(sm.Link, sm.Title).Value).ToList();
-            var socialMediasList = new SocialMediaList(socialMedias);
 
             volunteerResult.Value.UpdateSocialMedias(socialMedias);
 
