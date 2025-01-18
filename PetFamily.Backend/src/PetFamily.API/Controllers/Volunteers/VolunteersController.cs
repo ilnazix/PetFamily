@@ -4,6 +4,7 @@ using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.Shared;
+using PetFamily.Application.Volunteers.SoftDelete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateRequisites;
 using PetFamily.Application.Volunteers.UpdateSocialMedias;
@@ -105,6 +106,31 @@ namespace PetFamily.API.Controllers.Volunteers
             var validationResult = await validator.ValidateAsync(command, cancellationToken);
 
             if (validationResult.IsValid == false)
+            {
+                return validationResult.ToResponse();
+            }
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return result.Error.ToResponse();
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Envelope>> SoftDelete(
+            [FromRoute] Guid id,
+            [FromServices] SoftDeleteCommandHandler handler,
+            [FromServices] IValidator<SoftDeleteCommand> validator,
+            CancellationToken cancellationToken)
+        {
+            var command = new SoftDeleteCommand(id);
+            var validationResult = await validator.ValidateAsync(command);
+
+            if(validationResult.IsValid == false)
             {
                 return validationResult.ToResponse();
             }
