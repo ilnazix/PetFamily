@@ -1,6 +1,9 @@
-﻿namespace PetFamily.API.Controllers.Volunteers
+﻿using PetFamily.Application.Volunteers.Shared;
+
+namespace PetFamily.API.Controllers.Volunteers
 {
     public record CreateVolunteerRequest(
+        //TODO: отрефакторить с использованием FullNameDTO
         string FirstName,
         string LastName, 
         string MiddleName, 

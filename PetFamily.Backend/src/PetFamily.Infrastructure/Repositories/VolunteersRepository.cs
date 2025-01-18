@@ -1,4 +1,7 @@
-﻿using PetFamily.Application.Volunteers;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
+using PetFamily.Application.Volunteers;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteer;
 
 namespace PetFamily.Infrastructure.Repositories
@@ -18,6 +21,28 @@ namespace PetFamily.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return volunteer.Id;
+        }
+
+        public async Task<Result<Volunteer, Error>> GetById(VolunteerId id, CancellationToken cancellationToken = default)
+        {
+            var result = await _dbContext.Volunteers
+                .Include(v => v.Pets)
+                .FirstOrDefaultAsync(v => v.Id == id, cancellationToken);
+
+            if (result == null)
+            {
+                return Errors.General.NotFound(id);
+            }
+
+            return result;
+        }
+
+        public async Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Volunteers.Attach(volunteer);
+            await _dbContext.SaveChangesAsync();
+
+            return volunteer.Id.Value;
         }
     }
 }

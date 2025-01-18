@@ -41,11 +41,11 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
 
             var socialMedias = command.SocialMedias.Select(sm => SocialMedia.Create(sm.Link, sm.Title).Value);
-            volunteer.AddSocialMedias(socialMedias);
+            volunteer.UpdateSocialMedias(socialMedias);
 
 
             var requiesites = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description).Value);
-            volunteer.AddRequisites(requiesites);
+            volunteer.UpdateRequisites(requiesites);
 
             var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
 

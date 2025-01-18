@@ -47,7 +47,8 @@ namespace PetFamily.Infrastructure.Configurations
                 .IsRequired(false)
                 .HasMaxLength(Description.DESCRIPTION_MAX_LENGTH);
 
-            builder.Property(v => v.WorkExperienceInYears);
+            builder.Property(v => v.WorkExperienceInYears)
+                .HasConversion(we => we.Value, value => Experience.Create(value).Value);
 
             builder.Property(v => v.PhoneNumber)
                 .HasConversion(pn => pn.Value, value => PhoneNumber.Create(value).Value)

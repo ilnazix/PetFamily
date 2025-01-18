@@ -1,12 +1,16 @@
-﻿namespace PetFamily.Application.Volunteers.CreateVolunteer
+﻿using PetFamily.API.Controllers.Volunteers;
+using PetFamily.Application.Volunteers.Shared;
+
+namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
     public record CreateVolunteerCommand(
+        //TODO: отрефакторить с использованием FullNameDto
         string FirstName,
         string LastName, 
         string MiddleName,
         string PhoneNumber,
         string Email,
-        IEnumerable<CreateSocialMediaCommand> SocialMedias,
-        IEnumerable<CreateRequisiteCommand> Requisites
+        IEnumerable<SocialMediaDto> SocialMedias,
+        IEnumerable<RequisitesDto> Requisites
         );
 }
