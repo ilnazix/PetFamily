@@ -1,8 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteer
 {
-    public class Volunteer : Entity<VolunteerId>
+    public class Volunteer : SoftDeleteableEntity<VolunteerId>
     {
         private readonly List<Pet> _pets = new();
         
@@ -52,6 +53,16 @@ namespace PetFamily.Domain.Volunteer
             Email = email;
             PhoneNumber = phoneNumber;
             WorkExperienceInYears = experience;
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            foreach(var pet in _pets)
+            {
+                pet.Delete();
+            }
         }
     }
 }
