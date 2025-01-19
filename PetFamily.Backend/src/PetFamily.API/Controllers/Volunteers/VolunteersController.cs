@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.HardDelete;
 using PetFamily.Application.Volunteers.Restore;
 using PetFamily.Application.Volunteers.Shared;
 using PetFamily.Application.Volunteers.SoftDelete;
@@ -129,6 +130,31 @@ namespace PetFamily.API.Controllers.Volunteers
             CancellationToken cancellationToken)
         {
             var command = new SoftDeleteCommand(id);
+            var validationResult = await validator.ValidateAsync(command);
+
+            if (validationResult.IsValid == false)
+            {
+                return validationResult.ToResponse();
+            }
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return result.Error.ToResponse();
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpDelete("{id:guid}/hard")]
+        public async Task<ActionResult<Envelope>> HardDelete(
+            [FromRoute] Guid id,
+            [FromServices] HardDeleteCommandHandler handler,
+            [FromServices] IValidator<HardDeleteCommand> validator,
+            CancellationToken cancellationToken)
+        {
+            var command = new HardDeleteCommand(id);
             var validationResult = await validator.ValidateAsync(command);
 
             if (validationResult.IsValid == false)
