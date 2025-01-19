@@ -23,7 +23,7 @@ namespace PetFamily.Application.Volunteers.Restore
             CancellationToken cancellationToken)
         {
             var id = VolunteerId.Create(command.Id);
-            var volunteerResult = await _volunteersRepository.GetById(id);
+            var volunteerResult = await _volunteersRepository.GetById(id, cancellationToken);
 
             if (volunteerResult.IsFailure)
             {
