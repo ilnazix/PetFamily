@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Restore;
 using PetFamily.Application.Volunteers.SoftDelete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateRequisites;
@@ -18,6 +19,7 @@ namespace PetFamily.Application
             services.AddScoped<UpdateSocialMediasCommandHandler>();
             services.AddScoped<UpdateRequisitesCommandHandler>();
             services.AddScoped<SoftDeleteCommandHandler>();
+            services.AddScoped<RestoreVolunteerCommandHandler>();
 
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
