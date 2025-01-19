@@ -1,6 +1,7 @@
 using PetFamily.API.Extensions;
 using PetFamily.API.Middlewares;
 using PetFamily.Application;
+using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure;
 using Serilog;
 using Serilog.Events;
@@ -23,6 +24,8 @@ builder.Services.AddRouting(opt =>
 {
     opt.LowercaseUrls = true;
 });
+
+builder.Services.Configure<VolunteerEntityOptions>(builder.Configuration.GetSection("VolunteerEntityOptions"));
 
 builder.Services
     .AddApplication()
