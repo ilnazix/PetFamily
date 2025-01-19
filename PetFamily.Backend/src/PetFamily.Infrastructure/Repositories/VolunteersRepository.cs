@@ -53,14 +53,5 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer.Id.Value;
         }
-
-        public async Task DeleteExpiredSoftDeletions(TimeSpan olderThan)
-        {
-            var thresholdDate = DateTime.UtcNow.Subtract(olderThan);
-
-            await _dbContext.Volunteers
-                   .Where(v => v.IsDeleted && v.DeletedAt.HasValue && v.DeletedAt.Value <= thresholdDate)
-                   .ExecuteDeleteAsync();
-        }
     }
 }

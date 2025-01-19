@@ -74,5 +74,12 @@ namespace PetFamily.Domain.Volunteer
                 pet.Restore();
             }
         }
+
+        public void DeleteExpiredPets(TimeSpan lifetimeSpan)
+        {
+            _pets.RemoveAll(pet => pet.DeletedAt != null 
+                && DateTime.UtcNow > pet.DeletedAt.Value
+                    .Add(lifetimeSpan));
+        }
     }
 }

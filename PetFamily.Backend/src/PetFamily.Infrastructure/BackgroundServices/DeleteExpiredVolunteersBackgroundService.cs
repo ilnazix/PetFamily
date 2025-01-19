@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PetFamily.Application.Volunteers;
+using PetFamily.Infrastructure.Services;
 
 namespace PetFamily.Infrastructure.BackgroundServices
 {
@@ -34,7 +35,7 @@ namespace PetFamily.Infrastructure.BackgroundServices
                 
                 _logger.LogInformation("DeleteExpiredVolunteersService is working");
 
-                await service.Process();
+                await service.Process(stoppingToken);
 
                 await Task.Delay(TimeSpan.FromHours(_options.DeleteExpiredVolunteersServiceReductionDays), 
                     stoppingToken);
