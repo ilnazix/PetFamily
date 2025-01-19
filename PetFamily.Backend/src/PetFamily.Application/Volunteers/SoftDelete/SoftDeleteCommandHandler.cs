@@ -31,11 +31,11 @@ namespace PetFamily.Application.Volunteers.SoftDelete
             var volunteer = volunteerResult.Value;
             volunteer.Delete();
 
-            var guid = await _volunteersRepository.Save(volunteer, cancellationToken);
+            await _volunteersRepository.Save(volunteer, cancellationToken);
 
-            _logger.LogInformation("Soft delete volunteer with id={id}", guid);
+            _logger.LogInformation("Soft delete volunteer with id={id}", id.Value);
 
-            return guid;
+            return id.Value;
         }
     }
 }
