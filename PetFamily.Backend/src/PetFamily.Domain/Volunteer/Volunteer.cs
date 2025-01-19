@@ -64,5 +64,15 @@ namespace PetFamily.Domain.Volunteer
                 pet.Delete();
             }
         }
+
+        public override void Restore()
+        {
+            base.Restore();
+
+            foreach(var pet in _pets)
+            {
+                pet.Restore();
+            }
+        }
     }
 }
