@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Restore;
 using PetFamily.Application.Volunteers.Shared;
 using PetFamily.Application.Volunteers.SoftDelete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -79,7 +80,7 @@ namespace PetFamily.API.Controllers.Volunteers
             var command = new UpdateSocialMediasCommand(id, dto);
             var validationResult = await validator.ValidateAsync(command, cancellationToken);
 
-            if(validationResult.IsValid == false)
+            if (validationResult.IsValid == false)
             {
                 return validationResult.ToResponse();
             }
@@ -130,6 +131,31 @@ namespace PetFamily.API.Controllers.Volunteers
             var command = new SoftDeleteCommand(id);
             var validationResult = await validator.ValidateAsync(command);
 
+            if (validationResult.IsValid == false)
+            {
+                return validationResult.ToResponse();
+            }
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return result.Error.ToResponse();
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpPatch("{id:guid}")]
+        public async Task<ActionResult<Envelope>> Restore(
+            [FromRoute] Guid id,
+            [FromServices] RestoreVolunteerCommandHandler handler,
+            [FromServices] IValidator<RestoreVolunteerCommand> validator, 
+            CancellationToken cancellationToken)
+        {
+            var command = new RestoreVolunteerCommand(id);
+            var validationResult = await validator.ValidateAsync(command);
+            
             if(validationResult.IsValid == false)
             {
                 return validationResult.ToResponse();
