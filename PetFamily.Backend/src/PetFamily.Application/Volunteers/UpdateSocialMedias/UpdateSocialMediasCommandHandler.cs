@@ -37,7 +37,7 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedias
 
             var guid = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Volunteer's (id={id}) social medias list updated", guid);
+            _logger.LogInformation("Volunteer's (id={id}) social medias list updated", guid.Value);
 
             return guid;
         }

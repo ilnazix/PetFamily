@@ -1,12 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 
 namespace PetFamily.Domain.Volunteer
 {
-    public class Pet : Entity<PetId>
+    public class Pet : SoftDeleteableEntity<PetId>
     {
         //ef core
-        private Pet() { }
+        private Pet(PetId id) : base(id) 
+        { 
+        }
 
         public Pet(PetId id, PetName name, PetType petType, Description description, PhoneNumber ownerPhoneNumber, PetStatus status) : base(id)
         {

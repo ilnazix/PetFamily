@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteer;
+using System.Runtime.CompilerServices;
 
 namespace PetFamily.Infrastructure.Repositories
 {
@@ -41,6 +42,14 @@ namespace PetFamily.Infrastructure.Repositories
         {
             _dbContext.Volunteers.Attach(volunteer);
             await _dbContext.SaveChangesAsync();
+
+            return volunteer.Id.Value;
+        }
+
+        public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Volunteers.Remove(volunteer);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return volunteer.Id.Value;
         }
