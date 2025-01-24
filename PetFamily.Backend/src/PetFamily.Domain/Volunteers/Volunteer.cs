@@ -82,6 +82,80 @@ namespace PetFamily.Domain.Volunteers
             return pet;
         }
 
+        public UnitResult<Error> MovePet(PetId petId, Position newPosition)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+
+            if (pet is null)
+                return Errors.General.NotFound(petId.Value);
+
+            var currentPosition = pet.Position;
+
+            if (currentPosition == newPosition)
+                return UnitResult.Success<Error>();
+
+            var adjustedPositionResult = AdjustNewPositionIfOutOfRange(newPosition);
+
+            if (adjustedPositionResult.IsFailure)
+                return adjustedPositionResult.Error;
+
+            newPosition = adjustedPositionResult.Value;
+            
+            var moveResult = MovePetsBetweenPositions(newPosition, currentPosition);
+
+            if (moveResult.IsFailure)
+                return moveResult.Error;
+
+            pet.SetPosition(newPosition);
+
+            return UnitResult.Success<Error>();
+        }
+
+        private UnitResult<Error> MovePetsBetweenPositions(Position newPosition, Position currentPosition)
+        {
+            if (newPosition.Value < currentPosition.Value)
+            {
+                var petsToMove = _pets.Where(p => p.Position.Value >= newPosition.Value
+                    && p.Position.Value < currentPosition.Value);
+
+                foreach (var petToMove in petsToMove)
+                {
+                    var result = petToMove.MoveForward();
+
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+            }
+            else if (newPosition.Value > currentPosition.Value)
+            {
+                var petsToMove = _pets.Where(p => p.Position.Value > currentPosition.Value
+                    && p.Position.Value <= newPosition.Value);
+
+                foreach (var petToMove in petsToMove)
+                {
+                    var result = petToMove.MoveBack();
+
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+            }
+
+            return UnitResult.Success<Error>();
+        }
+
+        private Result<Position, Error> AdjustNewPositionIfOutOfRange(Position newPosition)
+        {
+            if(newPosition.Value <= _pets.Count)
+                return newPosition;
+
+            var lastPosition = Position.Create(_pets.Count);
+
+            if (lastPosition.IsFailure)
+                return lastPosition.Error;
+
+            return lastPosition.Value;
+        }
+
         public override void Delete()
         {
             base.Delete();

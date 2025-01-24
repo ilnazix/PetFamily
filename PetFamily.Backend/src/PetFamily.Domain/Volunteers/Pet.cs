@@ -50,5 +50,29 @@ namespace PetFamily.Domain.Volunteers
 
             return UnitResult.Success<Error>();
         }
+
+        public UnitResult<Error> MoveForward()
+        {
+            var newPositionResult = Position.MoveForward();
+
+            if (newPositionResult.IsFailure)
+                return newPositionResult.Error;
+
+            Position = newPositionResult.Value;
+
+            return UnitResult.Success<Error>();
+        }
+
+        internal UnitResult<Error> MoveBack()
+        {
+            var newPositionResult = Position.MoveBack();
+
+            if (newPositionResult.IsFailure)
+                return newPositionResult.Error;
+
+            Position = newPositionResult.Value;
+
+            return UnitResult.Success<Error>();
+        }
     }
 }

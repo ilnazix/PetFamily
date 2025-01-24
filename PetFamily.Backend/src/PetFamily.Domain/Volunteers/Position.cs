@@ -3,7 +3,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteers
 {
-    public class Position : ValueObject
+    public class Position : ComparableValueObject
     {
         public int Value { get; }
 
@@ -11,6 +11,10 @@ namespace PetFamily.Domain.Volunteers
         {
             Value = value;
         }
+
+        public Result<Position, Error> MoveForward() => Create(Value + 1);
+        
+        public Result<Position, Error> MoveBack() => Create(Value - 1);
 
         public static Result<Position, Error> Create(int position)
         {
@@ -22,7 +26,7 @@ namespace PetFamily.Domain.Volunteers
             return new Position(position);
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
         {
             yield return Value;
         }
