@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared;
 
 
-namespace PetFamily.Domain.Volunteer
+namespace PetFamily.Domain.Volunteers
 {
     public class Pet : SoftDeleteableEntity<PetId>
     {
@@ -22,7 +22,9 @@ namespace PetFamily.Domain.Volunteer
 
         public PetName Name { get; private set; }
 
-        public PetType PetType {  get; private set; }         
+        public PetType PetType {  get; private set; }
+        
+        public Position Position { get; private set; }
 
         public Description Description { get; private set; }
 
@@ -41,5 +43,12 @@ namespace PetFamily.Domain.Volunteer
         public DateTime CreatedAt { get; private set; }
 
         public RequisitesList? RequisitesList { get; private set; }
+
+        public UnitResult<Error> SetPosition(Position position)
+        {
+            Position = position;
+
+            return UnitResult.Success<Error>();
+        }
     }
 }

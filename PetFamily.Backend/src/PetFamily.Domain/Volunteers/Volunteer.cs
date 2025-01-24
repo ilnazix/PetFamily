@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Volunteer
+namespace PetFamily.Domain.Volunteers
 {
     public class Volunteer : SoftDeleteableEntity<VolunteerId>
     {
@@ -53,6 +53,33 @@ namespace PetFamily.Domain.Volunteer
             Email = email;
             PhoneNumber = phoneNumber;
             WorkExperienceInYears = experience;
+        }
+
+        public UnitResult<Error> AddPet(Pet pet)
+        {
+            var positionResult = Position.Create(_pets.Count + 1);
+
+            if (positionResult.IsFailure)
+            {
+                return positionResult.Error;
+            }
+
+            pet.SetPosition(positionResult.Value);
+            _pets.Add(pet);
+
+            return UnitResult.Success<Error>();
+        }
+
+        public Result<Pet, Error> GetPetById(PetId petId)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            
+            if(pet is null)
+            {
+                return Errors.General.NotFound(petId.Value);
+            }
+
+            return pet;
         }
 
         public override void Delete()

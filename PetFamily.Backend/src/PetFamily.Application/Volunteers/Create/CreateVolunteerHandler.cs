@@ -2,7 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
-using PetFamily.Domain.Volunteer;
+using PetFamily.Domain.Volunteers;
 
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer

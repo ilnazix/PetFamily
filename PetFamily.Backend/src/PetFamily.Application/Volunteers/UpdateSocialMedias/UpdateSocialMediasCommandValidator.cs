@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using PetFamily.Application.Validation;
-using PetFamily.Domain.Volunteer;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialMedias
 {

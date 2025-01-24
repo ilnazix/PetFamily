@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Species;
-using PetFamily.Domain.Volunteer;
+using PetFamily.Domain.Volunteers;
 using EFCore.NamingConventions;
 
 namespace PetFamily.Infrastructure
