@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Volunteer;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialMedias
 {
@@ -37,7 +37,7 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedias
 
             var guid = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Volunteer's (id={id}) social medias list updated", guid.Value);
+            _logger.LogInformation("Volunteers's (id={id}) social medias list updated", guid.Value);
 
             return guid;
         }

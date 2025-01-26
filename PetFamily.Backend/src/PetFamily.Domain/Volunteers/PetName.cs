@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Volunteer
+namespace PetFamily.Domain.Volunteers
 {
     public class PetName : ValueObject
     {

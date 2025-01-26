@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared;
 using System.Dynamic;
 
-namespace PetFamily.Domain.Volunteer
+namespace PetFamily.Domain.Volunteers
 {
     public class Address : ComparableValueObject
     {

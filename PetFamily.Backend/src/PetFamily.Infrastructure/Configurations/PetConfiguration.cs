@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
-using PetFamily.Domain.Volunteer;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Infrastructure.Configurations
 {
@@ -34,8 +34,10 @@ namespace PetFamily.Infrastructure.Configurations
                     .HasColumnName("breeed_id");
             });
 
-            builder
-                .Property(p => p.Status)
+            builder.Property(p => p.Position)
+                .HasConversion(p => p.Value, value => Position.Create(value).Value);
+
+            builder.Property(p => p.Status)
                 .HasConversion(status => status.Value, value => PetStatus.Create(value).Value);
 
             builder.Property(p => p.Description)

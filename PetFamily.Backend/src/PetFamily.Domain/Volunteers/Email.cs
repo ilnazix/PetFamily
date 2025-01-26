@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared;
 using System.Text.RegularExpressions;
 
-namespace PetFamily.Domain.Volunteer
+namespace PetFamily.Domain.Volunteers
 {
     public class Email : ComparableValueObject
     {

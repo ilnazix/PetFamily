@@ -11,7 +11,7 @@ namespace PetFamily.Domain.Species
 
         public Guid Value { get; }
 
-        public static SpeciesId NewSpeciesId => new SpeciesId(Guid.NewGuid());
+        public static SpeciesId NewSpeciesId() => new SpeciesId(Guid.NewGuid());
         public static SpeciesId Empty => new SpeciesId(Guid.Empty);
         public static SpeciesId Create(Guid value) => new SpeciesId(value);
 

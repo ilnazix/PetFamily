@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Volunteer;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.UpdateRequisites
 {
@@ -40,7 +40,7 @@ namespace PetFamily.Application.Volunteers.UpdateRequisites
 
             var guid = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Volunteer's (id={id}) social medias list updated", guid.Value);
+            _logger.LogInformation("Volunteers's (id={id}) social medias list updated", guid.Value);
 
             return guid;
         }

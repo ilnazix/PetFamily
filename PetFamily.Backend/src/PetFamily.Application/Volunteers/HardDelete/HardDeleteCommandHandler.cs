@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Volunteer;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.HardDelete
 {
@@ -32,7 +32,7 @@ namespace PetFamily.Application.Volunteers.HardDelete
 
             await _volunteersRepository.Delete(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Volunteer with id={id} permanently deleted", id.Value);
+            _logger.LogInformation("Volunteers with id={id} permanently deleted", id.Value);
 
             return id.Value;
         }
