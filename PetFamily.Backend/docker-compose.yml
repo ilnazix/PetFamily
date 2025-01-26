@@ -20,9 +20,20 @@ services:
     ports:
       - 5341:5341
       - 8081:80
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    ports: 
+      - 9000:9000
+      - 9001:9001
+    command: server --console-address ":9001" /data
+    volumes: 
+      - minio-data:/data
 
 
 volumes:
     postgres-data:
+    minio-data:
 
   
