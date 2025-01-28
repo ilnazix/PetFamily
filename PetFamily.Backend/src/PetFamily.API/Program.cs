@@ -29,7 +29,7 @@ builder.Services.Configure<VolunteerEntityOptions>(builder.Configuration.GetSect
 
 builder.Services
     .AddApplication()
-    .AddInfrastructure();
+    .AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
