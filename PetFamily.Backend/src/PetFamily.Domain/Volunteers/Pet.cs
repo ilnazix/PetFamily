@@ -76,5 +76,12 @@ namespace PetFamily.Domain.Volunteers
 
             return UnitResult.Success<Error>();
         }
+
+        public UnitResult<Error> SetPhotos(IEnumerable<Photo> photos)
+        {
+            Photos = photos.ToList();
+
+            return UnitResult.Success<Error>();
+        }
     }
 }

@@ -183,5 +183,19 @@ namespace PetFamily.Domain.Volunteers
                 && DateTime.UtcNow > pet.DeletedAt.Value
                     .Add(lifetimeSpan));
         }
+
+        public UnitResult<Error> SetPetPhotos(PetId petId, IEnumerable<Photo> photos)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+
+            if(pet == null)
+            {
+                return Errors.General.NotFound(petId.Value);
+            }
+
+            pet.SetPhotos(photos);
+
+            return UnitResult.Success<Error>();
+        }
     }
 }
