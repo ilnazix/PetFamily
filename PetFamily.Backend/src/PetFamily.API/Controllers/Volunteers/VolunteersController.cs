@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
@@ -21,7 +20,6 @@ namespace PetFamily.API.Controllers.Volunteers
         public async Task<ActionResult<Envelope>> Create(
             [FromServices] CreateVolunteerHandler handler,
             [FromBody] CreateVolunteerRequest request,
-            [FromServices] IValidator<CreateVolunteerCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new CreateVolunteerCommand(
@@ -34,7 +32,7 @@ namespace PetFamily.API.Controllers.Volunteers
                 Requisites: request.Requisites.Select(r => new RequisitesDto(r.Title, r.Description))
             );
 
-            var result = await handler.Handle(command, validator, cancellationToken);
+            var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
             {
@@ -49,17 +47,9 @@ namespace PetFamily.API.Controllers.Volunteers
             [FromRoute] Guid id,
             [FromBody] UpdateMainInfoDto dto,
             [FromServices] UpdateMainInfoHandler handler,
-            [FromServices] IValidator<UpdateMainInfoCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new UpdateMainInfoCommand(id, dto);
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-
-            if (validationResult.IsValid == false)
-            {
-                return validationResult.ToResponse();
-            }
-
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
@@ -75,17 +65,10 @@ namespace PetFamily.API.Controllers.Volunteers
             [FromRoute] Guid id,
             [FromBody] UpdateSocialMediaDto dto,
             [FromServices] UpdateSocialMediasCommandHandler handler,
-            [FromServices] IValidator<UpdateSocialMediasCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new UpdateSocialMediasCommand(id, dto);
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-
-            if (validationResult.IsValid == false)
-            {
-                return validationResult.ToResponse();
-            }
-
+            
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
@@ -101,16 +84,9 @@ namespace PetFamily.API.Controllers.Volunteers
             [FromRoute] Guid id,
             [FromBody] UpdateRequisitesDto dto,
             [FromServices] UpdateRequisitesCommandHandler handler,
-            [FromServices] IValidator<UpdateRequisitesCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new UpdateRequisitesCommand(id, dto);
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-
-            if (validationResult.IsValid == false)
-            {
-                return validationResult.ToResponse();
-            }
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -126,16 +102,9 @@ namespace PetFamily.API.Controllers.Volunteers
         public async Task<ActionResult<Envelope>> SoftDelete(
             [FromRoute] Guid id,
             [FromServices] SoftDeleteCommandHandler handler,
-            [FromServices] IValidator<SoftDeleteCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new SoftDeleteCommand(id);
-            var validationResult = await validator.ValidateAsync(command);
-
-            if (validationResult.IsValid == false)
-            {
-                return validationResult.ToResponse();
-            }
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -151,17 +120,10 @@ namespace PetFamily.API.Controllers.Volunteers
         public async Task<ActionResult<Envelope>> HardDelete(
             [FromRoute] Guid id,
             [FromServices] HardDeleteCommandHandler handler,
-            [FromServices] IValidator<HardDeleteCommand> validator,
             CancellationToken cancellationToken)
         {
             var command = new HardDeleteCommand(id);
-            var validationResult = await validator.ValidateAsync(command);
-
-            if (validationResult.IsValid == false)
-            {
-                return validationResult.ToResponse();
-            }
-
+           
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
@@ -176,17 +138,10 @@ namespace PetFamily.API.Controllers.Volunteers
         public async Task<ActionResult<Envelope>> Restore(
             [FromRoute] Guid id,
             [FromServices] RestoreVolunteerCommandHandler handler,
-            [FromServices] IValidator<RestoreVolunteerCommand> validator, 
             CancellationToken cancellationToken)
         {
             var command = new RestoreVolunteerCommand(id);
-            var validationResult = await validator.ValidateAsync(command);
             
-            if(validationResult.IsValid == false)
-            {
-                return validationResult.ToResponse();
-            }
-
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
@@ -196,5 +151,21 @@ namespace PetFamily.API.Controllers.Volunteers
 
             return Ok(result.Value);
         }
+
+       /* [HttpPost("{id:guid}")]
+        public async Task<ActionResult<Envelope>> AddPet(
+            [FromRoute] Guid id,
+            [FromBody] AddPetRequest request,
+            [FromServices] AddPetCommandHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = request.ToCommand(id);
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure) {
+                return result.Error.ToResponse();
+            }
+        }*/
     }
 }
