@@ -7,7 +7,7 @@
             public static Error ValueIsInvalid(string? name = null)
             {
                 var label = name ?? "value";
-                return Error.Validation("value.is.invalid", $"{label} is invalid");
+                return Error.Validation("value.is.invalid", $"{label} is invalid", name);
             }
             
             public static Error NotFound(Guid? id = null)
@@ -19,7 +19,7 @@
             public static Error ValueIsRequired(string? name = null)
             {
                 var label = name == null ? " " : " " + name + " ";
-                return Error.Validation("length.is.invalid", $"invalid{label}length");
+                return Error.Validation("length.is.invalid", $"invalid{label}length", name);
             }
         }
     }
