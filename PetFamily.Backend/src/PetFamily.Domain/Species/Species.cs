@@ -26,5 +26,17 @@ namespace PetFamily.Domain.Species
 
             return new Species(speciesTitle);
         }
+
+        public Result<Breed, Error> GetBreedById(BreedId id)
+        {
+            var breed = _breeds.FirstOrDefault(b => b.Id == id);
+
+            if(breed is null)
+            {
+                return Errors.General.NotFound(id.Value);   
+            }
+
+            return breed;
+        }
     }
 }
