@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Providers;
+using PetFamily.Application.Species;
 using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.Options;
@@ -19,6 +20,7 @@ namespace PetFamily.Infrastructure
             services.AddScoped<DeleteExpiredVolunteersService>();
             services.AddScoped<IVolunteersRepository, VolunteersRepository>();
             services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
+            services.AddScoped<ISpeciesRepository, SpeciesRepository>();
             
             services.AddMinio(configuration);
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.API.Controllers.Volunteers.AddPet;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
+using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.HardDelete;
 using PetFamily.Application.Volunteers.Restore;
@@ -152,7 +154,7 @@ namespace PetFamily.API.Controllers.Volunteers
             return Ok(result.Value);
         }
 
-       /* [HttpPost("{id:guid}")]
+        [HttpPost("{id:guid}/pets")]
         public async Task<ActionResult<Envelope>> AddPet(
             [FromRoute] Guid id,
             [FromBody] AddPetRequest request,
@@ -160,12 +162,13 @@ namespace PetFamily.API.Controllers.Volunteers
             CancellationToken cancellationToken)
         {
             var command = request.ToCommand(id);
-
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure) {
                 return result.Error.ToResponse();
             }
-        }*/
+
+            return Ok(result.Value);
+        }
     }
 }
