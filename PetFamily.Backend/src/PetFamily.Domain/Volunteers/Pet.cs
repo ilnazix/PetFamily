@@ -42,7 +42,9 @@ namespace PetFamily.Domain.Volunteers
 
         public DateTime CreatedAt { get; private set; }
 
-        public RequisitesList? RequisitesList { get; private set; }
+        public ValueObjectList<Requisite> Requisites { get; private set; } = new List<Requisite>();
+
+        public ValueObjectList<Photo> Photos { get; private set; } = new List<Photo>();
 
         public UnitResult<Error> SetPosition(Position position)
         {
@@ -63,7 +65,7 @@ namespace PetFamily.Domain.Volunteers
             return UnitResult.Success<Error>();
         }
 
-        internal UnitResult<Error> MoveBack()
+        public UnitResult<Error> MoveBack()
         {
             var newPositionResult = Position.MoveBack();
 

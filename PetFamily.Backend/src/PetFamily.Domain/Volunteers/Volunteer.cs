@@ -24,9 +24,10 @@ namespace PetFamily.Domain.Volunteers
         public Description? Description { get; private set; }
         public Experience WorkExperienceInYears { get; set; } = Experience.Default();
         public PhoneNumber PhoneNumber { get; private set; }
-        public RequisitesList? Requisites { get; private set; }
+        public ValueObjectList<Requisite> Requisites { get; private set; } = new List<Requisite>();
+        public ValueObjectList<SocialMedia> SocialMedias { get; set; } = new List<SocialMedia>();
+
         public IReadOnlyList<Pet> Pets => _pets;
-        public SocialMediaList? SocialMediaList { get; private set; }
 
         public int PetsFoundHomeCount => _pets.Where(p => p.Status == PetStatus.FoundHome).Count();
         public int HomelessPetsCount => _pets.Where(p => p.Status == PetStatus.SearchingForHome).Count();
@@ -34,11 +35,11 @@ namespace PetFamily.Domain.Volunteers
 
         public void UpdateSocialMedias(IEnumerable<SocialMedia> newSocialMedias)
         {
-            SocialMediaList = new SocialMediaList(newSocialMedias.ToList());
+            SocialMedias = newSocialMedias.ToList();
         }
         public void UpdateRequisites(IEnumerable<Requisite> newRequiesites)
         {
-            Requisites = new RequisitesList(newRequiesites.ToList());
+            Requisites = newRequiesites.ToList();
         }
 
         public void UpdateMainInfo(
