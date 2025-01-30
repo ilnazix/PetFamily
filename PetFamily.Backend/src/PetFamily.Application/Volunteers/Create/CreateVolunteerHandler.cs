@@ -2,6 +2,8 @@
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
 
@@ -10,24 +12,28 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
     public class CreateVolunteerHandler
     {
         private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IValidator<CreateVolunteerCommand> _validator;
         private readonly ILogger<CreateVolunteerHandler> _logger;
 
-        public CreateVolunteerHandler(IVolunteersRepository volunteersRepository, ILogger<CreateVolunteerHandler> logger)
+        public CreateVolunteerHandler(
+            IVolunteersRepository volunteersRepository,
+            IValidator<CreateVolunteerCommand> validator,
+            ILogger<CreateVolunteerHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
+            _validator = validator;
             _logger = logger;
         }
 
-        public async Task<Result<Guid, ValidationResult>> Handle(
+        public async Task<Result<Guid, ErrorList>> Handle(
             CreateVolunteerCommand command,
-            IValidator<CreateVolunteerCommand> validator,
             CancellationToken cancellationToken = default)
         {
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
-            if (!validationResult.IsValid)
+            if (validationResult.IsValid == false)
             {
-                return validationResult;
+                return validationResult.ToErrorList();
             }
 
 
@@ -44,12 +50,12 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             volunteer.UpdateSocialMedias(socialMedias);
 
 
-            var requiesites = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description).Value);
-            volunteer.UpdateRequisites(requiesites);
+            var requisites = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description).Value);
+            volunteer.UpdateRequisites(requisites);
 
             var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
 
-            _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {id})", 
+            _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {id})",
                 fullName.FirstName, fullName.LastName, fullName.MiddleName, volunteerGuid);
 
             return volunteerGuid;

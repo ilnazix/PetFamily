@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
@@ -10,27 +11,37 @@ namespace PetFamily.Application.Volunteers.UpdateRequisites
     public class UpdateRequisitesCommandHandler 
     {
         private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IValidator<UpdateRequisitesCommand> _validator;
         private readonly ILogger<UpdateRequisitesCommandHandler> _logger;
 
         public UpdateRequisitesCommandHandler(
             IVolunteersRepository volunteersRepository,
+            IValidator<UpdateRequisitesCommand> validator,
             ILogger<UpdateRequisitesCommandHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
+            _validator = validator;
             _logger = logger;
         }
 
 
-        public async Task<Result<Guid, Error>> Handle(
+        public async Task<Result<Guid, ErrorList>> Handle(
             UpdateRequisitesCommand command, 
             CancellationToken cancellationToken)
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+            if(validationResult.IsValid == false)
+            {
+                return validationResult.ToErrorList();
+            }
+
             var volunteerId = VolunteerId.Create(command.Id);
             var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancellationToken);
 
             if (volunteerResult.IsFailure)
             {
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
             }
 
             var requisitesDtos = command.Dto.Requisites;
@@ -42,7 +53,7 @@ namespace PetFamily.Application.Volunteers.UpdateRequisites
 
             _logger.LogInformation("Volunteers's (id={id}) social medias list updated", guid.Value);
 
-            return guid;
+            return guid.Value;
         }
     }
 }
