@@ -246,7 +246,7 @@ namespace PetFamily.Infrastructure.Migrations
                                         .ValueGeneratedOnAdd()
                                         .HasColumnType("integer");
 
-                                    b2.Property<string>("FileName")
+                                    b2.Property<string>("Path")
                                         .IsRequired()
                                         .HasColumnType("text");
 
