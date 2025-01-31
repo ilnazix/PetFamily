@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteers.AddPet;
 using PetFamily.API.Extensions;
+using PetFamily.API.Processors;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.AddPet;
+using PetFamily.Application.Volunteers.AddPetPhoto;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.HardDelete;
 using PetFamily.Application.Volunteers.Restore;
@@ -167,6 +169,27 @@ namespace PetFamily.API.Controllers.Volunteers
             if (result.IsFailure) {
                 return result.Error.ToResponse();
             }
+
+            return Ok(result.Value);
+        }
+
+        [HttpPost("{volunteerId:guid}/pets/{petId:guid}/photos")]
+        public async Task<ActionResult> AddPetPhoto(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromForm] IFormFileCollection files,
+            [FromServices] AddPetPhotoCommandHandler handler,
+            CancellationToken cancellationToken)
+        {
+            await using var formFileProcessor = new FormFileProcessor();
+            var fileCommands = formFileProcessor.Process(files);
+
+            var addPetPhotoCommand = new AddPetPhotoCommand(volunteerId, petId, fileCommands);
+
+            var result = await handler.Handle(addPetPhotoCommand, cancellationToken);
+
+            if (result.IsFailure)  
+                return result.Error.ToResponse();
 
             return Ok(result.Value);
         }
