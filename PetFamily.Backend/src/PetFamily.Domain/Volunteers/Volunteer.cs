@@ -112,51 +112,6 @@ namespace PetFamily.Domain.Volunteers
             return UnitResult.Success<Error>();
         }
 
-        private UnitResult<Error> MovePetsBetweenPositions(Position newPosition, Position currentPosition)
-        {
-            if (newPosition.Value < currentPosition.Value)
-            {
-                var petsToMove = _pets.Where(p => p.Position.Value >= newPosition.Value
-                    && p.Position.Value < currentPosition.Value);
-
-                foreach (var petToMove in petsToMove)
-                {
-                    var result = petToMove.MoveForward();
-
-                    if (result.IsFailure)
-                        return result.Error;
-                }
-            }
-            else if (newPosition.Value > currentPosition.Value)
-            {
-                var petsToMove = _pets.Where(p => p.Position.Value > currentPosition.Value
-                    && p.Position.Value <= newPosition.Value);
-
-                foreach (var petToMove in petsToMove)
-                {
-                    var result = petToMove.MoveBack();
-
-                    if (result.IsFailure)
-                        return result.Error;
-                }
-            }
-
-            return UnitResult.Success<Error>();
-        }
-
-        private Result<Position, Error> AdjustNewPositionIfOutOfRange(Position newPosition)
-        {
-            if(newPosition.Value <= _pets.Count)
-                return newPosition;
-
-            var lastPosition = Position.Create(_pets.Count);
-
-            if (lastPosition.IsFailure)
-                return lastPosition.Error;
-
-            return lastPosition.Value;
-        }
-
         public override void Delete()
         {
             base.Delete();
@@ -196,6 +151,51 @@ namespace PetFamily.Domain.Volunteers
             pet.SetPhotos(photos);
 
             return UnitResult.Success<Error>();
+        }
+
+        private UnitResult<Error> MovePetsBetweenPositions(Position newPosition, Position currentPosition)
+        {
+            if (newPosition.Value < currentPosition.Value)
+            {
+                var petsToMove = _pets.Where(p => p.Position.Value >= newPosition.Value
+                    && p.Position.Value < currentPosition.Value);
+
+                foreach (var petToMove in petsToMove)
+                {
+                    var result = petToMove.MoveForward();
+
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+            }
+            else if (newPosition.Value > currentPosition.Value)
+            {
+                var petsToMove = _pets.Where(p => p.Position.Value > currentPosition.Value
+                    && p.Position.Value <= newPosition.Value);
+
+                foreach (var petToMove in petsToMove)
+                {
+                    var result = petToMove.MoveBack();
+
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+            }
+
+            return UnitResult.Success<Error>();
+        }
+
+        private Result<Position, Error> AdjustNewPositionIfOutOfRange(Position newPosition)
+        {
+            if (newPosition.Value <= _pets.Count)
+                return newPosition;
+
+            var lastPosition = Position.Create(_pets.Count);
+
+            if (lastPosition.IsFailure)
+                return lastPosition.Error;
+
+            return lastPosition.Value;
         }
     }
 }
