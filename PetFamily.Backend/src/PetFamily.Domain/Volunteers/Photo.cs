@@ -5,7 +5,7 @@ namespace PetFamily.Domain.Volunteers
 {
     public class Photo : ValueObject
     {
-        public static readonly IReadOnlyList<string> ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".img"]; 
+        public static readonly IReadOnlyList<string> ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".img", ".png"]; 
 
         public string Path { get; }
         public string FileName { get; }
@@ -27,8 +27,8 @@ namespace PetFamily.Domain.Volunteers
             {
                 return Errors.General.ValueIsInvalid(nameof(fileName));
             }
-
-            var extension = System.IO.Path.GetExtension(fileName)?.ToLower();
+            
+            var extension = System.IO.Path.GetExtension(path)?.ToLower();
 
             if (string.IsNullOrEmpty(extension) || !ALLOWED_EXTENSIONS.Contains(extension))
             {
