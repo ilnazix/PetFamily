@@ -46,14 +46,14 @@ namespace PetFamily.Domain.Volunteers
 
         public ValueObjectList<Photo> Photos { get; private set; } = new List<Photo>();
 
-        public UnitResult<Error> SetPosition(Position position)
+        internal UnitResult<Error> SetPosition(Position position)
         {
             Position = position;
 
             return UnitResult.Success<Error>();
         }
 
-        public UnitResult<Error> MoveForward()
+        internal UnitResult<Error> MoveForward()
         {
             var newPositionResult = Position.MoveForward();
 
@@ -65,7 +65,7 @@ namespace PetFamily.Domain.Volunteers
             return UnitResult.Success<Error>();
         }
 
-        public UnitResult<Error> MoveBack()
+        internal UnitResult<Error> MoveBack()
         {
             var newPositionResult = Position.MoveBack();
 
@@ -77,7 +77,7 @@ namespace PetFamily.Domain.Volunteers
             return UnitResult.Success<Error>();
         }
 
-        public UnitResult<Error> SetPhotos(IEnumerable<Photo> photos)
+        internal UnitResult<Error> SetPhotos(IEnumerable<Photo> photos)
         {
             Photos = photos.ToList();
 
