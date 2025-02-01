@@ -26,7 +26,7 @@ namespace PetFamily.API.Controllers
         {
             await using var stream = file.OpenReadStream();
 
-            var result = await _fileProvider.UploadFile(stream, BUCKET_NAME, file.FileName, cancellationToken);
+            var result = await _fileProvider.UploadFile(new FileData(BUCKET_NAME, file.FileName, stream), cancellationToken);
 
             if (result.IsFailure)
             {

@@ -76,11 +76,11 @@ namespace PetFamily.Infrastructure.Configurations
             builder.Property(p => p.DateOfBirth);
             builder.Property(p => p.CreatedAt);
 
-            builder.OwnsOne(p => p.RequisitesList, rlb =>
+            builder.OwnsOne(p => p.Requisites, rlb =>
             {
                 rlb.ToJson();
 
-                rlb.OwnsMany(v => v.Requisites, rb =>
+                rlb.OwnsMany(v => v.Values, rb =>
                 {
                     rb.Property(r => r.Title)
                         .IsRequired()
@@ -89,6 +89,17 @@ namespace PetFamily.Infrastructure.Configurations
                     rb.Property(r => r.Description)
                         .IsRequired()
                         .HasMaxLength(Requisite.REQUISITE_DESCRIPTION_MAX_LENGTH);
+                });
+            });
+
+            builder.OwnsOne(pet => pet.Photos, pb =>
+            {
+                pb.ToJson();
+
+                pb.OwnsMany(ph => ph.Values, phb =>
+                {
+                    phb.Property(ph => ph.Path).IsRequired();
+                    phb.Property(ph => ph.FileName).IsRequired();
                 });
             });
         }

@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using PetFamily.Domain.Shared;
+using System.Xml.Linq;
 
 namespace PetFamily.Application.Validation
 {
@@ -21,6 +22,13 @@ namespace PetFamily.Application.Validation
 
                 context.AddFailure(result.Error.Serialize());
             });
+        }
+
+        public static IRuleBuilderOptions<T, TElement> WithError<T, TElement>(
+            this IRuleBuilderOptions<T, TElement> ruleBuilder, 
+            Error error)
+        {
+            return ruleBuilder.WithMessage(error.Serialize());
         }
     }
 }

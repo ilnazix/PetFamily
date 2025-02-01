@@ -63,7 +63,7 @@ namespace PetFamily.Infrastructure.Configurations
                 {
                     rlb.ToJson();
 
-                    rlb.OwnsMany(v => v.Requisites, rb =>
+                    rlb.OwnsMany(v => v.Values, rb =>
                     {
                         rb.Property(r => r.Title)
                             .IsRequired()
@@ -76,11 +76,11 @@ namespace PetFamily.Infrastructure.Configurations
                 });
 
             builder
-                .OwnsOne(v => v.SocialMediaList, smb =>
+                .OwnsOne(v => v.SocialMedias, smb =>
                 {
                     smb.ToJson();
 
-                    smb.OwnsMany(v => v.SocialMedias, sb =>
+                    smb.OwnsMany(v => v.Values, sb =>
                     {
                         sb.Property(s => s.Link)
                             .IsRequired()

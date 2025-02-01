@@ -3,7 +3,7 @@ using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Domain.Tests
+namespace PetFamily.Domain.UnitTests
 {
     public class VolunteersTests
     {
