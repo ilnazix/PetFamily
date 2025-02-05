@@ -2,6 +2,7 @@
 using PetFamily.API.Controllers.Volunteers.AddPet;
 using PetFamily.API.Controllers.Volunteers.ChangePetPosition;
 using PetFamily.API.Controllers.Volunteers.UpdateMainInfo;
+using PetFamily.API.Controllers.Volunteers.UpdateRequisites;
 using PetFamily.API.Controllers.Volunteers.UpdateSocialMedias;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
@@ -81,11 +82,11 @@ namespace PetFamily.API.Controllers.Volunteers
         [HttpPut("{id:guid}/requisites")]
         public async Task<ActionResult<Envelope>> UpdateRequisitesList(
             [FromRoute] Guid id,
-            [FromBody] UpdateRequisitesDto dto,
+            [FromBody] UpdateRequisitesRequest request,
             [FromServices] UpdateRequisitesCommandHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateRequisitesCommand(id, dto);
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -190,7 +191,7 @@ namespace PetFamily.API.Controllers.Volunteers
         }
 
         [HttpPatch("{volunteerId:guid}/pets/{petId:guid}")]
-        public async Task<ActionResult> ChangepetPosition(
+        public async Task<ActionResult> ChangePetPosition(
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
             [FromBody] ChangePetPositionRequest request,

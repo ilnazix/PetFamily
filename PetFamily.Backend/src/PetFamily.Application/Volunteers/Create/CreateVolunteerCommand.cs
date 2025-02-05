@@ -8,6 +8,6 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
         string PhoneNumber,
         string Email,
         IEnumerable<SocialMediaInfo> SocialMedias,
-        IEnumerable<RequisitesDto> Requisites
+        IEnumerable<RequisitesInfo> Requisites
         );
 }

@@ -18,7 +18,7 @@ namespace PetFamily.API.Controllers.Volunteers
             string phoneNumber,
             string email,
             IEnumerable<SocialMediaInfo> socialMedias,
-            IEnumerable<RequisitesDto> requisites
+            IEnumerable<RequisitesInfo> requisites
         )
         {
             FirstName = firstName;
@@ -31,7 +31,7 @@ namespace PetFamily.API.Controllers.Volunteers
         }
 
         public IEnumerable<SocialMediaInfo> SocialMedias { get; }
-        public IEnumerable<RequisitesDto> Requisites { get; }
+        public IEnumerable<RequisitesInfo> Requisites { get; }
 
         public CreateVolunteerCommand ToCommand()
         {
@@ -41,7 +41,7 @@ namespace PetFamily.API.Controllers.Volunteers
                 PhoneNumber: PhoneNumber,
                 Email: Email,
                 SocialMedias: SocialMedias.Select(sm => new SocialMediaInfo(sm.Link, sm.Title)),
-                Requisites: Requisites.Select(r => new RequisitesDto(r.Title, r.Description))
+                Requisites: Requisites.Select(r => new RequisitesInfo(r.Title, r.Description))
             );
 
             return command;
