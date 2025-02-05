@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Species;
 using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.BackgroundServices;
+using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
 using PetFamily.Infrastructure.Repositories;
@@ -19,9 +21,12 @@ namespace PetFamily.Infrastructure
             services.AddDbContext<ApplicationDbContext>();
             services.AddScoped<DeleteExpiredVolunteersService>();
             services.AddScoped<IVolunteersRepository, VolunteersRepository>();
-            services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
-            
+            services.AddSingleton<IMessageQueue<IEnumerable<FileMetadata>>, InMemoryMessageQueue<IEnumerable<FileMetadata>>>();
+
+            services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
+            services.AddHostedService<FilesCleanerBackgroundService>();
+
             services.AddMinio(configuration);
 
             return services;

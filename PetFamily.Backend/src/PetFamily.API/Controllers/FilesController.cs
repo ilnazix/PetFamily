@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.FileProviders;
-using Minio.DataModel.Args;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Providers;
+using FileInfo = PetFamily.Application.Providers.FileMetadata;
 
 namespace PetFamily.API.Controllers
 {
@@ -26,7 +24,8 @@ namespace PetFamily.API.Controllers
         {
             await using var stream = file.OpenReadStream();
 
-            var result = await _fileProvider.UploadFile(new FileData(BUCKET_NAME, file.FileName, stream), cancellationToken);
+            var fileInfo = new FileInfo(BUCKET_NAME, file.FileName);
+            var result = await _fileProvider.UploadFile(new FileData(fileInfo, stream), cancellationToken);
 
             if (result.IsFailure)
             {
@@ -52,7 +51,8 @@ namespace PetFamily.API.Controllers
         [HttpDelete("{fileName}")]
         public async Task<ActionResult> DeleteFile([FromRoute] string fileName, CancellationToken cancellationToken)
         {
-            var result = await _fileProvider.DeleteFile(BUCKET_NAME, fileName, cancellationToken);
+            var fileMetadata = new FileMetadata(BUCKET_NAME, fileName);
+            var result = await _fileProvider.DeleteFile(fileMetadata, cancellationToken);
 
             if (result.IsFailure)
             {
