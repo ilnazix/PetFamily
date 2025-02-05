@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteers.AddPet;
 using PetFamily.API.Controllers.Volunteers.ChangePetPosition;
+using PetFamily.API.Controllers.Volunteers.UpdateMainInfo;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.API.Response;
@@ -42,11 +43,11 @@ namespace PetFamily.API.Controllers.Volunteers
         [HttpPut("{id:guid}/main-info")]
         public async Task<ActionResult<Envelope>> UpdateMainInfo(
             [FromRoute] Guid id,
-            [FromBody] UpdateMainInfoDto dto,
+            [FromBody] UpdateMainInfoRequest request,
             [FromServices] UpdateMainInfoHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateMainInfoCommand(id, dto);
+            var command = request.ToCommand(id);
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)

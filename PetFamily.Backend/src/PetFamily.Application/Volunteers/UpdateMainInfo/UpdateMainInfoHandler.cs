@@ -41,13 +41,13 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
                 return volunteerResult.Error.ToErrorList();
             }
 
-            var (firstName, lastName, middleName) = command.Dto.FullName;
+            var (firstName, lastName, middleName) = command.FullName;
             var fullName = FullName.Create(firstName, lastName, middleName).Value;
 
-            var description = Description.Create(command.Dto.Description).Value;
-            var phoneNumber = PhoneNumber.Create(command.Dto.PhoneNumber).Value;
-            var email = Email.Create(command.Dto.Email).Value;
-            var experience = Experience.Create(command.Dto.Experience).Value;
+            var description = Description.Create(command.Description).Value;
+            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+            var email = Email.Create(command.Email).Value;
+            var experience = Experience.Create(command.Experience).Value;
 
             volunteerResult.Value.UpdateMainInfo(fullName, description, email, phoneNumber, experience);
 
