@@ -42,7 +42,7 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedias
                 return volunteerResult.Error.ToErrorList();
             }
 
-            var socialMediaDtos = command.Dto.SocialMedias;
+            var socialMediaDtos = command.SocialMedias;
             var socialMedias = socialMediaDtos.Select(sm => SocialMedia.Create(sm.Link, sm.Title).Value).ToList();
 
             volunteerResult.Value.UpdateSocialMedias(socialMedias);

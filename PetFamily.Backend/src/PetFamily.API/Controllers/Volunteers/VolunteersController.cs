@@ -2,6 +2,7 @@
 using PetFamily.API.Controllers.Volunteers.AddPet;
 using PetFamily.API.Controllers.Volunteers.ChangePetPosition;
 using PetFamily.API.Controllers.Volunteers.UpdateMainInfo;
+using PetFamily.API.Controllers.Volunteers.UpdateSocialMedias;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.API.Response;
@@ -61,11 +62,11 @@ namespace PetFamily.API.Controllers.Volunteers
         [HttpPut("{id:guid}/social-medias")]
         public async Task<ActionResult<Envelope>> UpdateSocialMediasList(
             [FromRoute] Guid id,
-            [FromBody] UpdateSocialMediaDto dto,
+            [FromBody] UpdateSocialMediasRequest request,
             [FromServices] UpdateSocialMediasCommandHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateSocialMediasCommand(id, dto);
+            var command = request.ToCommand(id);
             
             var result = await handler.Handle(command, cancellationToken);
 

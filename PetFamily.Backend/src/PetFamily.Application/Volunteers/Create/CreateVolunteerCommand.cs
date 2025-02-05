@@ -7,7 +7,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
         FullNameDto FullName,
         string PhoneNumber,
         string Email,
-        IEnumerable<SocialMediaDto> SocialMedias,
+        IEnumerable<SocialMediaInfo> SocialMedias,
         IEnumerable<RequisitesDto> Requisites
         );
 }
