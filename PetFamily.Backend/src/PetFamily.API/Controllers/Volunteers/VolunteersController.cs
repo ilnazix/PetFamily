@@ -28,16 +28,7 @@ namespace PetFamily.API.Controllers.Volunteers
             [FromBody] CreateVolunteerRequest request,
             CancellationToken cancellationToken)
         {
-            var command = new CreateVolunteerCommand(
-                FirstName: request.FirstName,
-                LastName: request.LastName,
-                MiddleName: request.MiddleName,
-                PhoneNumber: request.PhoneNumber,
-                Email: request.Email,
-                SocialMedias: request.SocialMedias.Select(sm => new SocialMediaDto(sm.Link, sm.Title)),
-                Requisites: request.Requisites.Select(r => new RequisitesDto(r.Title, r.Description))
-            );
-
+            var command = request.ToCommand();
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)

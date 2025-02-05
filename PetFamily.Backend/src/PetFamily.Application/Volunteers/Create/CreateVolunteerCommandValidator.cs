@@ -12,7 +12,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
             RuleFor(c => c.PhoneNumber).MustBeValueObject(PhoneNumber.Create);
 
-            RuleFor(c => new { c.FirstName, c.LastName, c.MiddleName })
+            RuleFor(c => c.FullName)
                 .MustBeValueObject(c => FullName.Create(c.FirstName, c.LastName, c.MiddleName));
 
             RuleForEach(c => c.SocialMedias)
