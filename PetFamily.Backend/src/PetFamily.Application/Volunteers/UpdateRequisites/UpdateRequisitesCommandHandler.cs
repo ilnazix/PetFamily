@@ -44,7 +44,7 @@ namespace PetFamily.Application.Volunteers.UpdateRequisites
                 return volunteerResult.Error.ToErrorList();
             }
 
-            var requisitesDtos = command.Dto.Requisites;
+            var requisitesDtos = command.Requisites;
             var requisites = requisitesDtos.Select(r => Requisite.Create(r.Title, r.Description).Value).ToList();
             
             volunteerResult.Value.UpdateRequisites(requisites);

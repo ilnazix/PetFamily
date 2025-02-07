@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
@@ -15,17 +16,20 @@ namespace PetFamily.Application.Volunteers.AddPetPhoto
         private readonly IVolunteersRepository _volunteersRepository;
         private readonly IFilesProvider _fileProvider;
         private readonly IValidator<AddPetPhotoCommand> _validator;
+        private readonly IMessageQueue<IEnumerable<FileMetadata>> _messageQueue;
         private readonly ILogger<AddPetPhotoCommandHandler> _logger;
 
         public AddPetPhotoCommandHandler(
             IVolunteersRepository volunteersRepository, 
             IFilesProvider fileProvider, 
             IValidator<AddPetPhotoCommand> validator,
+            IMessageQueue<IEnumerable<FileMetadata>> messageQueue,
             ILogger<AddPetPhotoCommandHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
             _fileProvider = fileProvider;
             _validator = validator;
+            _messageQueue = messageQueue;
             _logger = logger;
         }
 
@@ -57,7 +61,8 @@ namespace PetFamily.Application.Volunteers.AddPetPhoto
                 if (photoResult.IsFailure)
                     return photoResult.Error.ToErrorList();
 
-                var fileData = new FileData(BUCKET_NAME, path, file.Content);
+                var fileMetadata = new FileMetadata(BUCKET_NAME, path);
+                var fileData = new FileData(fileMetadata, file.Content);
 
                 photos.Add(photoResult.Value);
                 fileDatas.Add(fileData);
@@ -65,8 +70,10 @@ namespace PetFamily.Application.Volunteers.AddPetPhoto
 
             var pathsResult = await _fileProvider.UploadFiles(fileDatas, cancellationToken);
 
-            if(pathsResult.IsFailure)
+            if (pathsResult.IsFailure) {
+                await _messageQueue.WriteAsync(fileDatas.Select(f => f.Info), cancellationToken);
                 return pathsResult.Error.ToErrorList(); 
+            }
 
             var result = volunteer.SetPetPhotos(petId, photos);
 

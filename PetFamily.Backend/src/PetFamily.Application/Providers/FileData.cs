@@ -2,15 +2,25 @@
 {
     public class FileData
     {
-        public FileData(string bucketName, string path, Stream content)
+        public FileData(FileMetadata fileInfo, Stream content)
         {
-            BucketName = bucketName;
-            Path = path;
+            Info = fileInfo;
             Content = content;
         }
 
-        public string BucketName { get; set; } = string.Empty;
-        public string Path { get; set; } = string.Empty;
-        public Stream Content { get; set; } = null!;
+        public FileMetadata Info { get; init; }
+        public Stream Content { get; init; } = null!;
+    }
+
+    public class FileMetadata
+    {
+        public FileMetadata(string bucketName, string path)
+        {
+            BucketName = bucketName;
+            Path = path;
+        }
+
+        public string BucketName { get; init; }
+        public string Path { get; init; }
     }
 }

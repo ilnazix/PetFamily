@@ -9,7 +9,7 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedias
         public UpdateSocialMediasCommandValidator()
         {
             RuleFor(c => c.VolunteerId).NotEmpty();
-            RuleForEach(c => c.Dto.SocialMedias).MustBeValueObject(smq => SocialMedia.Create(smq.Link, smq.Title));
+            RuleForEach(c => c.SocialMedias).MustBeValueObject(smq => SocialMedia.Create(smq.Link, smq.Title));
         }
     }
 }

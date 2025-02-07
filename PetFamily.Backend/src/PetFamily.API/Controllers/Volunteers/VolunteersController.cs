@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteers.AddPet;
 using PetFamily.API.Controllers.Volunteers.ChangePetPosition;
+using PetFamily.API.Controllers.Volunteers.UpdateMainInfo;
+using PetFamily.API.Controllers.Volunteers.UpdateRequisites;
+using PetFamily.API.Controllers.Volunteers.UpdateSocialMedias;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.API.Response;
@@ -28,16 +31,7 @@ namespace PetFamily.API.Controllers.Volunteers
             [FromBody] CreateVolunteerRequest request,
             CancellationToken cancellationToken)
         {
-            var command = new CreateVolunteerCommand(
-                FirstName: request.FirstName,
-                LastName: request.LastName,
-                MiddleName: request.MiddleName,
-                PhoneNumber: request.PhoneNumber,
-                Email: request.Email,
-                SocialMedias: request.SocialMedias.Select(sm => new SocialMediaDto(sm.Link, sm.Title)),
-                Requisites: request.Requisites.Select(r => new RequisitesDto(r.Title, r.Description))
-            );
-
+            var command = request.ToCommand();
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
@@ -51,11 +45,11 @@ namespace PetFamily.API.Controllers.Volunteers
         [HttpPut("{id:guid}/main-info")]
         public async Task<ActionResult<Envelope>> UpdateMainInfo(
             [FromRoute] Guid id,
-            [FromBody] UpdateMainInfoDto dto,
+            [FromBody] UpdateMainInfoRequest request,
             [FromServices] UpdateMainInfoHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateMainInfoCommand(id, dto);
+            var command = request.ToCommand(id);
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
@@ -69,11 +63,11 @@ namespace PetFamily.API.Controllers.Volunteers
         [HttpPut("{id:guid}/social-medias")]
         public async Task<ActionResult<Envelope>> UpdateSocialMediasList(
             [FromRoute] Guid id,
-            [FromBody] UpdateSocialMediaDto dto,
+            [FromBody] UpdateSocialMediasRequest request,
             [FromServices] UpdateSocialMediasCommandHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateSocialMediasCommand(id, dto);
+            var command = request.ToCommand(id);
             
             var result = await handler.Handle(command, cancellationToken);
 
@@ -88,11 +82,11 @@ namespace PetFamily.API.Controllers.Volunteers
         [HttpPut("{id:guid}/requisites")]
         public async Task<ActionResult<Envelope>> UpdateRequisitesList(
             [FromRoute] Guid id,
-            [FromBody] UpdateRequisitesDto dto,
+            [FromBody] UpdateRequisitesRequest request,
             [FromServices] UpdateRequisitesCommandHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateRequisitesCommand(id, dto);
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -197,7 +191,7 @@ namespace PetFamily.API.Controllers.Volunteers
         }
 
         [HttpPatch("{volunteerId:guid}/pets/{petId:guid}")]
-        public async Task<ActionResult> ChangepetPosition(
+        public async Task<ActionResult> ChangePetPosition(
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
             [FromBody] ChangePetPositionRequest request,

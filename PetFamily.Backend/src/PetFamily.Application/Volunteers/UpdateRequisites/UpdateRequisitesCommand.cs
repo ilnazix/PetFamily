@@ -2,7 +2,5 @@
 
 namespace PetFamily.Application.Volunteers.UpdateRequisites
 {
-    public record UpdateRequisitesCommand(Guid Id, UpdateRequisitesDto Dto);
-
-    public record UpdateRequisitesDto(RequisitesDto[] Requisites);
+    public record UpdateRequisitesCommand(Guid Id, IEnumerable<RequisitesInfo> Requisites);
 }

@@ -10,7 +10,7 @@ namespace PetFamily.Application.Volunteers.UpdateRequisites
         {
             RuleFor(c => c.Id).NotEmpty();
 
-            RuleForEach(c => c.Dto.Requisites).MustBeValueObject(r => Requisite.Create(r.Title, r.Description));
+            RuleForEach(c => c.Requisites).MustBeValueObject(r => Requisite.Create(r.Title, r.Description));
         }
     }
 }

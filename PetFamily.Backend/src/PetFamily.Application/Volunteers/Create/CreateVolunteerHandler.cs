@@ -38,7 +38,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
 
             var volunteerId = VolunteerId.NewVolunteerId();
-            var fullName = FullName.Create(command.FirstName, command.LastName, command.MiddleName).Value;
+            var fullName = FullName.Create(command.FullName.FirstName, command.FullName.LastName, command.FullName.MiddleName).Value;
             var email = Email.Create(command.Email).Value;
             var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
 
