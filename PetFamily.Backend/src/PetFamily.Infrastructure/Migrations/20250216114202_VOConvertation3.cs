@@ -5,7 +5,7 @@
 namespace PetFamily.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class ExperienceVO : Migration
+    public partial class VOConvertation3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
