@@ -1,7 +1,7 @@
 using PetFamily.API.Extensions;
 using PetFamily.API.Middlewares;
 using PetFamily.Application;
-using PetFamily.Application.Volunteers;
+using PetFamily.Application.Volunteers.Commands;
 using PetFamily.Infrastructure;
 using Serilog;
 using Serilog.Events;

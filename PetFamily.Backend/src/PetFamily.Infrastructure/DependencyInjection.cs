@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using PetFamily.Application.Database;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Species;
-using PetFamily.Application.Volunteers;
+using PetFamily.Application.Volunteers.Commands;
 using PetFamily.Infrastructure.BackgroundServices;
+using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
@@ -18,16 +20,16 @@ namespace PetFamily.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>();
+            services
+                .AddDbContexts()
+                .AddMinio(configuration)
+                .AddHostedServices()
+                .AddMessaging();
+
             services.AddScoped<DeleteExpiredVolunteersService>();
             services.AddScoped<IVolunteersRepository, VolunteersRepository>();
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
-            services.AddSingleton<IMessageQueue<IEnumerable<FileMetadata>>, InMemoryMessageQueue<IEnumerable<FileMetadata>>>();
-
-            services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
-            services.AddHostedService<FilesCleanerBackgroundService>();
-
-            services.AddMinio(configuration);
+           
 
             return services;
         }
@@ -48,6 +50,28 @@ namespace PetFamily.Infrastructure
 
             services.AddScoped<IFilesProvider, MinioProvider>();
 
+            return services;
+        }
+        
+        private static IServiceCollection AddDbContexts(this IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationWriteDbContext>();
+            services.AddDbContext<IReadDbContext, ApplicationReadDbContext>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddHostedServices(this IServiceCollection services)
+        {
+            services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
+            services.AddHostedService<FilesCleanerBackgroundService>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddMessaging(this IServiceCollection services)
+        {
+            services.AddSingleton<IMessageQueue<IEnumerable<FileMetadata>>, InMemoryMessageQueue<IEnumerable<FileMetadata>>>();
             return services;
         }
     }

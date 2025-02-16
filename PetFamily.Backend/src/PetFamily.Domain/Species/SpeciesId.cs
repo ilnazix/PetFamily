@@ -9,6 +9,10 @@ namespace PetFamily.Domain.Species
             Value = value;
         }
 
+        private SpeciesId()
+        {
+        }
+
         public Guid Value { get; }
 
         public static SpeciesId NewSpeciesId() => new SpeciesId(Guid.NewGuid());

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
+using System.Text.Json.Serialization;
 
 namespace PetFamily.Domain.Volunteers
 {
@@ -11,6 +12,7 @@ namespace PetFamily.Domain.Volunteers
         public string Link { get; }
         public string Title { get; }
 
+        [JsonConstructor]
         private SocialMedia(string link, string title)
         {
             Link = link;

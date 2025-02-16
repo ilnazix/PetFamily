@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using PetFamily.Application.Volunteers;
+using PetFamily.Application.Volunteers.Commands;
 using PetFamily.Domain.Volunteers;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Services
 {
     public class DeleteExpiredVolunteersService
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationWriteDbContext _dbContext;
         private readonly VolunteerEntityOptions _options;
 
-        public DeleteExpiredVolunteersService(ApplicationDbContext volunteersRepository,
+        public DeleteExpiredVolunteersService(ApplicationWriteDbContext volunteersRepository,
             IOptions<VolunteerEntityOptions> options)
         {
             _dbContext = volunteersRepository;
