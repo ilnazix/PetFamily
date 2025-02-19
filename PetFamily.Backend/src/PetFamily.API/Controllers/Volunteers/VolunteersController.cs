@@ -1,33 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PetFamily.API.Controllers.Volunteers.AddPet;
-using PetFamily.API.Controllers.Volunteers.ChangePetPosition;
-using PetFamily.API.Controllers.Volunteers.UpdateMainInfo;
-using PetFamily.API.Controllers.Volunteers.UpdateRequisites;
-using PetFamily.API.Controllers.Volunteers.UpdateSocialMedias;
+using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.AddPet;
-using PetFamily.Application.Volunteers.AddPetPhoto;
-using PetFamily.Application.Volunteers.ChangePetPosition;
-using PetFamily.Application.Volunteers.CreateVolunteer;
-using PetFamily.Application.Volunteers.HardDelete;
-using PetFamily.Application.Volunteers.Restore;
-using PetFamily.Application.Volunteers.Shared;
-using PetFamily.Application.Volunteers.SoftDelete;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateRequisites;
-using PetFamily.Application.Volunteers.UpdateSocialMedias;
+using PetFamily.Application.Volunteers.Commands.AddPet;
+using PetFamily.Application.Volunteers.Commands.AddPetPhoto;
+using PetFamily.Application.Volunteers.Commands.ChangePetPosition;
+using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.Volunteers.Commands.HardDelete;
+using PetFamily.Application.Volunteers.Commands.Restore;
+using PetFamily.Application.Volunteers.Commands.SoftDelete;
+using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
+using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
+using PetFamily.Application.Volunteers.Commands.UpdateSocialMedias;
+using PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination;
 
 namespace PetFamily.API.Controllers.Volunteers
 {
     [Route("[controller]")]
     public class VolunteersController : ApplicationController
     {
+        [HttpGet]
+        public async Task<ActionResult> GetVolunteerWithPagination(
+            [FromQuery] GetFilteredVolunteersWithPaginationRequest request,
+            [FromServices] GetFilteredVolunteersWithPaginationQueryHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var query = request.ToQuery();
+
+            var response = await handler.Handle(query, cancellationToken);
+
+            return Ok(response);
+        }
 
         [HttpPost]
         public async Task<ActionResult<Envelope>> Create(
-            [FromServices] CreateVolunteerHandler handler,
+            [FromServices] CreateVolunteerCommandHandler handler,
             [FromBody] CreateVolunteerRequest request,
             CancellationToken cancellationToken)
         {

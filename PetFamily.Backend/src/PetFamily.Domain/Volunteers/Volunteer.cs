@@ -24,8 +24,8 @@ namespace PetFamily.Domain.Volunteers
         public Description? Description { get; private set; }
         public Experience WorkExperienceInYears { get; set; } = Experience.Default();
         public PhoneNumber PhoneNumber { get; private set; }
-        public ValueObjectList<Requisite> Requisites { get; private set; } = new List<Requisite>();
-        public ValueObjectList<SocialMedia> SocialMedias { get; set; } = new List<SocialMedia>();
+        public List<Requisite> Requisites { get; private set; } = new List<Requisite>();
+        public List<SocialMedia> SocialMedias { get; private set; } = new List<SocialMedia>();
 
         public IReadOnlyList<Pet> Pets => _pets;
 
