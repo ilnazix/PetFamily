@@ -9,7 +9,10 @@ namespace PetFamily.Domain.Species
 
         private readonly List<Breed> _breeds = new();
 
-        public Species(string title)
+        //ef core
+        private Species(SpeciesId id) {}
+
+        public Species(SpeciesId id,  string title) : base(id)
         {
             Title = title;
         }
@@ -17,14 +20,14 @@ namespace PetFamily.Domain.Species
         public string Title { get; private set; }
         public IReadOnlyList<Breed> Breeds => _breeds;
 
-        public static Result<Species, Error> Create(string speciesTitle) 
+        public static Result<Species, Error> Create(SpeciesId id, string speciesTitle) 
         {
             if (string.IsNullOrWhiteSpace(speciesTitle) || speciesTitle.Length > SPECIES_TITLE_MAX_LENGTH)
             {
                 return Errors.General.ValueIsInvalid(nameof(speciesTitle));
             }
 
-            return new Species(speciesTitle);
+            return new Species(id, speciesTitle);
         }
 
         public Result<Breed, Error> GetBreedById(BreedId id)

@@ -7,5 +7,7 @@ namespace PetFamily.Application.Species
     public interface ISpeciesRepository
     {
         Task<Result<Domain.Species.Species, Error>> GetById(SpeciesId id, CancellationToken cancellationToken = default);
+        Task<Guid> Add(Domain.Species.Species species, CancellationToken cancellationToken = default);
+        Task<bool> IsAlreadyExist(Domain.Species.Species species, CancellationToken cancellationToken = default);
     }
 }
