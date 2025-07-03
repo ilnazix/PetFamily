@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace PetFamily.Domain.Species
 {
@@ -52,6 +53,26 @@ namespace PetFamily.Domain.Species
             }
 
             return breed;
+        }
+
+
+        public UnitResult<Error> AddBreed(Breed breed)
+        {
+            _breeds.Add(breed);
+
+            return UnitResult.Success<Error>();
+        }
+
+        public UnitResult<Error> UpdateBreedTitle(BreedId breedId, string title)
+        {
+            var breed = _breeds.FirstOrDefault(b => b.Id == breedId);
+
+            if (breed is null)
+                return Errors.General.NotFound(breedId.Value);
+
+            var result = breed.UpdateTitle(title);
+
+            return result;
         }
 
         private static bool IsTitleValid(string title)

@@ -25,5 +25,17 @@ namespace PetFamily.Domain.Species
 
             return new Breed(id, breedTitle);
         }
+
+        internal UnitResult<Error> UpdateTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title) || title.Length > MAX_BREED_TITLE_LENGTH)
+            {
+                return Errors.General.ValueIsInvalid(nameof(title));
+            }
+
+            Title = title;
+
+            return UnitResult.Success<Error>();
+        }
     }
 }
