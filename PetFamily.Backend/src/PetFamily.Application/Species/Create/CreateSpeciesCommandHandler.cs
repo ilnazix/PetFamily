@@ -25,17 +25,16 @@ namespace PetFamily.Application.Species.Create
             CreateSpeciesCommand command, 
             CancellationToken cancelationToken = default)
         {
-            var speeciesId = SpeciesId.NewSpeciesId();
+            var isSpeciesAlreadyExist = await _speciesRepository.IsAlreadyExistWithTitle(command.Title, cancelationToken);
 
+            if (isSpeciesAlreadyExist)
+                return Errors.General.ValueIsInvalid(nameof(AnimalType.Title)).ToErrorList();
+
+            var speeciesId = SpeciesId.NewSpeciesId();
             var speciesResult = AnimalType.Create(speeciesId, command.Title);
 
             if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
-
-            var isSpeciesAlreadyExist = await _speciesRepository.IsAlreadyExist(speciesResult.Value, cancelationToken);
-
-            if (isSpeciesAlreadyExist)
-                return Errors.General.ValueIsInvalid(nameof(AnimalType.Title)).ToErrorList();
 
             var id = await _speciesRepository.Add(speciesResult.Value, cancelationToken);
 

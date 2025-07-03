@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Species;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
+using PetFamily.Domain.Volunteers;
 using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories
@@ -28,7 +29,7 @@ namespace PetFamily.Infrastructure.Repositories
         {
             var species = await _dbContext.Species
                 .Include(s => s.Breeds)
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
             if(species is null)
             {
@@ -38,14 +39,22 @@ namespace PetFamily.Infrastructure.Repositories
             return species;
         }
 
-        public async Task<bool> IsAlreadyExist(Species species, CancellationToken cancellationToken = default)
+        public async Task<bool> IsAlreadyExistWithTitle(string title, CancellationToken cancellationToken = default)
         {
             var isExist = await _dbContext.Species
                 .AnyAsync(
-                    s => s.Title.ToLower() == species.Title.ToLower(), 
+                    s => s.Title.ToLower() == title.ToLower(), 
                     cancellationToken);
 
             return isExist;
+        }
+
+        public async Task<Result<Guid, Error>> Save(Species species, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Species.Attach(species);
+            await _dbContext.SaveChangesAsync();
+
+            return species.Id.Value;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace PetFamily.Domain.Species
         private readonly List<Breed> _breeds = new();
 
         //ef core
-        private Species(SpeciesId id) {}
+        private Species(SpeciesId id) : base(id) {}
 
         public Species(SpeciesId id,  string title) : base(id)
         {
@@ -22,12 +22,24 @@ namespace PetFamily.Domain.Species
 
         public static Result<Species, Error> Create(SpeciesId id, string speciesTitle) 
         {
-            if (string.IsNullOrWhiteSpace(speciesTitle) || speciesTitle.Length > SPECIES_TITLE_MAX_LENGTH)
+            if (!IsTitleValid(speciesTitle))
             {
                 return Errors.General.ValueIsInvalid(nameof(speciesTitle));
             }
 
             return new Species(id, speciesTitle);
+        }
+
+        public UnitResult<Error> UpdateTitle(string title)
+        {
+            if (!IsTitleValid(title))
+            {
+                return Errors.General.ValueIsInvalid(nameof(title));
+            }
+
+            Title = title;
+
+            return UnitResult.Success<Error>();
         }
 
         public Result<Breed, Error> GetBreedById(BreedId id)
@@ -40,6 +52,11 @@ namespace PetFamily.Domain.Species
             }
 
             return breed;
+        }
+
+        private static bool IsTitleValid(string title)
+        {
+            return !(string.IsNullOrWhiteSpace(title) || title.Length > SPECIES_TITLE_MAX_LENGTH);
         }
     }
 }
