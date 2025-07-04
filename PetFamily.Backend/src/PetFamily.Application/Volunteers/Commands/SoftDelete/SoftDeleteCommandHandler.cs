@@ -46,7 +46,7 @@ namespace PetFamily.Application.Volunteers.Commands.SoftDelete
 
             await _volunteersRepository.Save(volunteer, cancellationToken);
 
-            _logger.LogInformation("Soft delete volunteer with id={id}", id.Value);
+            _logger.LogInformation("Soft delete volunteer with Id={Id}", id.Value);
 
             return id.Value;
         }

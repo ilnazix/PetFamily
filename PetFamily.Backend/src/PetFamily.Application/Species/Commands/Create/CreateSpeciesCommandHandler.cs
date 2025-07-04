@@ -6,7 +6,7 @@ using PetFamily.Domain.Species;
 using AnimalType = PetFamily.Domain.Species.Species;
 
 
-namespace PetFamily.Application.Species.Create
+namespace PetFamily.Application.Species.Commands.Create
 {
     public class CreateSpeciesCommandHandler : ICommandHandler<Guid, CreateSpeciesCommand>
     {
@@ -22,7 +22,7 @@ namespace PetFamily.Application.Species.Create
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(
-            CreateSpeciesCommand command, 
+            CreateSpeciesCommand command,
             CancellationToken cancelationToken = default)
         {
             var isSpeciesAlreadyExist = await _speciesRepository.IsAlreadyExistWithTitle(command.Title, cancelationToken);

@@ -54,7 +54,7 @@ namespace PetFamily.Application.Volunteers.Commands.UpdateMainInfo
 
             await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Volunteers's (id={id}) main info updated", volunteerResult.Value.Id.Value);
+            _logger.LogInformation("Volunteers's (Id={Id}) main info updated", volunteerResult.Value.Id.Value);
 
             return id.Value;
         }

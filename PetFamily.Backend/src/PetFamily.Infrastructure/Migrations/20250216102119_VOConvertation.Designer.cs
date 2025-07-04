@@ -30,7 +30,7 @@ namespace PetFamily.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -55,7 +55,7 @@ namespace PetFamily.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -73,7 +73,7 @@ namespace PetFamily.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     b.Property<string>("Color")
                         .HasMaxLength(50)
@@ -152,7 +152,7 @@ namespace PetFamily.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone")
@@ -333,7 +333,7 @@ namespace PetFamily.Infrastructure.Migrations
                         {
                             b1.Property<Guid>("PetId")
                                 .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnName("Id");
 
                             b1.Property<string>("City")
                                 .IsRequired()
@@ -378,7 +378,7 @@ namespace PetFamily.Infrastructure.Migrations
                         {
                             b1.Property<Guid>("PetId")
                                 .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnName("Id");
 
                             b1.Property<string>("HealthInformation")
                                 .IsRequired()

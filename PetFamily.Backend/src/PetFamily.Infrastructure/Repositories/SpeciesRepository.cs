@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Species;
+using PetFamily.Application.Species.Commands;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteers;
@@ -23,6 +23,14 @@ namespace PetFamily.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
 
             return species.Id;
+        }
+
+        public async Task<Result<Guid, Error>> Delete(Species species, CancellationToken cancelationToken)
+        {
+            _dbContext.Species.Remove(species);
+            await _dbContext.SaveChangesAsync(cancelationToken);
+
+            return species.Id.Value;
         }
 
         public async Task<Result<Species, Error>> GetById(SpeciesId id, CancellationToken cancellationToken = default)

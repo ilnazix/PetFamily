@@ -115,7 +115,6 @@ namespace PetFamily.Infrastructure.Providers
             IEnumerable<FileData> files, 
             CancellationToken cancellationToken = default)
         {
-            return Errors.General.NotFound();
             var semaphoreSlim = new SemaphoreSlim(MAX_DEGREE_OF_PARALLELISM);
             var filesList = files.ToList();
 

@@ -42,9 +42,9 @@ namespace PetFamily.Domain.Volunteers
 
         public DateTime CreatedAt { get; private set; }
 
-        public ValueObjectList<Requisite> Requisites { get; private set; } = new List<Requisite>();
+        public IReadOnlyList<Requisite> Requisites { get; private set; } = new List<Requisite>();
 
-        public ValueObjectList<Photo> Photos { get; private set; } = new List<Photo>();
+        public IReadOnlyList<Photo> Photos { get; private set; } = new List<Photo>();
 
         internal UnitResult<Error> SetPosition(Position position)
         {

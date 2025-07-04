@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
-using PetFamily.Application.Species;
+using PetFamily.Application.Species.Commands;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteers;
@@ -71,7 +71,7 @@ namespace PetFamily.Application.Volunteers.Commands.AddPet
 
             await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Add pet (id={petId}) to volunteer (id={volunteerId})", petId.Value, volunteerId.Value);
+            _logger.LogInformation("Add pet (Id={petId}) to volunteer (Id={volunteerId})", petId.Value, volunteerId.Value);
 
             return petId.Value;
         }

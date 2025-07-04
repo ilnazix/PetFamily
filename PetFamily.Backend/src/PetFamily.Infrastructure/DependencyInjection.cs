@@ -4,7 +4,7 @@ using Minio;
 using PetFamily.Application.Database;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
-using PetFamily.Application.Species;
+using PetFamily.Application.Species.Commands;
 using PetFamily.Application.Volunteers.Commands;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.DbContexts;

@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Species.UpdateBreed;
+﻿using PetFamily.Application.Species.Commands.UpdateBreed;
 
 namespace PetFamily.API.Controllers.Species.Requests
 {

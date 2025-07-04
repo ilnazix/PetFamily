@@ -3,7 +3,7 @@ using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Application.Species
+namespace PetFamily.Application.Species.Commands
 {
     public interface ISpeciesRepository
     {
@@ -11,5 +11,6 @@ namespace PetFamily.Application.Species
         Task<Guid> Add(Domain.Species.Species species, CancellationToken cancellationToken = default);
         Task<bool> IsAlreadyExistWithTitle(string title, CancellationToken cancellationToken = default);
         Task<Result<Guid, Error>> Save(Domain.Species.Species species, CancellationToken cancellationToken = default);
+        Task<Result<Guid, Error>> Delete(Domain.Species.Species species, CancellationToken cancelationToken);
     }
 }

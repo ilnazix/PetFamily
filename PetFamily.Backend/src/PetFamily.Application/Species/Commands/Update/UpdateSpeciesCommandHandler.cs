@@ -6,7 +6,7 @@ using PetFamily.Domain.Species;
 using AnimalType = PetFamily.Domain.Species.Species;
 
 
-namespace PetFamily.Application.Species.Update
+namespace PetFamily.Application.Species.Commands.Update
 {
     public class UpdateSpeciesCommandHandler : ICommandHandler<Guid, UpdateSpeciesCommand>
     {
@@ -22,7 +22,7 @@ namespace PetFamily.Application.Species.Update
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(
-            UpdateSpeciesCommand command, 
+            UpdateSpeciesCommand command,
             CancellationToken cancelationToken = default)
         {
             var isAlreadyExist = await _speciesRepository.IsAlreadyExistWithTitle(command.Title, cancelationToken);
@@ -32,18 +32,18 @@ namespace PetFamily.Application.Species.Update
             var speciesId = SpeciesId.Create(command.Id);
             var speciesResult = await _speciesRepository.GetById(speciesId, cancelationToken);
 
-            if(speciesResult.IsFailure)
+            if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
 
 
             var result = speciesResult.Value.UpdateTitle(command.Title);
 
-            if(result.IsFailure)
+            if (result.IsFailure)
                 return result.Error.ToErrorList();
 
             await _speciesRepository.Save(speciesResult.Value, cancelationToken);
 
-            _logger.LogInformation("Title of species with {id} has changed", speciesId.Value);
+            _logger.LogInformation("Title of species with {Id} has changed", speciesId.Value);
 
             return speciesId.Value;
         }

@@ -1,7 +1,7 @@
 ﻿using PetFamily.Application.Abstractions;
 
 
-namespace PetFamily.Application.Species.Update
+namespace PetFamily.Application.Species.Commands.Update
 {
     public record UpdateSpeciesCommand(Guid Id, string Title) : ICommand;
 }

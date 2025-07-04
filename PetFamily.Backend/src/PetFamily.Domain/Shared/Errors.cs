@@ -22,5 +22,16 @@
                 return Error.Validation("length.is.invalid", $"invalid{label}length", name);
             }
         }
+
+        public static class Species 
+        {
+            public static Error CannotDeleteWhenAnimalsExist()
+            {
+                return Error.Conflict(
+                    "species.delete.not.allowed",
+                    "cannot delete species because animals of this species exist"
+                );
+            }
+        }
     }
 }

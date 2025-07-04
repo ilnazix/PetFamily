@@ -45,7 +45,7 @@ namespace PetFamily.Application.Volunteers.Commands.HardDelete
 
             await _volunteersRepository.Delete(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Volunteers with id={id} permanently deleted", id.Value);
+            _logger.LogInformation("Volunteers with Id={Id} permanently deleted", id.Value);
 
             return id.Value;
         }

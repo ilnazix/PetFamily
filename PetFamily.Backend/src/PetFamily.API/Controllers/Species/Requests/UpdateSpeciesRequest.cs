@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Species.Update;
+﻿using PetFamily.Application.Species.Commands.Update;
 
 namespace PetFamily.API.Controllers.Species.Requests
 {

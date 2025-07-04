@@ -13,7 +13,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
     {
         public void Configure(EntityTypeBuilder<Volunteer> builder)
         {
-            builder.ToTable("volunteers");
+            builder.ToTable(Tables.Volunteers);
 
             builder.HasKey(v => v.Id);
 
@@ -70,14 +70,14 @@ namespace PetFamily.Infrastructure.Configurations.Write
                             Description = r.Description
                         }).ToList(), JsonSerializerOptions.Default),
 
-                    json => JsonSerializer.Deserialize<List<RequisiteDto>>(json, JsonSerializerOptions.Default)!
+                    json => JsonSerializer.Deserialize<IReadOnlyList<RequisiteDto>>(json, JsonSerializerOptions.Default)!
                         .Select(d => Requisite.Create(d.Title, d.Description).Value)
                         .ToList(),
 
-                    new ValueComparer<List<Requisite>>(
+                    new ValueComparer<IReadOnlyList<Requisite>>(
                             (c1, c2) => c1!.SequenceEqual(c2!),
                             c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                            c => (List<Requisite>)c.ToList()));
+                            c => (IReadOnlyList<Requisite>)c.ToList()));
 
             builder
                 .Property(v => v.SocialMedias)
@@ -88,14 +88,14 @@ namespace PetFamily.Infrastructure.Configurations.Write
                         }
                     ).ToList(), JsonSerializerOptions.Default),
 
-                    json => JsonSerializer.Deserialize<List<SocialMediaDto>>(json, JsonSerializerOptions.Default)!
+                    json => JsonSerializer.Deserialize<IReadOnlyList<SocialMediaDto>>(json, JsonSerializerOptions.Default)!
                         .Select(d => SocialMedia.Create(d.Link, d.Title).Value)
                         .ToList(),
 
-                    new ValueComparer<List<SocialMedia>>(
+                    new ValueComparer<IReadOnlyList<SocialMedia>>(
                             (c1, c2) => c1!.SequenceEqual(c2!),
                             c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                            c => (List<SocialMedia>)c.ToList()));
+                            c => (IReadOnlyList<SocialMedia>)c.ToList()));
         }
     }
 }

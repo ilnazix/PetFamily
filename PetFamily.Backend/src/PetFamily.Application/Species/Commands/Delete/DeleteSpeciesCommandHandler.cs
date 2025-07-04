@@ -6,7 +6,7 @@ using PetFamily.Application.Database;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 
-namespace PetFamily.Application.Species.Delete
+namespace PetFamily.Application.Species.Commands.Delete
 {
     public class DeleteSpeciesCommandHandler : ICommandHandler<DeleteSpeciesCommand>
     {
@@ -25,14 +25,14 @@ namespace PetFamily.Application.Species.Delete
         }
 
         public async Task<UnitResult<ErrorList>> Handle(
-            DeleteSpeciesCommand command, 
+            DeleteSpeciesCommand command,
             CancellationToken cancelationToken = default)
         {
             var speciesId = SpeciesId.Create(command.Id);
 
             var speciesResult = await _speciesRepository.GetById(speciesId, cancelationToken);
 
-            if (speciesResult.IsFailure) 
+            if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
 
             var species = speciesResult.Value;
@@ -44,6 +44,8 @@ namespace PetFamily.Application.Species.Delete
                 return Errors.Species.CannotDeleteWhenAnimalsExist().ToErrorList();
 
             await _speciesRepository.Delete(species, cancelationToken);
+
+            _logger.LogInformation("Species with title {1} deleted (id={2})", species.Title, species.Id);
 
             return UnitResult.Success<ErrorList>();
         }

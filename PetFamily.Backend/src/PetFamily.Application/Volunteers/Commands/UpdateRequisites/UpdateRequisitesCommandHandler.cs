@@ -52,7 +52,7 @@ namespace PetFamily.Application.Volunteers.Commands.UpdateRequisites
 
             var guid = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Volunteers's (id={id}) social medias list updated", guid.Value);
+            _logger.LogInformation("Volunteers's (Id={Id}) social medias list updated", guid.Value);
 
             return guid.Value;
         }

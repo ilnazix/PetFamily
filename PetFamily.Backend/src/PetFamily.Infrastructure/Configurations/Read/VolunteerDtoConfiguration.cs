@@ -9,7 +9,7 @@ namespace PetFamily.Infrastructure.Configurations.Read
     {
         public void Configure(EntityTypeBuilder<VolunteerDto> builder)
         {
-            builder.ToTable("volunteers");
+            builder.ToTable(Tables.Volunteers);
 
             builder.HasKey(v => v.Id);
 

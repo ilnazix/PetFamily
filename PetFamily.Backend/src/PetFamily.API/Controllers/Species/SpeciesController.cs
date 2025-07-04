@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Species.Requests;
 using PetFamily.API.Extensions;
-using PetFamily.Application.Species.AddBreed;
-using PetFamily.Application.Species.Create;
-using PetFamily.Application.Species.Delete;
-using PetFamily.Application.Species.Update;
-using PetFamily.Application.Species.UpdateBreed;
+using PetFamily.Application.Species.Commands.AddBreed;
+using PetFamily.Application.Species.Commands.Create;
+using PetFamily.Application.Species.Commands.Delete;
+using PetFamily.Application.Species.Commands.Update;
+using PetFamily.Application.Species.Commands.UpdateBreed;
 using System.Threading;
 
 namespace PetFamily.API.Controllers.Species

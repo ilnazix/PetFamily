@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Species.AddBreed;
+﻿using PetFamily.Application.Species.Commands.AddBreed;
 
 namespace PetFamily.API.Controllers.Species.Requests
 {
