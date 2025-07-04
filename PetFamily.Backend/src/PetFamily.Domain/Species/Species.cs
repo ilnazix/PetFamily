@@ -75,6 +75,15 @@ namespace PetFamily.Domain.Species
             return result;
         }
 
+        public UnitResult<Error> DeleteBreedById(BreedId breedId)
+        {
+            var breed = _breeds.FirstOrDefault(b => b.Id == breedId);
+            if (breed is null)
+                return Errors.General.NotFound(breedId.Value);
+
+            _breeds.Remove(breed); 
+            return UnitResult.Success<Error>();
+        }
         private static bool IsTitleValid(string title)
         {
             return !(string.IsNullOrWhiteSpace(title) || title.Length > SPECIES_TITLE_MAX_LENGTH);

@@ -4,6 +4,7 @@ using PetFamily.API.Extensions;
 using PetFamily.Application.Species.Commands.AddBreed;
 using PetFamily.Application.Species.Commands.Create;
 using PetFamily.Application.Species.Commands.Delete;
+using PetFamily.Application.Species.Commands.DeleteBreed;
 using PetFamily.Application.Species.Commands.Update;
 using PetFamily.Application.Species.Commands.UpdateBreed;
 using System.Threading;
@@ -86,6 +87,22 @@ namespace PetFamily.API.Controllers.Species
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpDelete("{speciesId:guid}/breeds/{breedId:guid}")]
+        public async Task<ActionResult> AddBreed(
+            [FromRoute] Guid speciesId,
+            [FromRoute] Guid breedId,
+            [FromServices] DeleteBreedCommandHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new DeleteBreedCommand(speciesId, breedId);
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return NoContent();
         }
     }
 }

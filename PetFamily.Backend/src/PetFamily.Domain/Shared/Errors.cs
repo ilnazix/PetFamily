@@ -33,5 +33,16 @@
                 );
             }
         }
+
+        public static class Breed
+        {
+            public static Error CannotDeleteWhenAnimalsExist()
+            {
+                return Error.Conflict(
+                    "breed.delete.not.allowed",
+                    "cannot delete breed because animals of this species exist"
+                );
+            }
+        }
     }
 }

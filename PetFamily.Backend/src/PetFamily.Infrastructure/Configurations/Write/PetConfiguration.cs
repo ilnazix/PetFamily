@@ -34,7 +34,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
 
                 ptb.Property(pt => pt.BreedId)
                     .IsRequired()
-                    .HasColumnName("breeed_id");
+                    .HasColumnName("breed_id");
             });
 
             builder.Property(p => p.Position)
