@@ -9,5 +9,4 @@ namespace PetFamily.API.Controllers.Species.Requests
     {
         public GetFilteredSpeciesWithPaginationQuery ToQuery() => new(Page, PageSize, Title);
     };
-
 }

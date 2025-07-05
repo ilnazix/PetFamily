@@ -7,6 +7,7 @@ using PetFamily.Application.Species.Commands.Delete;
 using PetFamily.Application.Species.Commands.DeleteBreed;
 using PetFamily.Application.Species.Commands.Update;
 using PetFamily.Application.Species.Commands.UpdateBreed;
+using PetFamily.Application.Species.Queries.GetFilteredBreedsWithPagination;
 using PetFamily.Application.Species.Queries.GetFilteredSpeciesWithPagination;
 
 namespace PetFamily.API.Controllers.Species
@@ -21,6 +22,20 @@ namespace PetFamily.API.Controllers.Species
             CancellationToken cancellationToken)
         {
             var query = request.ToQuery();
+
+            var response = await handler.Handle(query, cancellationToken);
+
+            return Ok(response);
+        }
+
+        [HttpGet("{speciesId:guid}")]
+        public async Task<ActionResult> GetAllBreeds(
+            [FromRoute] Guid speciesId,
+            [FromQuery] GetFilteredBreedsWithPaginationRequest request,
+            [FromServices] GetFilteredBreedsWithPaginationQueryHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var query = request.ToQuery(speciesId);
 
             var response = await handler.Handle(query, cancellationToken);
 
