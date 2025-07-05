@@ -26,7 +26,7 @@ namespace PetFamily.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Breed", b =>
+            modelBuilder.Entity("PetFamily.Domain.Species.Breeds", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -230,7 +230,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.ToTable("volunteers", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Breed", b =>
+            modelBuilder.Entity("PetFamily.Domain.Species.Breeds", b =>
                 {
                     b.HasOne("PetFamily.Domain.Species.Species", null)
                         .WithMany("Breeds")

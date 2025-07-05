@@ -47,16 +47,6 @@ namespace PetFamily.Infrastructure.Repositories
             return species;
         }
 
-        public async Task<bool> IsAlreadyExistWithTitle(string title, CancellationToken cancellationToken = default)
-        {
-            var isExist = await _dbContext.Species
-                .AnyAsync(
-                    s => s.Title.ToLower() == title.ToLower(), 
-                    cancellationToken);
-
-            return isExist;
-        }
-
         public async Task<Result<Guid, Error>> Save(Species species, CancellationToken cancellationToken = default)
         {
             _dbContext.Species.Attach(species);

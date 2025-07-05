@@ -37,9 +37,9 @@ namespace PetFamily.Application.Species.Commands.DeleteBreed
             var species = speciesResult.Value;
             var breedId = BreedId.Create(command.BreedId);
 
-            var isExistPetWithBreed = await _readDbContext.Pets.AnyAsync(p => p.BreedId == breedId.Value);
+            var isExistPetWithBreed = await _readDbContext.Pets.AnyAsync(p => p.BreedId == breedId.Value, cancelationToken);
             if (isExistPetWithBreed)
-                return Errors.Breed.CannotDeleteWhenAnimalsExist().ToErrorList();
+                return Errors.Breeds.CannotDeleteWhenAnimalsExist().ToErrorList();
 
             var result = species.DeleteBreedById(breedId);
             if(result.IsFailure)
@@ -47,7 +47,7 @@ namespace PetFamily.Application.Species.Commands.DeleteBreed
 
             await _speciesRepository.Save(species, cancelationToken);
 
-            _logger.LogInformation("Breed deleted (id={2})", breedId.Value);
+            _logger.LogInformation("Breeds deleted (id={2})", breedId.Value);
 
             return UnitResult.Success<ErrorList>();
         }

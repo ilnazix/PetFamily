@@ -38,7 +38,7 @@ namespace PetFamily.Application.Species.Commands.Delete
             var species = speciesResult.Value;
 
             var isExistPetWithSpecies = await _readDbContext.Pets
-                .AnyAsync(p => p.SpeciesId == speciesId);
+                .AnyAsync(p => p.SpeciesId == speciesId, cancelationToken);
 
             if (isExistPetWithSpecies)
                 return Errors.Species.CannotDeleteWhenAnimalsExist().ToErrorList();
