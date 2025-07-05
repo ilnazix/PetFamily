@@ -8,7 +8,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
     {
         public void Configure(EntityTypeBuilder<Species> builder)
         {
-            builder.ToTable("species");
+            builder.ToTable(Tables.Species);
 
             builder.HasKey(s => s.Id);
 

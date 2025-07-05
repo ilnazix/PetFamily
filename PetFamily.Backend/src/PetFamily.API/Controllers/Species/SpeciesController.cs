@@ -7,13 +7,26 @@ using PetFamily.Application.Species.Commands.Delete;
 using PetFamily.Application.Species.Commands.DeleteBreed;
 using PetFamily.Application.Species.Commands.Update;
 using PetFamily.Application.Species.Commands.UpdateBreed;
-using System.Threading;
+using PetFamily.Application.Species.Queries.GetFilteredSpeciesWithPagination;
 
 namespace PetFamily.API.Controllers.Species
 {
     [Route("[controller]")]
     public class SpeciesController : ApplicationController
     {
+        [HttpGet]
+        public async Task<ActionResult> GetAllSpecies(
+            [FromQuery] GetFilteredSpeciesWithPaginationRequest request,
+            [FromServices] GetFilteredSpeciesWithPaginationQueryHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var query = request.ToQuery();
+
+            var response = await handler.Handle(query, cancellationToken);
+
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateSpecies(
             [FromBody] CreateSpeciesRequest request,

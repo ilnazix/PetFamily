@@ -14,6 +14,8 @@ namespace PetFamily.Infrastructure.DbContexts
 
         public IQueryable<PetDto> Pets => Set<PetDto>();
 
+        public IQueryable<SpeciesDto> Species => Set<SpeciesDto>();
+
         public ApplicationReadDbContext(IConfiguration configuration)
         {
             _configuration = configuration;
