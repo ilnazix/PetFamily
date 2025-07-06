@@ -48,7 +48,7 @@ namespace PetFamily.Application.Volunteers.Commands.Restore
 
             await _volunteersRepository.Save(volunteer, cancellationToken);
 
-            _logger.LogInformation("Restore volunteer with id={id}", id.Value);
+            _logger.LogInformation("Restore volunteer with Id={Id}", id.Value);
 
             return id.Value;
         }

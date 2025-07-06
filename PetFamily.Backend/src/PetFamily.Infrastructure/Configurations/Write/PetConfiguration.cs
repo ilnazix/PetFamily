@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Application.Dtos;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteers;
+using System.Text.Json;
 
 namespace PetFamily.Infrastructure.Configurations.Write
 {
@@ -10,7 +13,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
     {
         public void Configure(EntityTypeBuilder<Pet> builder)
         {
-            builder.ToTable("pets");
+            builder.ToTable(Tables.Pets);
 
             builder.HasKey(p => p.Id);
 
@@ -31,7 +34,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
 
                 ptb.Property(pt => pt.BreedId)
                     .IsRequired()
-                    .HasColumnName("breeed_id");
+                    .HasColumnName("breed_id");
             });
 
             builder.Property(p => p.Position)
@@ -76,32 +79,42 @@ namespace PetFamily.Infrastructure.Configurations.Write
             builder.Property(p => p.DateOfBirth);
             builder.Property(p => p.CreatedAt);
 
-            builder.OwnsOne(p => p.Requisites, rlb =>
-            {
-                rlb.ToJson();
+            builder.Property(v => v.Requisites)
+                 .HasConversion(req =>
+                     JsonSerializer.Serialize(req.Select(r =>
+                         new RequisiteDto
+                         {
+                             Title = r.Title,
+                             Description = r.Description
+                         }).ToList(), JsonSerializerOptions.Default),
 
-                rlb.OwnsMany(v => v.Values, rb =>
-                {
-                    rb.Property(r => r.Title)
-                        .IsRequired()
-                        .HasMaxLength(Requisite.REQUISITE_TITLE_MAX_LENGTH);
+                     json => JsonSerializer.Deserialize<IReadOnlyList<RequisiteDto>>(json, JsonSerializerOptions.Default)!
+                         .Select(d => Requisite.Create(d.Title, d.Description).Value)
+                         .ToList(),
 
-                    rb.Property(r => r.Description)
-                        .IsRequired()
-                        .HasMaxLength(Requisite.REQUISITE_DESCRIPTION_MAX_LENGTH);
-                });
-            });
+                     new ValueComparer<IReadOnlyList<Requisite>>(
+                             (c1, c2) => c1!.SequenceEqual(c2!),
+                             c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                             c => (IReadOnlyList<Requisite>)c.ToList()));
 
-            builder.OwnsOne(pet => pet.Photos, pb =>
-            {
-                pb.ToJson();
+            builder.Property(v => v.Photos)
+                .HasConversion(photo =>
+                    JsonSerializer.Serialize(photo.Select(ph =>
+                        new PhotoDto
+                        {
+                            FileName = ph.FileName,
+                            Path = ph.Path
+                        }).ToList(), JsonSerializerOptions.Default),
 
-                pb.OwnsMany(ph => ph.Values, phb =>
-                {
-                    phb.Property(ph => ph.Path).IsRequired();
-                    phb.Property(ph => ph.FileName).IsRequired();
-                });
-            });
+                    json => JsonSerializer.Deserialize<IReadOnlyList<PhotoDto>>(json, JsonSerializerOptions.Default)!
+                        .Select(d => Photo.Create(d.Path, d.FileName).Value)
+                        .ToList(),
+
+                    new ValueComparer<IReadOnlyList<Photo>>(
+                            (c1, c2) => c1!.SequenceEqual(c2!),
+                            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                            c => (IReadOnlyList<Photo>)c.ToList()));
+
         }
     }
 }

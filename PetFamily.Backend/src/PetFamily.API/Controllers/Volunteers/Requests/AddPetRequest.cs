@@ -9,7 +9,7 @@ namespace PetFamily.API.Controllers.Volunteers.Requests
         public string PhoneNumber { get; init; }
         public string PetStatus { get; init; }
         public Guid SpeciesId { get; init; }
-        public Guid BreeedId { get; init; }
+        public Guid BreedId { get; init; }
 
         public AddPetRequest(
             string petName,
@@ -17,14 +17,14 @@ namespace PetFamily.API.Controllers.Volunteers.Requests
             string phoneNumber,
             string petStatus,
             Guid speciesId,
-            Guid breeedId)
+            Guid breedId)
         {
             PetName = petName;
             Description = description;
             PhoneNumber = phoneNumber;
             PetStatus = petStatus;
             SpeciesId = speciesId;
-            BreeedId = breeedId;
+            BreedId = breedId;
         }
 
         public AddPetCommand ToCommand(Guid volunteerId)
@@ -36,7 +36,7 @@ namespace PetFamily.API.Controllers.Volunteers.Requests
                 PhoneNumber,
                 PetStatus,
                 SpeciesId,
-                BreeedId
+                BreedId
             );
         }
     }

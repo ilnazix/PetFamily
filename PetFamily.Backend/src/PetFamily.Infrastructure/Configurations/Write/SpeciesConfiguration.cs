@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 
 namespace PetFamily.Infrastructure.Configurations.Write
@@ -9,7 +8,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
     {
         public void Configure(EntityTypeBuilder<Species> builder)
         {
-            builder.ToTable("species");
+            builder.ToTable(Tables.Species);
 
             builder.HasKey(s => s.Id);
 

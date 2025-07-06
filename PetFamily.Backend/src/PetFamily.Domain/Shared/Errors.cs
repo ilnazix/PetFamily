@@ -22,5 +22,39 @@
                 return Error.Validation("length.is.invalid", $"invalid{label}length", name);
             }
         }
+
+        public static class Species 
+        {
+            public static Error CannotDeleteWhenAnimalsExist()
+            {
+                return Error.Conflict(
+                    "species.delete.not.allowed",
+                    "cannot delete species because animals of this species exist"
+                );
+            }
+        }
+
+        public static class Breeds
+        {
+            public static Error CannotDeleteWhenAnimalsExist()
+            {
+                return Error.Conflict(
+                    "breed.delete.not.allowed",
+                    "cannot delete breed because animals of this species exist"
+                );
+            }
+        }
+
+        public static class Pets 
+        {
+            public static Error InvalidSpeciesOrBreed()
+            {
+                return Error.Validation(
+                    "pet.species-or-breed.invalid",
+                    "cannot create pet because specified species or breed does not exist",
+                    null
+                );
+            }
+        }
     }
 }

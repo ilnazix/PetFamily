@@ -55,7 +55,7 @@ namespace PetFamily.Application.Volunteers.Commands.Create
 
             var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
 
-            _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {id})",
+            _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {Id})",
                 fullName.FirstName, fullName.LastName, fullName.MiddleName, volunteerGuid);
 
             return volunteerGuid;

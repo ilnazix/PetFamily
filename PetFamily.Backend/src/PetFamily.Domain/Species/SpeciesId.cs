@@ -24,5 +24,6 @@ namespace PetFamily.Domain.Species
             yield return Value;
         }
 
+        public static implicit operator Guid(SpeciesId id) => id.Value;
     }
 }
