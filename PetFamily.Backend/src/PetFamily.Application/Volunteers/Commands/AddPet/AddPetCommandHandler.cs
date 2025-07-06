@@ -36,7 +36,7 @@ namespace PetFamily.Application.Volunteers.Commands.AddPet
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
             if (validationResult.IsValid == false)
-                validationResult.ToErrorList();
+                return validationResult.ToErrorList();
 
 
             var volunteerId = VolunteerId.Create(command.VolunteerId);

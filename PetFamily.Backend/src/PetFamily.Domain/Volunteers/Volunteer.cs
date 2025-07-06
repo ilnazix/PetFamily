@@ -139,6 +139,34 @@ namespace PetFamily.Domain.Volunteers
                     .Add(lifetimeSpan));
         }
 
+        public UnitResult<Error> UpdatePetInfo(
+            PetId petId,
+            PetName name,
+            PetType petType,
+            Description description,
+            PhoneNumber ownerPhoneNumber,
+            Color color,
+            IReadOnlyList<Requisite> requisites,
+            MedicalInformation medicalInformation,
+            Address address,
+            DateTime dateOfBirth)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+
+            if (pet is null)
+                return Errors.General.NotFound(petId.Value);
+
+            return pet.UpdateInfo(name, 
+                petType, 
+                description, 
+                ownerPhoneNumber, 
+                color, 
+                requisites, 
+                medicalInformation, 
+                address,
+                dateOfBirth);
+        }
+
         public UnitResult<Error> SetPetPhotos(PetId petId, IEnumerable<Photo> photos)
         {
             var pet = _pets.FirstOrDefault(p => p.Id == petId);
