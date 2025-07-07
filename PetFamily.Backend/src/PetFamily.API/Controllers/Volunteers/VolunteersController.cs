@@ -12,6 +12,7 @@ using PetFamily.Application.Volunteers.Commands.Restore;
 using PetFamily.Application.Volunteers.Commands.SoftDelete;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Application.Volunteers.Commands.UpdatePetInfo;
+using PetFamily.Application.Volunteers.Commands.UpdatePetStatus;
 using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
 using PetFamily.Application.Volunteers.Commands.UpdateSocialMedias;
 using PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination;
@@ -183,6 +184,23 @@ namespace PetFamily.API.Controllers.Volunteers
             [FromRoute] Guid petId,
             [FromBody] UpdatePetInfoRequest request,
             [FromServices] UpdatePetInfoCommandHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(result.Value);
+        }
+
+        [HttpPut("{volunteerId:guid}/pets/{petId:guid}/status")]
+        public async Task<ActionResult<Envelope>> UpdatePetStatus(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromBody] UpdatePetStatusRequest request,
+            [FromServices] UpdatePetStatusCommandHandler handler,
             CancellationToken cancellationToken)
         {
             var command = request.ToCommand(volunteerId, petId);

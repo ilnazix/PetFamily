@@ -151,10 +151,12 @@ namespace PetFamily.Domain.Volunteers
             Address address,
             DateTime dateOfBirth)
         {
-            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            var petResult = GetPetById(petId);
 
-            if (pet is null)
-                return Errors.General.NotFound(petId.Value);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
 
             return pet.UpdateInfo(name, 
                 petType, 
@@ -165,6 +167,20 @@ namespace PetFamily.Domain.Volunteers
                 medicalInformation, 
                 address,
                 dateOfBirth);
+        }
+
+        public UnitResult<Error> UpdatePetStatus(
+            PetId petId, 
+            PetStatus status)
+        {
+            var petResult = GetPetById(petId);
+
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+
+            return pet.UpdateStatus(status);
         }
 
         public UnitResult<Error> SetPetPhotos(PetId petId, IEnumerable<Photo> photos)

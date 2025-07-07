@@ -115,5 +115,11 @@ namespace PetFamily.Domain.Volunteers
 
             return UnitResult.Success<Error>();
         }
+
+        internal UnitResult<Error> UpdateStatus(PetStatus status)
+        {
+            Status = status;
+            return UnitResult.Success<Error>();
+        }
     }
 }
