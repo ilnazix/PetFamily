@@ -139,6 +139,17 @@ namespace PetFamily.Domain.Volunteers
                     .Add(lifetimeSpan));
         }
 
+        public UnitResult<Error> DeletePet(PetId petId)
+        {
+            var petResult = GetPetById(petId);
+            if(petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+            pet.Delete();
+            return UnitResult.Success<Error>();
+        }
+
         public UnitResult<Error> UpdatePetInfo(
             PetId petId,
             PetName name,

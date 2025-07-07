@@ -7,6 +7,7 @@ using PetFamily.Application.Volunteers.Commands.AddPet;
 using PetFamily.Application.Volunteers.Commands.AddPetPhoto;
 using PetFamily.Application.Volunteers.Commands.ChangePetPosition;
 using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.Volunteers.Commands.DeletePet;
 using PetFamily.Application.Volunteers.Commands.HardDelete;
 using PetFamily.Application.Volunteers.Commands.Restore;
 using PetFamily.Application.Volunteers.Commands.SoftDelete;
@@ -193,6 +194,22 @@ namespace PetFamily.API.Controllers.Volunteers
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpDelete("{volunteerId:guid}/pets/{petId:guid}")]
+        public async Task<ActionResult<Envelope>> DeletePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] DeletePetCommandHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new DeletePetCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return NoContent();
         }
 
         [HttpPut("{volunteerId:guid}/pets/{petId:guid}/status")]
