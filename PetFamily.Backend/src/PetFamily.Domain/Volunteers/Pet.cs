@@ -86,7 +86,26 @@ namespace PetFamily.Domain.Volunteers
 
         internal UnitResult<Error> SetPhotos(IEnumerable<Photo> photos)
         {
-            Photos = photos.ToList();
+            Photos = photos.Concat(Photos).ToList();
+
+            return UnitResult.Success<Error>();
+        }
+
+        internal UnitResult<Error> SetMainPhoto(string path)
+        {
+            var isPhotoExist = Photos.Any(p => p.Path == path);
+            if (isPhotoExist == false)
+                return Errors.General.NotFound();
+
+            var photos = new List<Photo>();
+            foreach (var photo in Photos)
+            {
+                var isMain = photo.Path == path;
+                var photoCopy = Photo.Create(photo.Path, photo.FileName, isMain).Value;
+                photos.Add(photoCopy);
+            }
+
+            Photos = photos;
 
             return UnitResult.Success<Error>();
         }

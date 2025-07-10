@@ -57,7 +57,7 @@ namespace PetFamily.Application.Volunteers.Commands.AddPetPhoto
             foreach (var file in command.Files)
             {
                 var path = Guid.NewGuid().ToString() + "_" + file.FileName;
-                var photoResult = Photo.Create(path, file.FileName);
+                var photoResult = Photo.Create(path, file.FileName, false);
 
                 if (photoResult.IsFailure)
                     return photoResult.Error.ToErrorList();

@@ -18,6 +18,7 @@ using PetFamily.Application.Volunteers.Commands.UpdatePetStatus;
 using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
 using PetFamily.Application.Volunteers.Commands.UpdateSocialMedias;
 using PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination;
+using PetFamily.Application.Volunteers.Commands.SetPetMainPhoto;
 
 namespace PetFamily.API.Controllers.Volunteers
 {
@@ -212,6 +213,25 @@ namespace PetFamily.API.Controllers.Volunteers
 
             return NoContent();
         }
+
+        [HttpPut("{volunteerId:guid}/pets/{petId:guid}/main-photo")]
+        public async Task<ActionResult> SetMainPhoto(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromBody] SetPetMainPhotoRequest request,
+            [FromServices] SetPetMainPhotoCommandHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(result.Value);
+        }
+
+
 
         [HttpDelete("{volunteerId:guid}/pets/{petId:guid}/hard")]
         public async Task<ActionResult<Envelope>> DeletePetPermanently (

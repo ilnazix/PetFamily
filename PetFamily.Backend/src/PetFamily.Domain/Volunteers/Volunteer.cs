@@ -150,6 +150,18 @@ namespace PetFamily.Domain.Volunteers
             return UnitResult.Success<Error>();
         }
 
+        public UnitResult<Error> SetPetMainPhoto(
+            PetId petId,
+            string imagePath)
+        {
+            var petResult = GetPetById(petId);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+            return pet.SetMainPhoto(imagePath);
+        }
+
         public UnitResult<Error> DeletePetPermanently(PetId petId)
         {
             var petResult = GetPetById(petId);
