@@ -12,7 +12,7 @@ namespace PetFamily.Application.Volunteers.Commands.AddPetPhoto
 {
     public class AddPetPhotoCommandHandler : ICommandHandler<IReadOnlyList<string>, AddPetPhotoCommand>
     {
-        public const string BUCKET_NAME = "pet-photos";
+        private const string BUCKET_NAME = Constants.Buckets.PetPhotos;
 
         private readonly IVolunteersRepository _volunteersRepository;
         private readonly IFilesProvider _fileProvider;

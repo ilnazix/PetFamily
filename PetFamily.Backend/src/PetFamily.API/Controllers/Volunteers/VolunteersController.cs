@@ -9,6 +9,7 @@ using PetFamily.Application.Volunteers.Commands.ChangePetPosition;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.DeletePet;
 using PetFamily.Application.Volunteers.Commands.HardDelete;
+using PetFamily.Application.Volunteers.Commands.DeletePetPermanently;
 using PetFamily.Application.Volunteers.Commands.Restore;
 using PetFamily.Application.Volunteers.Commands.SoftDelete;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
@@ -204,6 +205,22 @@ namespace PetFamily.API.Controllers.Volunteers
             CancellationToken cancellationToken)
         {
             var command = new DeletePetCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{volunteerId:guid}/pets/{petId:guid}/hard")]
+        public async Task<ActionResult<Envelope>> DeletePetPermanently (
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] DeletePetPermanentlyCommandHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new DeletePetPermanentlyCommand(volunteerId, petId);
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)

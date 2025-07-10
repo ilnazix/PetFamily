@@ -150,6 +150,18 @@ namespace PetFamily.Domain.Volunteers
             return UnitResult.Success<Error>();
         }
 
+        public UnitResult<Error> DeletePetPermanently(PetId petId)
+        {
+            var petResult = GetPetById(petId);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+            _pets.Remove(pet);
+            
+            return UnitResult.Success<Error>();
+        }
+
         public UnitResult<Error> UpdatePetInfo(
             PetId petId,
             PetName name,

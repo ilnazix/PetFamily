@@ -71,7 +71,9 @@ namespace PetFamily.Infrastructure
 
         private static IServiceCollection AddMessaging(this IServiceCollection services)
         {
-            services.AddSingleton<IMessageQueue<IEnumerable<FileMetadata>>, InMemoryMessageQueue<IEnumerable<FileMetadata>>>();
+            services.AddSingleton<IMessageQueue<IEnumerable<FileMetadata>>, 
+                InMemoryMessageQueue<IEnumerable<FileMetadata>>>();
+
             return services;
         }
     }
