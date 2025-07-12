@@ -12,7 +12,7 @@ namespace PetFamily.Application.Volunteers.Commands.AddPetPhoto
 {
     public class AddPetPhotoCommandHandler : ICommandHandler<IReadOnlyList<string>, AddPetPhotoCommand>
     {
-        public const string BUCKET_NAME = "pet-photos";
+        private const string BUCKET_NAME = Constants.Buckets.PetPhotos;
 
         private readonly IVolunteersRepository _volunteersRepository;
         private readonly IFilesProvider _fileProvider;
@@ -57,7 +57,7 @@ namespace PetFamily.Application.Volunteers.Commands.AddPetPhoto
             foreach (var file in command.Files)
             {
                 var path = Guid.NewGuid().ToString() + "_" + file.FileName;
-                var photoResult = Photo.Create(path, file.FileName);
+                var photoResult = Photo.Create(path, file.FileName, false);
 
                 if (photoResult.IsFailure)
                     return photoResult.Error.ToErrorList();

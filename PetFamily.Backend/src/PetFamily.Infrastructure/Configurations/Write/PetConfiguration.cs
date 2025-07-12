@@ -103,11 +103,12 @@ namespace PetFamily.Infrastructure.Configurations.Write
                         new PhotoDto
                         {
                             FileName = ph.FileName,
-                            Path = ph.Path
+                            Path = ph.Path,
+                            IsMain = ph.IsMain
                         }).ToList(), JsonSerializerOptions.Default),
 
                     json => JsonSerializer.Deserialize<IReadOnlyList<PhotoDto>>(json, JsonSerializerOptions.Default)!
-                        .Select(d => Photo.Create(d.Path, d.FileName).Value)
+                        .Select(d => Photo.Create(d.Path, d.FileName, d.IsMain).Value)
                         .ToList(),
 
                     new ValueComparer<IReadOnlyList<Photo>>(

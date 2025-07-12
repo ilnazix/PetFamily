@@ -9,14 +9,16 @@ namespace PetFamily.Domain.Volunteers
 
         public string Path { get; }
         public string FileName { get; }
+        public bool IsMain { get; }
 
-        private Photo(string path, string fileName)
+        private Photo(string path, string fileName, bool isMain)
         {
             Path = path;
             FileName = fileName;
+            IsMain = isMain;
         }
 
-        public static Result<Photo, Error> Create(string path, string fileName)
+        public static Result<Photo, Error> Create(string path, string fileName, bool isMain)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -35,13 +37,14 @@ namespace PetFamily.Domain.Volunteers
                 return Errors.General.ValueIsInvalid(nameof(extension));
             }
 
-            return new Photo(path, fileName);
+            return new Photo(path, fileName, isMain);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Path;
             yield return FileName;
+            yield return IsMain;
         }
     }
 }

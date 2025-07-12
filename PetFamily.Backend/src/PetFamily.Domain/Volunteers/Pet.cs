@@ -11,13 +11,20 @@ namespace PetFamily.Domain.Volunteers
         { 
         }
 
-        public Pet(PetId id, PetName name, PetType petType, Description description, PhoneNumber ownerPhoneNumber, PetStatus status) : base(id)
+        public Pet(
+            PetId id, 
+            PetName name, 
+            PetType petType, 
+            Description description, 
+            PhoneNumber ownerPhoneNumber, 
+            PetStatus status) : base(id)
         {
             Name = name;
             PetType = petType;
             Description = description;
             OwnerPhoneNumber = ownerPhoneNumber;
             Status = status;
+            CreatedAt = DateTime.UtcNow;
         }
 
         public PetName Name { get; private set; }
@@ -79,8 +86,58 @@ namespace PetFamily.Domain.Volunteers
 
         internal UnitResult<Error> SetPhotos(IEnumerable<Photo> photos)
         {
-            Photos = photos.ToList();
+            Photos = photos.Concat(Photos).ToList();
 
+            return UnitResult.Success<Error>();
+        }
+
+        internal UnitResult<Error> SetMainPhoto(string path)
+        {
+            var isPhotoExist = Photos.Any(p => p.Path == path);
+            if (isPhotoExist == false)
+                return Errors.General.NotFound();
+
+            var photos = new List<Photo>();
+            foreach (var photo in Photos)
+            {
+                var isMain = photo.Path == path;
+                var photoCopy = Photo.Create(photo.Path, photo.FileName, isMain).Value;
+                photos.Add(photoCopy);
+            }
+
+            Photos = photos;
+
+            return UnitResult.Success<Error>();
+        }
+
+        internal UnitResult<Error> UpdateInfo(
+            PetName name,
+            PetType petType,
+            Description description,
+            PhoneNumber ownerPhoneNumber,
+            Color color,
+            IReadOnlyList<Requisite> requisites,
+            MedicalInformation medicalInformation,
+            Address address,
+            DateTime dateOfBirth
+            )
+        {
+            Name = name;
+            PetType = petType;
+            Description = description;
+            OwnerPhoneNumber = ownerPhoneNumber;
+            Color = color;
+            Requisites = requisites;
+            MedicalInformation = medicalInformation;
+            Address = address;
+            DateOfBirth = dateOfBirth;
+
+            return UnitResult.Success<Error>();
+        }
+
+        internal UnitResult<Error> UpdateStatus(PetStatus status)
+        {
+            Status = status;
             return UnitResult.Success<Error>();
         }
     }

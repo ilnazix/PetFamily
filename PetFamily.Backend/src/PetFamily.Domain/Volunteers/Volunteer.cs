@@ -139,6 +139,85 @@ namespace PetFamily.Domain.Volunteers
                     .Add(lifetimeSpan));
         }
 
+        public UnitResult<Error> DeletePet(PetId petId)
+        {
+            var petResult = GetPetById(petId);
+            if(petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+            pet.Delete();
+            return UnitResult.Success<Error>();
+        }
+
+        public UnitResult<Error> SetPetMainPhoto(
+            PetId petId,
+            string imagePath)
+        {
+            var petResult = GetPetById(petId);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+            return pet.SetMainPhoto(imagePath);
+        }
+
+        public UnitResult<Error> DeletePetPermanently(PetId petId)
+        {
+            var petResult = GetPetById(petId);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+            _pets.Remove(pet);
+            
+            return UnitResult.Success<Error>();
+        }
+
+        public UnitResult<Error> UpdatePetInfo(
+            PetId petId,
+            PetName name,
+            PetType petType,
+            Description description,
+            PhoneNumber ownerPhoneNumber,
+            Color color,
+            IReadOnlyList<Requisite> requisites,
+            MedicalInformation medicalInformation,
+            Address address,
+            DateTime dateOfBirth)
+        {
+            var petResult = GetPetById(petId);
+
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+
+            return pet.UpdateInfo(name, 
+                petType, 
+                description, 
+                ownerPhoneNumber, 
+                color, 
+                requisites, 
+                medicalInformation, 
+                address,
+                dateOfBirth);
+        }
+
+        public UnitResult<Error> UpdatePetStatus(
+            PetId petId, 
+            PetStatus status)
+        {
+            var petResult = GetPetById(petId);
+
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var pet = petResult.Value;
+
+            return pet.UpdateStatus(status);
+        }
+
         public UnitResult<Error> SetPetPhotos(PetId petId, IEnumerable<Photo> photos)
         {
             var pet = _pets.FirstOrDefault(p => p.Id == petId);
