@@ -70,7 +70,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 ab.Property(a => a.City).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("city");
                 ab.Property(a => a.Street).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("street");
                 ab.Property(a => a.HouseNumber).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("house_number");
-                ab.Property(a => a.HouseNumber).HasColumnName("apartment_number");
+                ab.Property(a => a.ApartmentNumber).HasColumnName("apartment_number");
             });
 
             builder.Property(p => p.OwnerPhoneNumber)

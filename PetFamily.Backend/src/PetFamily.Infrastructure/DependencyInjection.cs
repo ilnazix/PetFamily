@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Minio;
 using PetFamily.Application.Database;
 using PetFamily.Application.Messaging;
@@ -13,6 +16,7 @@ using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
 using PetFamily.Infrastructure.Repositories;
 using PetFamily.Infrastructure.Services;
+using static CSharpFunctionalExtensions.Result;
 
 namespace PetFamily.Infrastructure
 {
@@ -21,7 +25,7 @@ namespace PetFamily.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services
-                .AddDbContexts()
+                .AddDbContexts(configuration)
                 .AddMinio(configuration)
                 .AddHostedServices()
                 .AddMessaging();
@@ -53,10 +57,26 @@ namespace PetFamily.Infrastructure
             return services;
         }
         
-        private static IServiceCollection AddDbContexts(this IServiceCollection services)
+        private static IServiceCollection AddDbContexts(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationWriteDbContext>();
-            services.AddDbContext<IReadDbContext, ApplicationReadDbContext>();
+            services.AddDbContext<ApplicationWriteDbContext>(options =>
+            {
+                options
+                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                    .UseSnakeCaseNamingConvention();
+            });
+
+            services.AddDbContext<IReadDbContext, ApplicationReadDbContext>(options =>
+            {
+                options
+                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                    .UseSnakeCaseNamingConvention()
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
 
             return services;
         }

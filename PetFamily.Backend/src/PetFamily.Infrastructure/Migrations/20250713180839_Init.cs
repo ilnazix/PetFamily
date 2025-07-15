@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFamily.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class VOConvertation : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,7 @@ namespace PetFamily.Infrastructure.Migrations
                         name: "fk_breeds_species_species_id",
                         column: x => x.species_id,
                         principalTable: "species",
-                        principalColumn: "Id");
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -81,18 +81,19 @@ namespace PetFamily.Infrastructure.Migrations
                     state = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     city = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     street = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    apartment_number = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    house_number = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    apartment_number = table.Column<int>(type: "integer", nullable: true),
                     owner_phone_number = table.Column<string>(type: "text", nullable: false),
                     date_of_birth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    requisites = table.Column<string>(type: "text", nullable: false),
+                    photos = table.Column<string>(type: "text", nullable: false),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    breeed_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    breed_id = table.Column<Guid>(type: "uuid", nullable: false),
                     species_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    photos = table.Column<string>(type: "jsonb", nullable: false),
-                    requisites = table.Column<string>(type: "jsonb", nullable: false)
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,7 +102,7 @@ namespace PetFamily.Infrastructure.Migrations
                         name: "fk_pets_volunteers_volunteer_id",
                         column: x => x.volunteer_id,
                         principalTable: "volunteers",
-                        principalColumn: "Id");
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateIndex(

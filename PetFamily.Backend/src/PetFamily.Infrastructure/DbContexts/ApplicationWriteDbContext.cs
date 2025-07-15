@@ -9,38 +9,19 @@ namespace PetFamily.Infrastructure.DbContexts
 {
     public class ApplicationWriteDbContext : DbContext
     {
-        private const string DATABASE = "Database";
-        private readonly IConfiguration _configuration;
-
         public DbSet<Volunteer> Volunteers { get; set; }
         public DbSet<Species> Species { get; set; }
 
-        public ApplicationWriteDbContext(IConfiguration configuration)
+        public ApplicationWriteDbContext(DbContextOptions<ApplicationWriteDbContext> options)
+            : base(options)
         {
-            _configuration = configuration;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .UseNpgsql(_configuration.GetConnectionString(DATABASE))
-                .UseLoggerFactory(CreateLoggerFactory())
-                .UseSnakeCaseNamingConvention();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(
                 typeof(ApplicationWriteDbContext).Assembly,
-                type => type.FullName?.Contains("Configurations.Write") ?? false);
-        }
-
-        private ILoggerFactory CreateLoggerFactory()
-        {
-            return LoggerFactory.Create(builder =>
-            {
-                builder.AddConsole();
-            });
+                type => type.FullName?.Contains(Constants.WRITE_DB_CONTEXT_CONFIGURATIONS) ?? false);
         }
     }
 }
