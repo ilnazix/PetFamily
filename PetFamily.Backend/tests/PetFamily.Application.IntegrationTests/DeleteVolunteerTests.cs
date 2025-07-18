@@ -5,14 +5,14 @@ using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.IntegrationTests.Extensions;
 using PetFamily.Application.Volunteers.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.HardDelete;
+using PetFamily.Application.Volunteers.Commands.DeletePermanently;
 
 namespace PetFamily.Application.IntegrationTests
 {
     public class DeleteVolunteerTests : IClassFixture<IntegrationTestWebAppFactory>
     {
         private readonly IServiceScope _scope;
-        private readonly ICommandHandler<Guid, HardDeleteCommand> _sut;
+        private readonly ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand> _sut;
         private readonly ICommandHandler<Guid, CreateVolunteerCommand> _createVolunteerCommand;
         private readonly IReadDbContext _readDbContext;
         private readonly Fixture _fixture;
@@ -23,7 +23,7 @@ namespace PetFamily.Application.IntegrationTests
             
             _sut = _scope
                 .ServiceProvider
-                .GetRequiredService<ICommandHandler<Guid, HardDeleteCommand>>();
+                .GetRequiredService<ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand>>();
 
             _createVolunteerCommand = _scope
                 .ServiceProvider

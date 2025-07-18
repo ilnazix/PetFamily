@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using PetFamily.Application.Volunteers.Commands.AddPet;
 using PetFamily.Application.Volunteers.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.HardDelete;
+using PetFamily.Application.Volunteers.Commands.DeletePermanently;
 
 namespace PetFamily.Application.IntegrationTests.Extensions
 {
@@ -16,11 +16,11 @@ namespace PetFamily.Application.IntegrationTests.Extensions
                 .Create();
         }
 
-        public static HardDeleteCommand BuildDeleteVolunteerPermanentlyCommand(
+        public static DeleteVolunteerPermanentlyCommand BuildDeleteVolunteerPermanentlyCommand(
             this IFixture fixture,
             Guid volunteerId)
         {
-            return fixture.Build<HardDeleteCommand>()
+            return fixture.Build<DeleteVolunteerPermanentlyCommand>()
                 .With(c => c.Id, volunteerId)
                 .Create();
         }

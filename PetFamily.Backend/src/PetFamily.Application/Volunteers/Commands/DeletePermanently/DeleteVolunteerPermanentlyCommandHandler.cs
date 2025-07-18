@@ -6,18 +6,18 @@ using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Application.Volunteers.Commands.HardDelete
+namespace PetFamily.Application.Volunteers.Commands.DeletePermanently
 {
-    public class HardDeleteCommandHandler : ICommandHandler<Guid, HardDeleteCommand>
+    public class DeleteVolunteerPermanentlyCommandHandler : ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand>
     {
         private readonly IVolunteersRepository _volunteersRepository;
-        private readonly IValidator<HardDeleteCommand> _validator;
-        private readonly ILogger<HardDeleteCommandHandler> _logger;
+        private readonly IValidator<DeleteVolunteerPermanentlyCommand> _validator;
+        private readonly ILogger<DeleteVolunteerPermanentlyCommandHandler> _logger;
 
-        public HardDeleteCommandHandler(
+        public DeleteVolunteerPermanentlyCommandHandler(
             IVolunteersRepository volunteersRepository,
-            IValidator<HardDeleteCommand> validator,
-            ILogger<HardDeleteCommandHandler> logger)
+            IValidator<DeleteVolunteerPermanentlyCommand> validator,
+            ILogger<DeleteVolunteerPermanentlyCommandHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
             _validator = validator;
@@ -25,7 +25,7 @@ namespace PetFamily.Application.Volunteers.Commands.HardDelete
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(
-            HardDeleteCommand command,
+            DeleteVolunteerPermanentlyCommand command,
             CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
