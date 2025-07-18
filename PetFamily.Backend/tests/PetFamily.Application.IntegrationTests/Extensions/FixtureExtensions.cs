@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
 using PetFamily.Application.Species.Commands.AddBreed;
+using PetFamily.Application.Species.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.AddPet;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.DeletePermanently;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PetFamily.Application.IntegrationTests.Extensions
 {
@@ -52,6 +54,12 @@ namespace PetFamily.Application.IntegrationTests.Extensions
              return fixture.Build<AddBreedCommand>()
                 .With(c => c.SpeciesId, speciesId)
                 .Create();
+        }
+    
+        public static CreateSpeciesCommand BuildCreateSpeciesCommand(
+            this IFixture fixture)
+        {
+            return fixture.Create<CreateSpeciesCommand>();
         }
     }
 }

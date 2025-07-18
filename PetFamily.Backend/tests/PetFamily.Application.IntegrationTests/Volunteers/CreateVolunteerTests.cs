@@ -2,9 +2,10 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.IntegrationTests.Extensions;
+using PetFamily.Application.IntegrationTests.Infrastructure;
 using PetFamily.Application.Volunteers.Commands.Create;
 
-namespace PetFamily.Application.IntegrationTests
+namespace PetFamily.Application.IntegrationTests.Volunteers
 {
     public class CreateVolunteerTests : BaseIntegrationTest
     {

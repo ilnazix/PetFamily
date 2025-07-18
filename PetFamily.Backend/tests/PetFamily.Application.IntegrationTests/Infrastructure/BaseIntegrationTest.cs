@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Database;
 
-namespace PetFamily.Application.IntegrationTests
+namespace PetFamily.Application.IntegrationTests.Infrastructure
 {
     public class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>, IAsyncLifetime
     {

@@ -4,12 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.IntegrationTests.Extensions;
+using PetFamily.Application.IntegrationTests.Infrastructure;
 using PetFamily.Application.Species.Commands.AddBreed;
 using PetFamily.Application.Species.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.AddPet;
 using PetFamily.Application.Volunteers.Commands.Create;
 
-namespace PetFamily.Application.IntegrationTests
+namespace PetFamily.Application.IntegrationTests.Volunteers
 {
     public class AddPetTests : BaseIntegrationTest
     {
@@ -75,7 +76,7 @@ namespace PetFamily.Application.IntegrationTests
 
             return speciesResult.Value;
         }
-    
+
         private async Task<Guid> CreateBreed(Guid speciesId)
         {
             var createBreedCommand = _fixture.BuildAddBreedCommand(speciesId);

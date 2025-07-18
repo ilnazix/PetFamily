@@ -9,7 +9,7 @@ using Respawn;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
 
-namespace PetFamily.Application.IntegrationTests
+namespace PetFamily.Application.IntegrationTests.Infrastructure
 {
     public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
@@ -37,11 +37,11 @@ namespace PetFamily.Application.IntegrationTests
         {
             await _dbConnection.OpenAsync();
 
-            _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions 
-                {
-                    DbAdapter = DbAdapter.Postgres,
-                    SchemasToInclude = ["public"]
-                });
+            _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                SchemasToInclude = ["public"]
+            });
         }
 
         public async Task ResetDatabaseAsync()
@@ -59,7 +59,7 @@ namespace PetFamily.Application.IntegrationTests
             var writeDbContext = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(ApplicationWriteDbContext));
 
-            if(writeDbContext is not null)
+            if (writeDbContext is not null)
                 services.Remove(writeDbContext);
 
             var readDbContext = services.SingleOrDefault(s =>
