@@ -23,7 +23,7 @@ namespace PetFamily.Application.IntegrationTests
             _factory = factory;
 
             _scope = factory.Services.CreateScope();
-            
+
             _sut = _scope
                 .ServiceProvider
                 .GetRequiredService<ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand>>();
@@ -70,4 +70,5 @@ namespace PetFamily.Application.IntegrationTests
         }
 
         public Task InitializeAsync() => Task.CompletedTask;
+    }
 }
