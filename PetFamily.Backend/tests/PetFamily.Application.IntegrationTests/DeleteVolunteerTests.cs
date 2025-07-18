@@ -1,42 +1,22 @@
-﻿using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.Database;
 using PetFamily.Application.IntegrationTests.Extensions;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.DeletePermanently;
 
 namespace PetFamily.Application.IntegrationTests
 {
-    public class DeleteVolunteerTests : IClassFixture<IntegrationTestWebAppFactory>, IAsyncLifetime
+    public class DeleteVolunteerTests : BaseIntegrationTest
     {
-        private readonly IntegrationTestWebAppFactory _factory;
-        private readonly IServiceScope _scope;
         private readonly ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand> _sut;
-        private readonly ICommandHandler<Guid, CreateVolunteerCommand> _createVolunteerCommand;
-        private readonly IReadDbContext _readDbContext;
-        private readonly Fixture _fixture;
 
         public DeleteVolunteerTests(IntegrationTestWebAppFactory factory)
+            : base(factory)
         {
-            _factory = factory;
-
-            _scope = factory.Services.CreateScope();
-
             _sut = _scope
                 .ServiceProvider
                 .GetRequiredService<ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand>>();
-
-            _createVolunteerCommand = _scope
-                .ServiceProvider
-                .GetRequiredService<ICommandHandler<Guid, CreateVolunteerCommand>>();
-
-            _readDbContext = _scope
-                .ServiceProvider
-                .GetRequiredService<IReadDbContext>();
-
-            _fixture = new Fixture();
         }
 
 
@@ -44,11 +24,7 @@ namespace PetFamily.Application.IntegrationTests
         public async Task Handle_ShouldDeleteVolunteer_WhenVolunteerExists()
         {
             // Arrange
-            var createVolunteerCommand = _fixture.BuildCreateVolunteerCommand();
-
-            var createVolunteerResult = await _createVolunteerCommand.Handle(createVolunteerCommand);
-
-            var volunteerId = createVolunteerResult.Value;
+            var volunteerId = await CreateVolunteer();
             var deleteVolunteerCommand = _fixture.BuildDeleteVolunteerPermanentlyCommand(volunteerId);
 
             // Act
@@ -62,13 +38,17 @@ namespace PetFamily.Application.IntegrationTests
             volunteer.Should().BeNull();
         }
 
-        public Task DisposeAsync()
+        private async Task<Guid> CreateVolunteer()
         {
-            _scope.Dispose();
+            var createVolunteerCommand = _fixture.BuildCreateVolunteerCommand();
 
-            return _factory.ResetDatabaseAsync();
+            var createVolunteerCommandHandler = _scope
+                .ServiceProvider
+                .GetRequiredService<ICommandHandler<Guid, CreateVolunteerCommand>>();
+
+            var volunteerResult = await createVolunteerCommandHandler.Handle(createVolunteerCommand);
+
+            return volunteerResult.Value;
         }
-
-        public Task InitializeAsync() => Task.CompletedTask;
     }
 }
