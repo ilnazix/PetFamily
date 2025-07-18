@@ -9,8 +9,9 @@ using PetFamily.Application.Volunteers.Commands.DeletePermanently;
 
 namespace PetFamily.Application.IntegrationTests
 {
-    public class DeleteVolunteerTests : IClassFixture<IntegrationTestWebAppFactory>
+    public class DeleteVolunteerTests : IClassFixture<IntegrationTestWebAppFactory>, IAsyncLifetime
     {
+        private readonly IntegrationTestWebAppFactory _factory;
         private readonly IServiceScope _scope;
         private readonly ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand> _sut;
         private readonly ICommandHandler<Guid, CreateVolunteerCommand> _createVolunteerCommand;
@@ -19,6 +20,8 @@ namespace PetFamily.Application.IntegrationTests
 
         public DeleteVolunteerTests(IntegrationTestWebAppFactory factory)
         {
+            _factory = factory;
+
             _scope = factory.Services.CreateScope();
             
             _sut = _scope
@@ -35,6 +38,7 @@ namespace PetFamily.Application.IntegrationTests
 
             _fixture = new Fixture();
         }
+
 
         [Fact]
         public async Task Handle_ShouldDeleteVolunteer_WhenVolunteerExists()
@@ -57,5 +61,13 @@ namespace PetFamily.Application.IntegrationTests
 
             volunteer.Should().BeNull();
         }
-    }
+
+        public Task DisposeAsync()
+        {
+            _scope.Dispose();
+
+            return _factory.ResetDatabaseAsync();
+        }
+
+        public Task InitializeAsync() => Task.CompletedTask;
 }
