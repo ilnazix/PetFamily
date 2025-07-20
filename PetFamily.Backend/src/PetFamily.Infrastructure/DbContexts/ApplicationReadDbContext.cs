@@ -8,8 +8,6 @@ namespace PetFamily.Infrastructure.DbContexts
 {
     public class ApplicationReadDbContext : DbContext, IReadDbContext
     {
-        private readonly IConfiguration _configuration;
-
         public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
 
         public IQueryable<PetDto> Pets => Set<PetDto>();
@@ -18,33 +16,16 @@ namespace PetFamily.Infrastructure.DbContexts
 
         public IQueryable<BreedDto> Breeds => Set<BreedDto>(); 
 
-        public ApplicationReadDbContext(IConfiguration configuration)
+        public ApplicationReadDbContext(DbContextOptions<ApplicationReadDbContext> options)
+            : base(options)
         {
-            _configuration = configuration;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .UseNpgsql(_configuration.GetConnectionString(Constants.DATABASE))
-                .UseLoggerFactory(CreateLoggerFactory())
-                .UseSnakeCaseNamingConvention()
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(
                 typeof(ApplicationReadDbContext).Assembly, 
-                type => type.FullName?.Contains("Configurations.Read") ?? false);
-        }
-
-        private ILoggerFactory CreateLoggerFactory()
-        {
-            return LoggerFactory.Create(builder =>
-            {
-                builder.AddConsole();
-            });
+                type => type.FullName?.Contains(Constants.READ_DB_CONTEXT_CONFIGURATIONS) ?? false);
         }
     }
 }

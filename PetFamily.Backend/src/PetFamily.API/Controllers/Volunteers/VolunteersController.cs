@@ -8,7 +8,7 @@ using PetFamily.Application.Volunteers.Commands.AddPetPhoto;
 using PetFamily.Application.Volunteers.Commands.ChangePetPosition;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.DeletePet;
-using PetFamily.Application.Volunteers.Commands.HardDelete;
+using PetFamily.Application.Volunteers.Commands.DeletePermanently;
 using PetFamily.Application.Volunteers.Commands.DeletePetPermanently;
 using PetFamily.Application.Volunteers.Commands.Restore;
 using PetFamily.Application.Volunteers.Commands.SoftDelete;
@@ -132,10 +132,10 @@ namespace PetFamily.API.Controllers.Volunteers
         [HttpDelete("{id:guid}/hard")]
         public async Task<ActionResult<Envelope>> HardDelete(
             [FromRoute] Guid id,
-            [FromServices] HardDeleteCommandHandler handler,
+            [FromServices] DeleteVolunteerPermanentlyCommandHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new HardDeleteCommand(id);
+            var command = new DeleteVolunteerPermanentlyCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 

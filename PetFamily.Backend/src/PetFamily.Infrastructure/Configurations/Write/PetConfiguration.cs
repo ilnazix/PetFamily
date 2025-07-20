@@ -60,7 +60,8 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 mib.Property(mi => mi.Height).HasColumnName("height");
                 mib.Property(mi => mi.Weight).HasColumnName("weight");
                 mib.Property(mi => mi.HealthInformation)
-                    .HasMaxLength(MedicalInformation.MAX_HEALTH_INFO_LENGTH);
+                    .HasMaxLength(MedicalInformation.MAX_HEALTH_INFO_LENGTH)
+                    .HasColumnName("health_information");
             });
 
             builder.OwnsOne(p => p.Address, ab =>
@@ -70,7 +71,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 ab.Property(a => a.City).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("city");
                 ab.Property(a => a.Street).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("street");
                 ab.Property(a => a.HouseNumber).HasMaxLength(Address.FIELD_MAX_LENGTH).HasColumnName("house_number");
-                ab.Property(a => a.HouseNumber).HasColumnName("apartment_number");
+                ab.Property(a => a.ApartmentNumber).HasColumnName("apartment_number");
             });
 
             builder.Property(p => p.OwnerPhoneNumber)

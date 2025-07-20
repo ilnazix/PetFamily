@@ -5,24 +5,24 @@
 namespace PetFamily.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class breed : Migration
+    public partial class health_info : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "breeed_id",
+                name: "medical_information_health_information",
                 table: "pets",
-                newName: "breed_id");
+                newName: "health_information");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "breed_id",
+                name: "health_information",
                 table: "pets",
-                newName: "breeed_id");
+                newName: "medical_information_health_information");
         }
     }
 }

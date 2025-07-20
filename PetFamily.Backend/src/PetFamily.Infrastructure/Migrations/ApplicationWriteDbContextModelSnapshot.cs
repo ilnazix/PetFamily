@@ -23,7 +23,7 @@ namespace PetFamily.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Breeds", b =>
+            modelBuilder.Entity("PetFamily.Domain.Species.Breed", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -227,7 +227,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.ToTable("volunteers", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Breeds", b =>
+            modelBuilder.Entity("PetFamily.Domain.Species.Breed", b =>
                 {
                     b.HasOne("PetFamily.Domain.Species.Species", null)
                         .WithMany("Breeds")
@@ -248,6 +248,10 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
+                            b1.Property<int?>("ApartmentNumber")
+                                .HasColumnType("integer")
+                                .HasColumnName("apartment_number");
+
                             b1.Property<string>("City")
                                 .IsRequired()
                                 .HasMaxLength(50)
@@ -264,7 +268,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
-                                .HasColumnName("apartment_number");
+                                .HasColumnName("house_number");
 
                             b1.Property<string>("State")
                                 .IsRequired()
@@ -297,7 +301,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasMaxLength(2000)
                                 .HasColumnType("character varying(2000)")
-                                .HasColumnName("medical_information_health_information");
+                                .HasColumnName("health_information");
 
                             b1.Property<int>("Height")
                                 .HasColumnType("integer")
