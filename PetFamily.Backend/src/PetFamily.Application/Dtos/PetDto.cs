@@ -3,6 +3,7 @@
     public class PetDto
     {
         public Guid Id { get; init; }
+        public Guid VolunteerId { get; set; }
         public string Name { get; init; } = string.Empty;
         public int Position { get; init; }
         public string Description { get; init; } = string.Empty;

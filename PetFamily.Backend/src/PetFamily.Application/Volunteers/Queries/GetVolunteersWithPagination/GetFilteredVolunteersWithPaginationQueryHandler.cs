@@ -24,19 +24,19 @@ namespace PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination
 
             volunteersQuery = volunteersQuery.WhereIf(
                 !string.IsNullOrWhiteSpace(query.FirstName),
-                v => v.FirstName.Contains(query.FirstName));
+                v => v.FirstName.Contains(query.FirstName!));
 
             volunteersQuery = volunteersQuery.WhereIf(
                 !string.IsNullOrWhiteSpace(query.MiddleName),
-                v => v.MiddleName.Contains(query.MiddleName));
+                v => v.MiddleName.Contains(query.MiddleName!));
 
             volunteersQuery = volunteersQuery.WhereIf(
                 !string.IsNullOrWhiteSpace(query.LastName),
-                v => v.LastName.Contains(query.LastName));
+                v => v.LastName.Contains(query.LastName!));
 
             volunteersQuery = volunteersQuery.WhereIf(
                 !string.IsNullOrWhiteSpace(query.Email),
-                v => v.Email.Contains(query.Email));
+                v => v.Email.Contains(query.Email!));
 
             var pagedList = await volunteersQuery.ToPagedList(query.Page, query.PageSize, cancellationToken);
 
