@@ -11,7 +11,7 @@
         public string Status { get; init; } = string.Empty;
         public string OwnerPhoneNumber { get; init; } = string.Empty;
         public RequisiteDto[] Requisites { get; init; } = [];
-        public PhotoDto[] Photos { get; init; } = [];
+        public PhotoDto[] Photos { get; set; } = [];
         public string? Color { get; init; } = string.Empty;
         public bool? IsCastrated { get; init; }
         public bool? IsVaccinated { get; init;  }
@@ -24,8 +24,7 @@
         public string? State { get; init; } = string.Empty;
         public string? City { get; init; } = string.Empty;
         public string? Street { get; init; } = string.Empty;
-        public string? HouseNumber { get; } = string.Empty;
-        public int? ApartmentNumber { get; }
-
+        public string? HouseNumber { get; init;  } = string.Empty;
+        public int? ApartmentNumber { get; init; }
     }
 }
