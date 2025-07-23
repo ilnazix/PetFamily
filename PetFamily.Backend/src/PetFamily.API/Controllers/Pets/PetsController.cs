@@ -20,7 +20,7 @@ namespace PetFamily.API.Controllers.Pets
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetAllPets(
+        public async Task<ActionResult> GetPetById(
             [FromRoute] Guid id,
             GetPetQueryHandler handler,
             CancellationToken cancellationToken)
