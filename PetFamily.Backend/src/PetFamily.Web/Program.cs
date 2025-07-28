@@ -1,5 +1,6 @@
 using PetFamily.Species.Presentation;
 using PetFamily.Volunteers.Presentation;
+using PetFamily.Volunteers.Presentation.Volunteers;
 using PetFamily.Web.Middlewares;
 using Serilog;
 using Serilog.Events;
@@ -18,7 +19,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSerilog();
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddApplicationPart(typeof(SpeciesController).Assembly)
+    .AddApplicationPart(typeof(VolunteersController).Assembly);
+
 builder.Services.AddRouting(opt =>
 {
     opt.LowercaseUrls = true;
