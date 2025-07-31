@@ -2,6 +2,7 @@
 using PetFamily.Species.Application.Species.Commands.Create;
 using PetFamily.Species.Application.Species.Commands.Update;
 using PetFamily.Species.Application.Species.Commands.UpdateBreed;
+using PetFamily.Species.Application.Species.Queries.CheckIfBreedsExistsQuery;
 using PetFamily.Species.Application.Species.Queries.GetFilteredBreedsWithPagination;
 using PetFamily.Species.Application.Species.Queries.GetFilteredSpeciesWithPagination;
 using PetFamily.Species.Contracts.Requests;
@@ -10,6 +11,11 @@ namespace PetFamily.Species.Presentation.Extensions
 {
     public static class RequestExtensions
     {
+        public static CheckBreedsExistenceQuery ToQuery(this CheckBreedExistenceRequest request)
+        {
+            return new(request.SpeciesId, request.BreedId);
+        }
+
         public static AddBreedCommand ToCommand(this AddBreedRequest request, Guid speciesId)
         {
             return new AddBreedCommand(speciesId, request.Title);

@@ -6,6 +6,8 @@ using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Species.Contracts;
+using PetFamily.Species.Contracts.Requests;
 using PetFamily.Volunteers.Domain.Volunteers;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPet
@@ -14,15 +16,18 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPet
     {
         private readonly IVolunteersRepository _volunteersRepository;
         private readonly IValidator<AddPetCommand> _validator;
+        private readonly ISpeciesModule _speciesModule;
         private readonly ILogger<AddPetCommandHandler> _logger;
 
         public AddPetCommandHandler(
             IVolunteersRepository volunteersRepository,
             IValidator<AddPetCommand> validator,
+            ISpeciesModule speciesModule,
             ILogger<AddPetCommandHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
             _validator = validator;
+            _speciesModule = speciesModule;
             _logger = logger;
         }
 
@@ -40,12 +45,12 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPet
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
-            //TODO: ппроверить вид и породу
-            /*var isSpeciesAndBreedExist = await _readDbContext.Breeds
-                .AnyAsync(b => b.Id == command.BreeedId && b.SpeciesId == command.SpeciesId, cancellationToken);
+            var checkBreedExistenceRequest = new CheckBreedExistenceRequest(command.SpeciesId, command.BreeedId); 
+            var isSpeciesAndBreedExist = await _speciesModule
+                    .CheckBreedsExistence(checkBreedExistenceRequest, cancellationToken);
 
             if (!isSpeciesAndBreedExist)
-                return Errors.Pets.InvalidSpeciesOrBreed().ToErrorList();*/
+                return Errors.Pets.InvalidSpeciesOrBreed().ToErrorList();
 
             var petId = PetId.NewPetId();
             var petName = PetName.Create(command.PetName).Value;

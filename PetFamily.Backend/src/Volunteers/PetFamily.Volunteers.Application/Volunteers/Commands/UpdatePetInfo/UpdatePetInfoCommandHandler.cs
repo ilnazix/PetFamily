@@ -6,7 +6,10 @@ using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Species.Contracts.Requests;
+using PetFamily.Species.Contracts;
 using PetFamily.Volunteers.Domain.Volunteers;
+using System.Threading;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo
 {
@@ -14,19 +17,24 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo
     {
         private readonly IValidator<UpdatePetInfoCommand> _validator;
         private readonly IVolunteersRepository _volunteersRepository;
+        private readonly ISpeciesModule _speciesModule;
         private readonly ILogger<UpdatePetInfoCommand> _logger;
 
         public UpdatePetInfoCommandHandler(
             IValidator<UpdatePetInfoCommand> validator,
             IVolunteersRepository volunteersRepository,
+            ISpeciesModule speciesModule
             ILogger<UpdatePetInfoCommand> logger)
         {
             _validator = validator;
             _volunteersRepository = volunteersRepository;
+            _speciesModule = speciesModule;
             _logger = logger;
         }
 
-        public async Task<Result<Guid, ErrorList>> Handle(UpdatePetInfoCommand command, CancellationToken cancelationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(
+            UpdatePetInfoCommand command, 
+            CancellationToken cancelationToken = default)
         {
             var validationResult = await _validator.ValidateAsync(command, cancelationToken);
             if (validationResult.IsValid == false)
@@ -37,15 +45,12 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
-            //TODO: проверить что вид и порода существуют
-            /*var isBreedAndSpeciesExist = await _readDbContext.Breeds
-                .AnyAsync(
-                    b => b.SpeciesId == command.SpeciesId &&
-                         b.Id == command.BreedId,
-                    cancelationToken);
+            var checkBreedExistenceRequest = new CheckBreedExistenceRequest(command.SpeciesId, command.BreedId);
+            var isSpeciesAndBreedExist = await _speciesModule
+                    .CheckBreedsExistence(checkBreedExistenceRequest, cancelationToken);
 
-            if (!isBreedAndSpeciesExist)
-                return Errors.Pets.InvalidSpeciesOrBreed().ToErrorList();*/
+            if (!isSpeciesAndBreedExist)
+                return Errors.Pets.InvalidSpeciesOrBreed().ToErrorList();
 
             var volunteer = volunteerResult.Value;
 

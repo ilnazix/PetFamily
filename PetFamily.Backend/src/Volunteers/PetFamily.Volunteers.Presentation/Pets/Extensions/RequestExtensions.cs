@@ -1,9 +1,7 @@
-﻿using PetFamily.SharedKernel.ValueObjects.Ids;
-using PetFamily.SharedKernel.ValueObjects;
-using PetFamily.Volunteers.Application.Volunteers.Queries.GetPetsWithFilters;
+﻿using PetFamily.Volunteers.Application.Volunteers.Queries.GetPetsWithFilters;
 using PetFamily.Volunteers.Contracts.Requests;
-using System.Diagnostics.Metrics;
-using System.Xml.Linq;
+using PetFamily.Volunteers.Application.Volunteers.Queries.AnyPetOfBreedExists;
+using PetFamily.Volunteers.Application.Volunteers.Queries.AnyPetOfSpeciesExists;
 
 namespace PetFamily.Volunteers.Presentation.Pets.Extensions
 {
@@ -26,5 +24,11 @@ namespace PetFamily.Volunteers.Presentation.Pets.Extensions
             request.PageSize,
             request.OrderBy);
         }
+
+        public static AnyPetOfBreedExistsQuery ToQuery(
+            this AnyPetOfBreedExistsRequest request) => new(request.BreedId);
+
+        public static AnyPetOfScpeciesExistsQuery ToQuery(
+            this AnyPetOfSpeciesExistsRequest request) => new(request.SpeciesId);
     }
 }

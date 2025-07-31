@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Contracts;
 using PetFamily.Volunteers.Infrastructure;
 
 namespace PetFamily.Volunteers.Presentation
@@ -14,6 +15,8 @@ namespace PetFamily.Volunteers.Presentation
             services
                 .AddApplication()
                 .AddInfrastructure(configuration);
+
+            services.AddScoped<IVolunteersModule, VolunteersModule>();
 
             return services;
         }

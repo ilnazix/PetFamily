@@ -4,19 +4,24 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Volunteers.Contracts;
+using PetFamily.Volunteers.Contracts.Requests;
 
 namespace PetFamily.Species.Application.Species.Commands.Delete
 {
     public class DeleteSpeciesCommandHandler : ICommandHandler<DeleteSpeciesCommand>
     {
         private readonly ISpeciesRepository _speciesRepository;
+        private readonly IVolunteersModule _volunteersModule;
         private readonly ILogger<DeleteSpeciesCommandHandler> _logger;
 
         public DeleteSpeciesCommandHandler(
             ISpeciesRepository speciesRepository,
+            IVolunteersModule volunteersModule,
             ILogger<DeleteSpeciesCommandHandler> logger)
         {
             _speciesRepository = speciesRepository;
+            _volunteersModule = volunteersModule;
             _logger = logger;
         }
 
@@ -33,12 +38,10 @@ namespace PetFamily.Species.Application.Species.Commands.Delete
 
             var species = speciesResult.Value;
 
-            //TODO: проверить что не сущетсвует животных такого вида
-            /*var isExistPetWithSpecies = await _readDbContext.Pets
-                .AnyAsync(p => p.SpeciesId == speciesId, cancelationToken);
-
+            var request = new AnyPetOfSpeciesExistsRequest(command.Id);
+            var isExistPetWithSpecies = await _volunteersModule.AnyPetOfSpeciesExists(request, cancelationToken);
             if (isExistPetWithSpecies)
-                return Errors.Species.CannotDeleteWhenAnimalsExist().ToErrorList();*/
+                return Errors.Species.CannotDeleteWhenAnimalsExist().ToErrorList();
 
             await _speciesRepository.Delete(species, cancelationToken);
 
