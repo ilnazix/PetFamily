@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetFamily.Species.Contracts
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetFamily.Application.IntegrationTests", "tests\PetFamily.Application.IntegrationTests\PetFamily.Application.IntegrationTests.csproj", "{A7D6A658-461B-4EC0-B7AD-5DB6306D711C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetFamily.Domain.UnitTests", "tests\PetFamily.Domain.UnitTests\PetFamily.Domain.UnitTests.csproj", "{3D259ACD-8A35-4232-9600-40BCCA1BCB69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,10 @@ Global
 		{A7D6A658-461B-4EC0-B7AD-5DB6306D711C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7D6A658-461B-4EC0-B7AD-5DB6306D711C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7D6A658-461B-4EC0-B7AD-5DB6306D711C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D259ACD-8A35-4232-9600-40BCCA1BCB69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D259ACD-8A35-4232-9600-40BCCA1BCB69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D259ACD-8A35-4232-9600-40BCCA1BCB69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D259ACD-8A35-4232-9600-40BCCA1BCB69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,6 +143,7 @@ Global
 		{2120662C-8EC0-4219-8242-7C17FA4328AC} = {13E0C070-4A14-4353-ABA1-13536E324D61}
 		{7F020613-4F43-4A09-A0AA-1566A6064CCE} = {13E0C070-4A14-4353-ABA1-13536E324D61}
 		{A7D6A658-461B-4EC0-B7AD-5DB6306D711C} = {5C76B5E3-8332-46A6-8320-B1D3EFA78A93}
+		{3D259ACD-8A35-4232-9600-40BCCA1BCB69} = {5C76B5E3-8332-46A6-8320-B1D3EFA78A93}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F1A69B7-94CC-4170-8CF0-4BAA5EA4C2CC}

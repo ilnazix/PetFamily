@@ -1,7 +1,8 @@
 using FluentAssertions;
-using PetFamily.Domain.Shared;
-using PetFamily.Domain.Species;
-using PetFamily.Domain.Volunteers;
+using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Volunteers.Domain.Volunteers;
 
 namespace PetFamily.Domain.UnitTests
 {
