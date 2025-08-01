@@ -12,16 +12,16 @@ namespace PetFamily.Species.Application.Species.Commands.Create
 {
     public class CreateSpeciesCommandHandler : ICommandHandler<Guid, CreateSpeciesCommand>
     {
-        private readonly ISpeciesRepository _speciesRepository;
+        private readonly ISpeciesUnitOfWork _unitOfWork;
         private readonly ISpeciesReadDbContext _readDbContext;
         private readonly ILogger<CreateSpeciesCommandHandler> _logger;
 
         public CreateSpeciesCommandHandler(
-            ISpeciesRepository speciesRepository,
+            ISpeciesUnitOfWork unitOfWork,
             ISpeciesReadDbContext readDbContext,
             ILogger<CreateSpeciesCommandHandler> logger)
         {
-            _speciesRepository = speciesRepository;
+            _unitOfWork = unitOfWork;
             _readDbContext = readDbContext;
             _logger = logger;
         }
@@ -41,7 +41,9 @@ namespace PetFamily.Species.Application.Species.Commands.Create
             if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
 
-            var id = await _speciesRepository.Add(speciesResult.Value, cancelationToken);
+            var id = await _unitOfWork.SpeciesRepository.Add(speciesResult.Value, cancelationToken);
+
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation("Created species with {title}", command.Title);
 

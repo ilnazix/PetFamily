@@ -10,16 +10,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Restore
 {
     public class RestoreVolunteerCommandHandler : ICommandHandler<Guid, RestoreVolunteerCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<RestoreVolunteerCommand> _validator;
         private readonly ILogger<RestoreVolunteerCommandHandler> _logger;
 
         public RestoreVolunteerCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<RestoreVolunteerCommand> validator,
             ILogger<RestoreVolunteerCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _logger = logger;
         }
@@ -36,7 +36,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Restore
             }
 
             var id = VolunteerId.Create(command.Id);
-            var volunteerResult = await _volunteersRepository.GetById(id, cancellationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(id, cancellationToken);
 
             if (volunteerResult.IsFailure)
             {
@@ -46,7 +46,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Restore
             var volunteer = volunteerResult.Value;
             volunteer.Restore();
 
-            await _volunteersRepository.Save(volunteer, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
             _logger.LogInformation("Restore volunteer with Id={Id}", id.Value);
 

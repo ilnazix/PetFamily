@@ -3,7 +3,6 @@ using PetFamily.Volunteers.Application.Volunteers.Queries.AnyPetOfSpeciesExists;
 using PetFamily.Volunteers.Contracts;
 using PetFamily.Volunteers.Contracts.Requests;
 using PetFamily.Volunteers.Presentation.Pets.Extensions;
-using System.Runtime.CompilerServices;
 
 namespace PetFamily.Volunteers.Presentation
 {

@@ -1,4 +1,5 @@
-﻿using PetFamily.Volunteers.Application.Volunteers.Commands.AddPet;
+﻿using PetFamily.Core.Dtos;
+using PetFamily.Volunteers.Application.Volunteers.Commands.AddPet;
 using PetFamily.Volunteers.Application.Volunteers.Commands.ChangePetPosition;
 using PetFamily.Volunteers.Application.Volunteers.Commands.Create;
 using PetFamily.Volunteers.Application.Volunteers.Commands.SetPetMainPhoto;
@@ -42,7 +43,7 @@ namespace PetFamily.Volunteers.Presentation.Volunteers.Extensions
                 PhoneNumber: request.PhoneNumber,
                 Email: request.Email,
                 SocialMedias: request.SocialMedias.Select(sm => new SocialMediaInfo(sm.Link, sm.Title)),
-                Requisites: request.Requisites.Select(r => new RequisitesInfo(r.Title, r.Description))
+                Requisites: request.Requisites.Select(r => new RequisiteInfo(r.Title, r.Description))
             );
         }
 
@@ -78,7 +79,7 @@ namespace PetFamily.Volunteers.Presentation.Volunteers.Extensions
 
         public static UpdatePetInfoCommand ToCommand(this UpdatePetInfoRequest request, Guid volunteerId, Guid petId)
         {
-            var requisites = request.Requisites.Select(r => new RequisitesInfo(r.Title, r.Description));
+            var requisites = request.Requisites.Select(r => new RequisiteInfo(r.Title, r.Description));
 
             return new UpdatePetInfoCommand(
                 volunteerId,
@@ -112,7 +113,7 @@ namespace PetFamily.Volunteers.Presentation.Volunteers.Extensions
 
         public static UpdateRequisitesCommand ToCommand(this UpdateRequisitesRequest request, Guid id)
         {
-            var requisites = request.Requisites.Select(r => new RequisitesInfo(r.Title, r.Description));
+            var requisites = request.Requisites.Select(r => new RequisiteInfo(r.Title, r.Description));
             return new UpdateRequisitesCommand(id, requisites);
         }
 

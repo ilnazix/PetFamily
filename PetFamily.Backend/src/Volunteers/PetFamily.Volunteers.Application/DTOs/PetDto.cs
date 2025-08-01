@@ -12,7 +12,7 @@ namespace PetFamily.Volunteers.Application.DTOs
         public DateTime DateOfBirth { get; init; }
         public string Status { get; init; } = string.Empty;
         public string OwnerPhoneNumber { get; init; } = string.Empty;
-        public RequisiteDto[] Requisites { get; init; } = [];
+        public RequisiteInfo[] Requisites { get; init; } = [];
         public PhotoDto[] Photos { get; set; } = [];
         public string? Color { get; init; } = string.Empty;
         public bool? IsCastrated { get; init; }

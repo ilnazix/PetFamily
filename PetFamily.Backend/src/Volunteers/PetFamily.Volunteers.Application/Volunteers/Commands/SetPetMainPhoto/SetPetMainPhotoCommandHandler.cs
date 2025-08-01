@@ -8,14 +8,14 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.SetPetMainPhoto
 {
     public class SetPetMainPhotoCommandHandler : ICommandHandler<Guid, SetPetMainPhotoCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly ILogger<SetPetMainPhotoCommandHandler> _logger;
 
         public SetPetMainPhotoCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             ILogger<SetPetMainPhotoCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -24,7 +24,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.SetPetMainPhoto
             CancellationToken cancelationToken = default)
         {
             var volunteerId = VolunteerId.Create(command.VolunteerId);
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancelationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(volunteerId, cancelationToken);
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
@@ -36,7 +36,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.SetPetMainPhoto
             if (result.IsFailure)
                 return result.Error.ToErrorList();
 
-            await _volunteersRepository.Save(volunteer, cancelationToken);
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation(
                 "Main photo for pet {PetId} was updated by volunteer {VolunteerId}",

@@ -10,16 +10,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePermanently
 {
     public class DeleteVolunteerPermanentlyCommandHandler : ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<DeleteVolunteerPermanentlyCommand> _validator;
         private readonly ILogger<DeleteVolunteerPermanentlyCommandHandler> _logger;
 
         public DeleteVolunteerPermanentlyCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<DeleteVolunteerPermanentlyCommand> validator,
             ILogger<DeleteVolunteerPermanentlyCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _logger = logger;
         }
@@ -36,14 +36,15 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePermanently
             }
 
             var id = VolunteerId.Create(command.Id);
-            var volunteerResult = await _volunteersRepository.GetById(id, cancellationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(id, cancellationToken);
 
             if (volunteerResult.IsFailure)
             {
                 return volunteerResult.Error.ToErrorList();
             }
 
-            await _volunteersRepository.Delete(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.VolunteersRepository.Delete(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
             _logger.LogInformation("Volunteers with Id={Id} permanently deleted", id.Value);
 

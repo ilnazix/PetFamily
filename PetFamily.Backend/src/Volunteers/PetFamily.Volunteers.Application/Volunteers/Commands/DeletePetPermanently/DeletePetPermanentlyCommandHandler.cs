@@ -12,16 +12,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePetPermanen
     {
         private const string BUCKET_NAME = Constants.Buckets.PetPhotos;
 
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IMessageQueue<IEnumerable<FileMetadata>> _messageQueue;
         private readonly ILogger<DeletePetPermanentlyCommandHandler> _logger;
 
         public DeletePetPermanentlyCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IMessageQueue<IEnumerable<FileMetadata>> messageQueue,
             ILogger<DeletePetPermanentlyCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _messageQueue = messageQueue;
             _logger = logger;
         }
@@ -31,7 +31,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePetPermanen
             CancellationToken cancelationToken = default)
         {
             var volunteerId = VolunteerId.Create(command.VolunteerId);
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancelationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(volunteerId, cancelationToken);
 
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
@@ -51,7 +51,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePetPermanen
 
             await _messageQueue.WriteAsync(photosToDelete, cancelationToken);
 
-            await _volunteersRepository.Save(volunteer, cancelationToken);
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation(
                 "Pet with ID {PetId} was permanently deleted by volunteer {VolunteerId}",

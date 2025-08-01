@@ -15,20 +15,20 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPetPhoto
     {
         private const string BUCKET_NAME = Constants.Buckets.PetPhotos;
 
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IFilesProvider _fileProvider;
         private readonly IValidator<AddPetPhotoCommand> _validator;
         private readonly IMessageQueue<IEnumerable<FileMetadata>> _messageQueue;
         private readonly ILogger<AddPetPhotoCommandHandler> _logger;
 
         public AddPetPhotoCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IFilesProvider fileProvider,
             IValidator<AddPetPhotoCommand> validator,
             IMessageQueue<IEnumerable<FileMetadata>> messageQueue,
             ILogger<AddPetPhotoCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _fileProvider = fileProvider;
             _validator = validator;
             _messageQueue = messageQueue;
@@ -41,7 +41,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPetPhoto
             if (validationResult.IsValid == false)
                 return validationResult.ToErrorList();
 
-            var volunteerResult = await _volunteersRepository.GetById(VolunteerId.Create(command.VolunteerId));
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(VolunteerId.Create(command.VolunteerId));
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
@@ -83,7 +83,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPetPhoto
             if (result.IsFailure)
                 return result.Error.ToErrorList();
 
-            var saveResult = await _volunteersRepository.Save(volunteer, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
             return pathsResult.Value.ToList();
         }

@@ -8,14 +8,14 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePet
 {
     public class DeletePetCommandHandler : ICommandHandler<DeletePetCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly ILogger<DeletePetCommandHandler> _logger;
 
         public DeletePetCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             ILogger<DeletePetCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -24,7 +24,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePet
             CancellationToken cancelationToken = default)
         {
             var volunteerId = VolunteerId.Create(command.VolunteerId);
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancelationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(volunteerId, cancelationToken);
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
@@ -35,7 +35,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePet
             if (deletePetResult.IsFailure)
                 return deletePetResult.Error.ToErrorList();
 
-            await _volunteersRepository.Save(volunteer, cancelationToken);
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation(
                 "Pet with ID={petID} deleted by volunteer with ID={volunteerID}",

@@ -12,16 +12,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetStatus
     public class UpdatePetStatusCommandHandler : ICommandHandler<Guid, UpdatePetStatusCommand>
     {
         private readonly IValidator<UpdatePetStatusCommand> _validator;
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly ILogger<UpdatePetStatusCommandHandler> _logger;
 
         public UpdatePetStatusCommandHandler(
             IValidator<UpdatePetStatusCommand> validator,
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork volunteersRepository,
             ILogger<UpdatePetStatusCommandHandler> logger)
         {
             _validator = validator;
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = volunteersRepository;
             _logger = logger;
         }
 
@@ -34,7 +34,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetStatus
                 return validationResult.ToErrorList();
 
             var volunteerId = VolunteerId.Create(command.VolunteerId);
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancelationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(volunteerId, cancelationToken);
 
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
@@ -47,7 +47,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetStatus
             if (updateStatusResult.IsFailure)
                 return updateStatusResult.Error.ToErrorList();
 
-            await _volunteersRepository.Save(volunteer, cancelationToken);
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation(
                 "Pet status with ID={petId} updated by volunteer with ID={volunteerId}",

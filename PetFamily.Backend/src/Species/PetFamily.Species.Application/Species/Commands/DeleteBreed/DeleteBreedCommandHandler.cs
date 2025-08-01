@@ -12,16 +12,16 @@ namespace PetFamily.Species.Application.Species.Commands.DeleteBreed
 {
     public class DeleteBreedCommandHandler : ICommandHandler<DeleteBreedCommand>
     {
-        private readonly ISpeciesRepository _speciesRepository;
+        private readonly ISpeciesUnitOfWork _unitOfWork;
         private readonly IVolunteersModule _volunteersModule;
         private readonly ILogger<DeleteBreedCommandHandler> _logger;
 
         public DeleteBreedCommandHandler(
-            ISpeciesRepository speciesRepository,
+            ISpeciesUnitOfWork unitOfWork,
             IVolunteersModule volunteersModule,
             ILogger<DeleteBreedCommandHandler> logger)
         {
-            _speciesRepository = speciesRepository;
+            _unitOfWork = unitOfWork;
             _volunteersModule = volunteersModule;
             _logger = logger;
         }
@@ -31,7 +31,7 @@ namespace PetFamily.Species.Application.Species.Commands.DeleteBreed
             CancellationToken cancelationToken = default)
         {
             var speciesId = SpeciesId.Create(command.SpeciesId);
-            var speciesResult = await _speciesRepository.GetById(speciesId, cancelationToken);
+            var speciesResult = await _unitOfWork.SpeciesRepository.GetById(speciesId, cancelationToken);
 
             if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
@@ -49,7 +49,7 @@ namespace PetFamily.Species.Application.Species.Commands.DeleteBreed
             if (result.IsFailure)
                 return result.Error.ToErrorList();
 
-            await _speciesRepository.Save(species, cancelationToken);
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation("Breeds deleted (id={2})", breedId.Value);
 

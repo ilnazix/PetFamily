@@ -14,6 +14,7 @@ using PetFamily.Volunteers.Infrastructure.Services;
 using PetFamily.Volunteers.Infrastructure.BackgroundServices;
 using PetFamily.Core.Messaging;
 using PetFamily.Volunteers.Infrastructure.MessageQueues;
+using PetFamily.Volunteers.Infrastructure.Database;
 
 namespace PetFamily.Volunteers.Infrastructure
 {
@@ -33,6 +34,8 @@ namespace PetFamily.Volunteers.Infrastructure
                 .AddMessaging();
 
             services.AddScoped<DeleteExpiredVolunteersService>();
+
+            services.AddScoped<IVolunteersUnitOfWork, VolunteersUnitOfWork>();
 
             return services;
         }

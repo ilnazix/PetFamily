@@ -14,18 +14,18 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPet
 {
     public class AddPetCommandHandler : ICommandHandler<Guid, AddPetCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<AddPetCommand> _validator;
         private readonly ISpeciesModule _speciesModule;
         private readonly ILogger<AddPetCommandHandler> _logger;
 
         public AddPetCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<AddPetCommand> validator,
             ISpeciesModule speciesModule,
             ILogger<AddPetCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _speciesModule = speciesModule;
             _logger = logger;
@@ -40,7 +40,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPet
 
 
             var volunteerId = VolunteerId.Create(command.VolunteerId);
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancellationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(volunteerId, cancellationToken);
 
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
@@ -68,7 +68,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.AddPet
             if (result.IsFailure)
                 return result.Error.ToErrorList();
 
-            await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
             _logger.LogInformation("Add pet (Id={petId}) to volunteer (Id={volunteerId})", petId.Value, volunteerId.Value);
 

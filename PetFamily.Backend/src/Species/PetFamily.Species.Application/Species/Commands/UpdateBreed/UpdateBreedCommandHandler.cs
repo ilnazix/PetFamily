@@ -9,21 +9,21 @@ namespace PetFamily.Species.Application.Species.Commands.UpdateBreed
 {
     public class UpdateBreedCommandHandler : ICommandHandler<Guid, UpdateBreedCommand>
     {
-        private readonly ISpeciesRepository _speciesRepository;
+        private readonly ISpeciesUnitOfWork _unitOfWork;
         private readonly ILogger<AddBreedCommandHandler> _logger;
 
         public UpdateBreedCommandHandler(
-            ISpeciesRepository speciesRepository,
+            ISpeciesUnitOfWork unitOfWork,
             ILogger<AddBreedCommandHandler> logger)
         {
-            _speciesRepository = speciesRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(UpdateBreedCommand command, CancellationToken cancelationToken = default)
         {
             var speciesId = SpeciesId.Create(command.SpeciesId);
-            var speciesResult = await _speciesRepository.GetById(speciesId, cancelationToken);
+            var speciesResult = await _unitOfWork.SpeciesRepository.GetById(speciesId, cancelationToken);
 
             if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
@@ -36,7 +36,7 @@ namespace PetFamily.Species.Application.Species.Commands.UpdateBreed
             if (result.IsFailure)
                 return result.Error.ToErrorList();
 
-            await _speciesRepository.Save(species, cancelationToken);
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation("Updated breed title {title}", command.Title);
 

@@ -11,16 +11,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateRequisites
 {
     public class UpdateRequisitesCommandHandler : ICommandHandler<Guid, UpdateRequisitesCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<UpdateRequisitesCommand> _validator;
         private readonly ILogger<UpdateRequisitesCommandHandler> _logger;
 
         public UpdateRequisitesCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<UpdateRequisitesCommand> validator,
             ILogger<UpdateRequisitesCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _logger = logger;
         }
@@ -38,7 +38,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateRequisites
             }
 
             var volunteerId = VolunteerId.Create(command.Id);
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancellationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(volunteerId, cancellationToken);
 
             if (volunteerResult.IsFailure)
             {
@@ -50,11 +50,11 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateRequisites
 
             volunteerResult.Value.UpdateRequisites(requisites);
 
-            var guid = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
-            _logger.LogInformation("Volunteers's (Id={Id}) social medias list updated", guid.Value);
+            _logger.LogInformation("Volunteers's (Id={Id}) social medias list updated", volunteerId.Value);
 
-            return guid.Value;
+            return volunteerId.Value;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Read
 
             builder.Property(v => v.Requisites)
                 .HasConversion(req => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
-                 json => JsonSerializer.Deserialize<RequisiteDto[]>(json, JsonSerializerOptions.Default)!);
+                 json => JsonSerializer.Deserialize<RequisiteInfo[]>(json, JsonSerializerOptions.Default)!);
 
 
             builder.Property(v => v.Photos)

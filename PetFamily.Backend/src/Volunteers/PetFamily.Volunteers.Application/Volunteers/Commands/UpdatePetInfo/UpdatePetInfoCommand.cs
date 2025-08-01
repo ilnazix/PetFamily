@@ -1,5 +1,5 @@
 ﻿using PetFamily.Core.Abstractions;
-using PetFamily.Volunteers.Application.Volunteers.Commands.Shared;
+using PetFamily.Core.Dtos;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo
 {
@@ -13,7 +13,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo
         string OwnerPhoneNumber,
         string Color,
         DateTime DateOfBirth,
-        IEnumerable<RequisitesInfo> Requisites,
+        IEnumerable<RequisiteInfo> Requisites,
         bool IsCastrated,
         bool IsVaccinated,
         string HealthInformation,

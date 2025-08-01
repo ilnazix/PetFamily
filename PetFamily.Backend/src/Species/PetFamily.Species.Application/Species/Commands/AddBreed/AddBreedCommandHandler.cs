@@ -9,14 +9,14 @@ namespace PetFamily.Species.Application.Species.Commands.AddBreed
 {
     public class AddBreedCommandHandler : ICommandHandler<Guid, AddBreedCommand>
     {
-        private readonly ISpeciesRepository _speciesRepository;
+        private readonly ISpeciesUnitOfWork _unitOfWork;
         private readonly ILogger<AddBreedCommandHandler> _logger;
 
         public AddBreedCommandHandler(
-            ISpeciesRepository speciesRepository,
+            ISpeciesUnitOfWork unitOfWork,
             ILogger<AddBreedCommandHandler> logger)
         {
-            _speciesRepository = speciesRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -26,7 +26,7 @@ namespace PetFamily.Species.Application.Species.Commands.AddBreed
         {
             var speciesId = SpeciesId.Create(command.SpeciesId);
 
-            var speciesResult = await _speciesRepository.GetById(speciesId, cancelationToken);
+            var speciesResult = await _unitOfWork.SpeciesRepository.GetById(speciesId, cancelationToken);
 
             if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
@@ -42,7 +42,7 @@ namespace PetFamily.Species.Application.Species.Commands.AddBreed
             var breed = breedResult.Value;
             species.AddBreed(breed);
 
-            await _speciesRepository.Save(species, cancelationToken);
+            await _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation("Created breed with title {title}", breed.Title);
 

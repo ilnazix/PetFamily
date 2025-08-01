@@ -12,16 +12,16 @@ namespace PetFamily.Species.Application.Species.Commands.Update
 {
     public class UpdateSpeciesCommandHandler : ICommandHandler<Guid, UpdateSpeciesCommand>
     {
-        private readonly ISpeciesRepository _speciesRepository;
+        private readonly ISpeciesUnitOfWork _unitOfWork;
         private readonly ISpeciesReadDbContext _readDbContext;
         private readonly ILogger<UpdateSpeciesCommandHandler> _logger;
 
         public UpdateSpeciesCommandHandler(
-            ISpeciesRepository speciesRepository,
+            ISpeciesUnitOfWork unitOfWork,
             ISpeciesReadDbContext readDbContext,
             ILogger<UpdateSpeciesCommandHandler> logger)
         {
-            _speciesRepository = speciesRepository;
+            _unitOfWork = unitOfWork;
             _readDbContext = readDbContext;
             _logger = logger;
         }
@@ -35,7 +35,7 @@ namespace PetFamily.Species.Application.Species.Commands.Update
                 return Errors.General.ValueIsInvalid(nameof(AnimalType.Title)).ToErrorList();
 
             var speciesId = SpeciesId.Create(command.Id);
-            var speciesResult = await _speciesRepository.GetById(speciesId, cancelationToken);
+            var speciesResult = await _unitOfWork.SpeciesRepository.GetById(speciesId, cancelationToken);
 
             if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
@@ -46,7 +46,7 @@ namespace PetFamily.Species.Application.Species.Commands.Update
             if (result.IsFailure)
                 return result.Error.ToErrorList();
 
-            await _speciesRepository.Save(speciesResult.Value, cancelationToken);
+            _unitOfWork.Commit(cancelationToken);
 
             _logger.LogInformation("Title of species with {Id} has changed", speciesId.Value);
 

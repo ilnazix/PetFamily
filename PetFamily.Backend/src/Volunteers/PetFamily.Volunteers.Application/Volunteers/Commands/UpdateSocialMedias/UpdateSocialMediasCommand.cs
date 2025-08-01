@@ -1,5 +1,5 @@
 ﻿using PetFamily.Core.Abstractions;
-using PetFamily.Volunteers.Application.Volunteers.Commands.Shared;
+using PetFamily.Core.Dtos;
 
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateSocialMedias

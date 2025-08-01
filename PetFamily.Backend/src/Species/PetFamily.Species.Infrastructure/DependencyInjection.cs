@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Species.Application.Database;
 using PetFamily.Species.Application.Species.Commands;
+using PetFamily.Species.Infrastructure.Database;
 using PetFamily.Species.Infrastructure.DbContexts;
 using PetFamily.Species.Infrastructure.Repositories;
 
@@ -19,6 +20,7 @@ namespace PetFamily.Species.Infrastructure
                 .AddDbContexts(configuration);
 
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+            services.AddScoped<ISpeciesUnitOfWork, SpeciesUnitOfWork>();
 
             return services;
         }

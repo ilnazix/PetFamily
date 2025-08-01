@@ -64,13 +64,13 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Write
             builder.Property(v => v.Requisites)
                 .HasConversion(req =>
                     JsonSerializer.Serialize(req.Select(r =>
-                        new RequisiteDto
+                        new RequisiteInfo
                         {
                             Title = r.Title,
                             Description = r.Description
                         }).ToList(), JsonSerializerOptions.Default),
 
-                    json => JsonSerializer.Deserialize<IReadOnlyList<RequisiteDto>>(json, JsonSerializerOptions.Default)!
+                    json => JsonSerializer.Deserialize<IReadOnlyList<RequisiteInfo>>(json, JsonSerializerOptions.Default)!
                         .Select(d => Requisite.Create(d.Title, d.Description).Value)
                         .ToList(),
 
@@ -82,14 +82,14 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Write
             builder
                 .Property(v => v.SocialMedias)
                 .HasConversion(sm => JsonSerializer.Serialize(sm.Select(sm =>
-                        new SocialMediaDto
+                        new SocialMediaInfo()
                         {
                             Title = sm.Title,
                             Link = sm.Link
                         }
                     ).ToList(), JsonSerializerOptions.Default),
 
-                    json => JsonSerializer.Deserialize<IReadOnlyList<SocialMediaDto>>(json, JsonSerializerOptions.Default)!
+                    json => JsonSerializer.Deserialize<IReadOnlyList<SocialMediaInfo>>(json, JsonSerializerOptions.Default)!
                         .Select(d => SocialMedia.Create(d.Link, d.Title).Value)
                         .ToList(),
 

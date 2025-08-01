@@ -10,16 +10,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.SoftDelete
 {
     public class SoftDeleteCommandHandler : ICommandHandler<Guid, SoftDeleteCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<SoftDeleteCommand> _validator;
         private readonly ILogger<SoftDeleteCommandHandler> _logger;
 
         public SoftDeleteCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<SoftDeleteCommand> validator,
             ILogger<SoftDeleteCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _logger = logger;
         }
@@ -34,7 +34,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.SoftDelete
             }
 
             var id = VolunteerId.Create(command.Id);
-            var volunteerResult = await _volunteersRepository.GetById(id, cancellationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(id, cancellationToken);
 
             if (volunteerResult.IsFailure)
             {
@@ -44,7 +44,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.SoftDelete
             var volunteer = volunteerResult.Value;
             volunteer.Delete();
 
-            await _volunteersRepository.Save(volunteer, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
             _logger.LogInformation("Soft delete volunteer with Id={Id}", id.Value);
 

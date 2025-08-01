@@ -19,7 +19,6 @@ namespace PetFamily.Species.Infrastructure.Repositories
         public async Task<Guid> Add(Domain.Models.Species species, CancellationToken cancellationToken = default)
         {
             await _dbContext.Species.AddAsync(species, cancellationToken);
-            await _dbContext.SaveChangesAsync();
 
             return species.Id;
         }
@@ -27,7 +26,6 @@ namespace PetFamily.Species.Infrastructure.Repositories
         public async Task<Result<Guid, Error>> Delete(Domain.Models.Species species, CancellationToken cancelationToken)
         {
             _dbContext.Species.Remove(species);
-            await _dbContext.SaveChangesAsync(cancelationToken);
 
             return species.Id.Value;
         }
@@ -44,14 +42,6 @@ namespace PetFamily.Species.Infrastructure.Repositories
             }
 
             return species;
-        }
-
-        public async Task<Result<Guid, Error>> Save(Domain.Models.Species species, CancellationToken cancellationToken = default)
-        {
-            _dbContext.Species.Attach(species);
-            await _dbContext.SaveChangesAsync();
-
-            return species.Id.Value;
         }
     }
 }

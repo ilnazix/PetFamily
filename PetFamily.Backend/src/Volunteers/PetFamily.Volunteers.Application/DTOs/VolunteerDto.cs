@@ -11,7 +11,7 @@ namespace PetFamily.Volunteers.Application.DTOs
         public string Email { get; init; } = string.Empty;
         public string PhoneNumber { get; init; } = string.Empty;
         public string? Description { get; init; } = string.Empty;
-        public RequisiteDto[] Requisites { get; init; } = [];
-        public SocialMediaDto[] SocialMedias { get; init; } = [];
+        public RequisiteInfo[] Requisites { get; init; } = [];
+        public SocialMediaInfo[] SocialMedias { get; init; } = [];
     }
 }

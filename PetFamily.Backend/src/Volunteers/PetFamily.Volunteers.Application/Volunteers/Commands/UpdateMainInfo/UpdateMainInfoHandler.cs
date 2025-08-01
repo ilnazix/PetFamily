@@ -11,16 +11,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo
 {
     public class UpdateMainInfoHandler : ICommandHandler<Guid, UpdateMainInfoCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<UpdateMainInfoCommand> _validator;
         private readonly ILogger<UpdateMainInfoHandler> _logger;
 
         public UpdateMainInfoHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<UpdateMainInfoCommand> validator,
             ILogger<UpdateMainInfoHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _logger = logger;
         }
@@ -37,7 +37,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo
             }
 
             var id = VolunteerId.Create(command.Id);
-            var volunteerResult = await _volunteersRepository.GetById(id, cancellationToken);
+            var volunteerResult = await _unitOfWork.VolunteersRepository.GetById(id, cancellationToken);
             if (volunteerResult.IsFailure)
             {
                 return volunteerResult.Error.ToErrorList();
@@ -53,7 +53,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo
 
             volunteerResult.Value.UpdateMainInfo(fullName, description, email, phoneNumber, experience);
 
-            await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
 
             _logger.LogInformation("Volunteers's (Id={Id}) main info updated", volunteerResult.Value.Id.Value);
 

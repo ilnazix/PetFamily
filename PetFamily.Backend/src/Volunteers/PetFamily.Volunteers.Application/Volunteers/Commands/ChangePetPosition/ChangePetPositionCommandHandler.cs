@@ -11,16 +11,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.ChangePetPosition
 {
     public class ChangePetPositionCommandHandler : ICommandHandler<Guid, ChangePetPositionCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<ChangePetPositionCommand> _validator;
         private readonly ILogger<ChangePetPositionCommandHandler> _logger;
 
         public ChangePetPositionCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<ChangePetPositionCommand> validator,
             ILogger<ChangePetPositionCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _logger = logger;
         }
@@ -35,7 +35,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.ChangePetPosition
                 return validationResult.ToErrorList();
 
             var volunteerId = VolunteerId.Create(command.VolunteerId);
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId);
+            var volunteerResult = await _unitOfWork. VolunteersRepository.GetById(volunteerId);
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
@@ -47,9 +47,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.ChangePetPosition
             if (result.IsFailure)
                 return result.Error.ToErrorList();
 
-            var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
-            if (saveResult.IsFailure)
-                return saveResult.Error.ToErrorList();
+            await _unitOfWork.Commit(cancellationToken);
 
             return petId.Value;
         }

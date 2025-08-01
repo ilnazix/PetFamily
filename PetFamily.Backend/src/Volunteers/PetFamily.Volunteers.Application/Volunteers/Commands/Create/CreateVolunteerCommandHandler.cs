@@ -13,16 +13,16 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
 {
     public class CreateVolunteerCommandHandler : ICommandHandler<Guid, CreateVolunteerCommand>
     {
-        private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IVolunteersUnitOfWork _unitOfWork;
         private readonly IValidator<CreateVolunteerCommand> _validator;
         private readonly ILogger<CreateVolunteerCommandHandler> _logger;
 
         public CreateVolunteerCommandHandler(
-            IVolunteersRepository volunteersRepository,
+            IVolunteersUnitOfWork unitOfWork,
             IValidator<CreateVolunteerCommand> validator,
             ILogger<CreateVolunteerCommandHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _logger = logger;
         }
@@ -55,7 +55,9 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
             var requisites = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description).Value);
             volunteer.UpdateRequisites(requisites);
 
-            var volunteerGuid = await _volunteersRepository.Add(volunteer, cancellationToken);
+            var volunteerGuid = await _unitOfWork.VolunteersRepository.Add(volunteer, cancellationToken);
+
+            await _unitOfWork.Commit(cancellationToken);
 
             _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {Id})",
                 fullName.FirstName, fullName.LastName, fullName.MiddleName, volunteerGuid);
