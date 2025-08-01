@@ -1,17 +1,17 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.IntegrationTests.Extensions;
-using PetFamily.Application.IntegrationTests.Infrastructure;
-using PetFamily.Application.Species.Commands.Create;
+using PetFamily.Application.IntegrationTests.Volunteers;
+using PetFamily.Core.Abstractions;
+using PetFamily.Species.Application.Species.Commands.Create;
 
 namespace PetFamily.Application.IntegrationTests.Species
 {
-    public class CreateSpeciesTests : BaseIntegrationTest
+    public class CreateSpeciesTests : SpeciesBaseIntegrationTest
     {
         private readonly ICommandHandler<Guid, CreateSpeciesCommand> _sut;
 
-        public CreateSpeciesTests(IntegrationTestWebAppFactory factory) 
+        public CreateSpeciesTests(SpeciesIntegrationTestWebAppFactory factory) 
             : base(factory)
         {
             _sut = _scope

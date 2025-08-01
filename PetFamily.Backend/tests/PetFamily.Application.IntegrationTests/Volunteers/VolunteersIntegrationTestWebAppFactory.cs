@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using PetFamily.Infrastructure.DbContexts;
+using PetFamily.Species.Infrastructure.DbContexts;
+using PetFamily.Volunteers.Infrastructure.DbContexts;
 using Respawn;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
 
-namespace PetFamily.Application.IntegrationTests.Infrastructure
+namespace PetFamily.Application.IntegrationTests.Volunteers
 {
-    public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
+    public class VolunteerIntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
             .WithImage("postgres:17")
@@ -40,7 +41,7 @@ namespace PetFamily.Application.IntegrationTests.Infrastructure
             _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
             {
                 DbAdapter = DbAdapter.Postgres,
-                SchemasToInclude = ["public"]
+                SchemasToInclude = ["volunteers"]
             });
         }
 
@@ -57,25 +58,25 @@ namespace PetFamily.Application.IntegrationTests.Infrastructure
         private void ConfigureDefaultServices(IServiceCollection services)
         {
             var writeDbContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(ApplicationWriteDbContext));
+                s.ServiceType == typeof(VolunteersWriteDbContext));
 
             if (writeDbContext is not null)
                 services.Remove(writeDbContext);
 
             var readDbContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(ApplicationReadDbContext));
+                s.ServiceType == typeof(VolunteersReadDbContext));
 
             if (readDbContext is not null)
                 services.Remove(readDbContext);
 
-            services.AddDbContext<ApplicationWriteDbContext>(options =>
+            services.AddDbContext<VolunteersWriteDbContext>(options =>
             {
                 options
                     .UseNpgsql(_dbContainer.GetConnectionString())
                     .UseSnakeCaseNamingConvention();
             });
 
-            services.AddDbContext<ApplicationReadDbContext>(options =>
+            services.AddDbContext<VolunteersReadDbContext>(options =>
             {
                 options
                     .UseNpgsql(_dbContainer.GetConnectionString())
@@ -84,7 +85,7 @@ namespace PetFamily.Application.IntegrationTests.Infrastructure
 
             var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationWriteDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
 
             context.Database.Migrate();
         }

@@ -1,24 +1,25 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Database;
+using PetFamily.Application.IntegrationTests.Species;
+using PetFamily.Volunteers.Application.Database;
 
-namespace PetFamily.Application.IntegrationTests.Infrastructure
+namespace PetFamily.Application.IntegrationTests.Volunteers
 {
-    public class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>, IAsyncLifetime
+    public class VolunteerBaseIntegrationTest : IClassFixture<VolunteerIntegrationTestWebAppFactory>, IAsyncLifetime
     {
-        protected readonly IntegrationTestWebAppFactory _factory;
+        protected readonly VolunteerIntegrationTestWebAppFactory _factory;
         protected readonly IServiceScope _scope;
         protected readonly Fixture _fixture;
-        protected readonly IReadDbContext _readDbContext;
+        protected readonly IVolunteersReadDbContext _readDbContext;
 
-        public BaseIntegrationTest(IntegrationTestWebAppFactory factory)
+        public VolunteerBaseIntegrationTest(VolunteerIntegrationTestWebAppFactory factory)
         {
             _factory = factory;
             _scope = factory.Services.CreateScope();
             _fixture = new Fixture();
             _readDbContext = _scope
                 .ServiceProvider
-                .GetRequiredService<IReadDbContext>();
+                .GetRequiredService<IVolunteersReadDbContext>();
         }
 
         public Task DisposeAsync()
