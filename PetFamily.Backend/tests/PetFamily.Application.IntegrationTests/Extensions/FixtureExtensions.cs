@@ -1,10 +1,9 @@
 ﻿using AutoFixture;
-using PetFamily.Application.Species.Commands.AddBreed;
-using PetFamily.Application.Species.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.AddPet;
-using PetFamily.Application.Volunteers.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.DeletePermanently;
-using System.Diagnostics.CodeAnalysis;
+using PetFamily.Species.Application.Species.Commands.AddBreed;
+using PetFamily.Species.Application.Species.Commands.Create;
+using PetFamily.Volunteers.Application.Volunteers.Commands.AddPet;
+using PetFamily.Volunteers.Application.Volunteers.Commands.Create;
+using PetFamily.Volunteers.Application.Volunteers.Commands.DeletePermanently;
 
 namespace PetFamily.Application.IntegrationTests.Extensions
 {

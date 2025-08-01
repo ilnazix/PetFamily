@@ -1,22 +1,21 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.Database;
 using PetFamily.Application.IntegrationTests.Extensions;
-using PetFamily.Application.IntegrationTests.Infrastructure;
-using PetFamily.Application.Species.Commands.AddBreed;
-using PetFamily.Application.Species.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.AddPet;
-using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.IntegrationTests.Species;
+using PetFamily.Core.Abstractions;
+using PetFamily.Species.Application.Species.Commands.AddBreed;
+using PetFamily.Species.Application.Species.Commands.Create;
+using PetFamily.Volunteers.Application.Volunteers.Commands.AddPet;
+using PetFamily.Volunteers.Application.Volunteers.Commands.Create;
 
 namespace PetFamily.Application.IntegrationTests.Volunteers
 {
-    public class AddPetTests : BaseIntegrationTest
+    public class AddPetTests : VolunteerBaseIntegrationTest
     {
         private readonly ICommandHandler<Guid, AddPetCommand> _sut;
 
-        public AddPetTests(IntegrationTestWebAppFactory factory)
+        public AddPetTests(VolunteerIntegrationTestWebAppFactory factory)
             : base(factory)
         {
             _sut = _scope

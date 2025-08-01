@@ -1,18 +1,17 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.IntegrationTests.Extensions;
-using PetFamily.Application.IntegrationTests.Infrastructure;
-using PetFamily.Application.Volunteers.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.DeletePermanently;
+using PetFamily.Core.Abstractions;
+using PetFamily.Volunteers.Application.Volunteers.Commands.Create;
+using PetFamily.Volunteers.Application.Volunteers.Commands.DeletePermanently;
 
 namespace PetFamily.Application.IntegrationTests.Volunteers
 {
-    public class DeleteVolunteerTests : BaseIntegrationTest
+    public class DeleteVolunteerTests : VolunteerBaseIntegrationTest
     {
         private readonly ICommandHandler<Guid, DeleteVolunteerPermanentlyCommand> _sut;
 
-        public DeleteVolunteerTests(IntegrationTestWebAppFactory factory)
+        public DeleteVolunteerTests(VolunteerIntegrationTestWebAppFactory factory)
             : base(factory)
         {
             _sut = _scope
