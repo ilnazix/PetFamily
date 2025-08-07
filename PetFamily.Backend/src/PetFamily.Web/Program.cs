@@ -1,6 +1,8 @@
 using PetFamily.Species.Presentation;
+using PetFamily.Accounts.Presentation;
 using PetFamily.Volunteers.Presentation;
 using PetFamily.Volunteers.Presentation.Volunteers;
+using PetFamily.Web.Extensions;
 using PetFamily.Web.Middlewares;
 using Serilog;
 using Serilog.Events;
@@ -17,12 +19,15 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwagger();
+
 builder.Services.AddSerilog();
+
 builder.Services
     .AddControllers()
     .AddApplicationPart(typeof(SpeciesController).Assembly)
-    .AddApplicationPart(typeof(VolunteersController).Assembly);
+    .AddApplicationPart(typeof(VolunteersController).Assembly)
+    .AddApplicationPart(typeof(AccountsController).Assembly);
 
 builder.Services.AddRouting(opt =>
 {
@@ -31,7 +36,8 @@ builder.Services.AddRouting(opt =>
 
 builder.Services
     .AddSpeciesModule(builder.Configuration)
-    .AddVolunteersModule(builder.Configuration);
+    .AddVolunteersModule(builder.Configuration)
+    .AddAccountsModule();
 
 var app = builder.Build();
 
@@ -45,8 +51,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapControllers();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 app.Run();
 
 
