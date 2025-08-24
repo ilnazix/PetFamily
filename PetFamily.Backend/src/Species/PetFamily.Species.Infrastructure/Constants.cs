@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PetFamily.Species.Infrastructure
+﻿namespace PetFamily.Species.Infrastructure
 {
     public static class Constants
     {

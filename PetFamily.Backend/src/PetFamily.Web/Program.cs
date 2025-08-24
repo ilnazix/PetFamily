@@ -6,6 +6,9 @@ using PetFamily.Web.Extensions;
 using PetFamily.Web.Middlewares;
 using Serilog;
 using Serilog.Events;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,7 +40,7 @@ builder.Services.AddRouting(opt =>
 builder.Services
     .AddSpeciesModule(builder.Configuration)
     .AddVolunteersModule(builder.Configuration)
-    .AddAccountsModule();
+    .AddAccountsModule(builder.Configuration);
 
 var app = builder.Build();
 

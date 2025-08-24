@@ -1,15 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using PetFamily.Accounts.Infrastructure;
 using System.Text;
+using PetFamily.Accounts.Application;
 
 namespace PetFamily.Accounts.Presentation;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddAccountsModule(
-        this IServiceCollection services)
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -26,6 +30,10 @@ public static class DependencyInjection
             });
         
         services.AddAuthorization();
+
+        services
+            .AddApplication()
+            .AddInfrastructure(configuration);
 
         return services;
     }
