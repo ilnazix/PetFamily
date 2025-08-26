@@ -5,7 +5,7 @@ using PetFamily.Accounts.Domain;
 using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel;
 
-namespace PetFamily.Accounts.Application.RegisterUser;
+namespace PetFamily.Accounts.Application.Commands.RegisterUser;
 
 public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
 {

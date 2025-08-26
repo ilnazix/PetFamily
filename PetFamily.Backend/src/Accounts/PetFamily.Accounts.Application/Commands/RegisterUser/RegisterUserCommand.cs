@@ -1,6 +1,6 @@
 ﻿using PetFamily.Core.Abstractions;
 
-namespace PetFamily.Accounts.Application.RegisterUser;
+namespace PetFamily.Accounts.Application.Commands.RegisterUser;
 
 public record RegisterUserCommand(
     string Email,
