@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Accounts.Application.Commands.RegisterUser;
 using PetFamily.Accounts.Contracts.Requests;
@@ -36,6 +37,13 @@ public class AccountsController : ApplicationController
             return result.Error.ToResponse();
 
         return Ok(result.Value);
+    }
+
+    [Authorize]
+    [HttpGet("protected")]
+    public ActionResult TestAuth()
+    {
+        return Ok("authorized");
     }
 }
  

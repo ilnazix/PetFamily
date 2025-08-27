@@ -18,8 +18,8 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services
-            .AddAuth()
             .AddIdentity()
+            .AddAuth()
             .AddDbContext(configuration)
             .AddOptions()
             .AddProviders();
@@ -60,7 +60,6 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.ConfigureOptions<JwtOptionsSetup>();
-        services.ConfigureOptions<JwtBearerOptionsSetup>();
         
         return services;
     }
@@ -69,8 +68,15 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer();
+
+        services.ConfigureOptions<JwtBearerOptionsSetup>();
 
         services.AddAuthorization();
 
