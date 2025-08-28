@@ -56,5 +56,16 @@
                 );
             }
         }
+
+        public static class User 
+        {
+            public static Error InvalidCredentials()
+            {
+                return Error.Validation(
+                    "invalid.credentials", 
+                    "Your credentials are invalid", 
+                    null);
+            }
+        }
     }
 }
