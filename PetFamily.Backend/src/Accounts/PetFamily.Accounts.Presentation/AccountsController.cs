@@ -5,6 +5,7 @@ using PetFamily.Accounts.Application.Commands.RegisterUser;
 using PetFamily.Accounts.Contracts.Requests;
 using PetFamily.Accounts.Presentation.Extensions;
 using PetFamily.Framework;
+using PetFamily.Framework.Auth;
 
 namespace PetFamily.Accounts.Presentation;
 
@@ -39,7 +40,7 @@ public class AccountsController : ApplicationController
         return Ok(result.Value);
     }
 
-    [Authorize]
+    [HasPermission("321")]
     [HttpGet("protected")]
     public ActionResult TestAuth()
     {

@@ -39,10 +39,11 @@ internal class JwtTokenProvider : ITokenProvider
 
     private Claim[] ConfigureClaims(User user)
     {
-        return new Claim[]
-        {
+        return
+        [
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-        };
+            new Claim("Permission", "123")
+        ];
     }
 }

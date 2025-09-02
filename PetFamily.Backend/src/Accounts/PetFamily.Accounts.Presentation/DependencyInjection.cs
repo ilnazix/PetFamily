@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Accounts.Infrastructure;
 using PetFamily.Accounts.Application;
+using Microsoft.AspNetCore.Authorization;
+using PetFamily.Framework.Auth;
 
 namespace PetFamily.Accounts.Presentation;
 
@@ -13,7 +15,19 @@ public static class DependencyInjection
     {
         services
             .AddApplication()
+            .AddPermissionAuthorization()
             .AddInfrastructure(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddPermissionAuthorization(
+        this IServiceCollection services)
+    {
+        services.AddAuthorization();
+
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 
         return services;
     }

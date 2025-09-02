@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application.Commands;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.Options.Jwt;
-using PetFamily.Accounts.Infrastructure.Options.JwtBearer;
 using PetFamily.Accounts.Infrastructure.Providers;
+using System.Text;
 
 namespace PetFamily.Accounts.Infrastructure;
 
@@ -19,7 +20,7 @@ public static class DependencyInjection
     {
         services
             .AddIdentity()
-            .AddAuth()
+            .AddPermissionAuthentication(configuration)
             .AddDbContext(configuration)
             .AddOptions()
             .AddProviders();
@@ -64,8 +65,8 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddAuth(
-        this IServiceCollection services)
+    private static IServiceCollection AddPermissionAuthentication(
+        this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddAuthentication(options =>
@@ -74,11 +75,22 @@ public static class DependencyInjection
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer();
+            .AddJwtBearer(options =>
+            {
+                var _jwtOptions = configuration.GetSection("Jwt").Get<JwtOptions>()
+                    ?? throw new ApplicationException("Missing jwt options");
 
-        services.ConfigureOptions<JwtBearerOptionsSetup>();
-
-        services.AddAuthorization();
+                options.TokenValidationParameters = new()
+                {
+                    ValidateIssuer = _jwtOptions.ValidateIssuer,
+                    ValidateAudience = _jwtOptions.ValidateAudience,
+                    ValidateIssuerSigningKey = _jwtOptions.ValidateIssuerSigningKey,
+                    ValidateLifetime = _jwtOptions.ValidateLifetime,
+                    ValidIssuer = _jwtOptions.Issuer,
+                    ValidAudience = _jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
+                };
+            });
 
         return services;
     }
