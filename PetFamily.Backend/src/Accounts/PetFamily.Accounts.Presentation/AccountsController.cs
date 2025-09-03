@@ -40,7 +40,7 @@ public class AccountsController : ApplicationController
         return Ok(result.Value);
     }
 
-    [HasPermission("321")]
+    [HasPermission("123")]
     [HttpGet("protected")]
     public ActionResult TestAuth()
     {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.Configurations;
 
 namespace PetFamily.Accounts.Infrastructure;
 
@@ -18,13 +19,24 @@ internal class AccountsDbContext : IdentityDbContext<User, Role, Guid>
         
         builder.HasDefaultSchema(Constants.SCHEMA);
 
-        builder
-            .Entity<User>()
-            .ToTable("users");
+        builder.ApplyConfiguration(new UserConfiguration());
 
         builder
             .Entity<Role>()
-            .ToTable("roles");
+            .ToTable("roles")
+            .HasMany(r => r.Permissions)
+            .WithMany(p => p.Roles)
+            .UsingEntity<RolePermission>();
+
+        builder
+            .Entity<Permission>()
+            .ToTable("permissions")
+            .HasIndex(p => p.Code)
+            .IsUnique();
+
+        builder.Entity<ParticipantAccount>().ToTable("participant_accounts");
+        builder.Entity<VolunteerAccount>().ToTable("volunteer_accounts");
+        builder.Entity<AdminAccount>().ToTable("admin_accounts");
 
         builder
             .Entity<IdentityUserClaim<Guid>>()

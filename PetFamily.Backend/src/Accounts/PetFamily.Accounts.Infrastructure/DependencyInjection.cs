@@ -88,6 +88,7 @@ public static class DependencyInjection
                     ValidateLifetime = _jwtOptions.ValidateLifetime,
                     ValidIssuer = _jwtOptions.Issuer,
                     ValidAudience = _jwtOptions.Audience,
+                    ClockSkew = TimeSpan.Zero,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
                 };
             });

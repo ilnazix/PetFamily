@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Accounts.Infrastructure;
@@ -11,9 +12,11 @@ using PetFamily.Accounts.Infrastructure;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsDbContext))]
-    partial class AccountsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250903174155_Accounts_20250903204125")]
+    partial class Accounts_20250903204125
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,48 +154,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasName("pk_user_tokens");
 
                     b.ToTable("user_tokens", "accounts");
-                });
-
-            modelBuilder.Entity("PetFamily.Accounts.Domain.AdminAccount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid?>("user_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_admin_accounts");
-
-                    b.HasIndex("user_id")
-                        .IsUnique()
-                        .HasDatabaseName("ix_admin_accounts_user_id");
-
-                    b.ToTable("admin_accounts", "accounts");
-                });
-
-            modelBuilder.Entity("PetFamily.Accounts.Domain.ParticipantAccount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid?>("user_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_participant_accounts");
-
-                    b.HasIndex("user_id")
-                        .IsUnique()
-                        .HasDatabaseName("ix_participant_accounts_user_id");
-
-                    b.ToTable("participant_accounts", "accounts");
                 });
 
             modelBuilder.Entity("PetFamily.Accounts.Domain.Permission", b =>
@@ -349,27 +310,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.ToTable("users", "accounts");
                 });
 
-            modelBuilder.Entity("PetFamily.Accounts.Domain.VolunteerAccount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid?>("user_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_volunteer_accounts");
-
-                    b.HasIndex("user_id")
-                        .IsUnique()
-                        .HasDatabaseName("ix_volunteer_accounts_user_id");
-
-                    b.ToTable("volunteer_accounts", "accounts");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.Role", null)
@@ -427,22 +367,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasConstraintName("fk_user_tokens_users_user_id");
                 });
 
-            modelBuilder.Entity("PetFamily.Accounts.Domain.AdminAccount", b =>
-                {
-                    b.HasOne("PetFamily.Accounts.Domain.User", null)
-                        .WithOne("AdminAccount")
-                        .HasForeignKey("PetFamily.Accounts.Domain.AdminAccount", "user_id")
-                        .HasConstraintName("fk_admin_accounts_users_user_id");
-                });
-
-            modelBuilder.Entity("PetFamily.Accounts.Domain.ParticipantAccount", b =>
-                {
-                    b.HasOne("PetFamily.Accounts.Domain.User", null)
-                        .WithOne("ParticipantAccount")
-                        .HasForeignKey("PetFamily.Accounts.Domain.ParticipantAccount", "user_id")
-                        .HasConstraintName("fk_participant_accounts_users_user_id");
-                });
-
             modelBuilder.Entity("PetFamily.Accounts.Domain.RolePermission", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.Permission", null)
@@ -458,23 +382,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_role_permission_roles_role_id");
-                });
-
-            modelBuilder.Entity("PetFamily.Accounts.Domain.VolunteerAccount", b =>
-                {
-                    b.HasOne("PetFamily.Accounts.Domain.User", null)
-                        .WithOne("VolunteerAccount")
-                        .HasForeignKey("PetFamily.Accounts.Domain.VolunteerAccount", "user_id")
-                        .HasConstraintName("fk_volunteer_accounts_users_user_id");
-                });
-
-            modelBuilder.Entity("PetFamily.Accounts.Domain.User", b =>
-                {
-                    b.Navigation("AdminAccount");
-
-                    b.Navigation("ParticipantAccount");
-
-                    b.Navigation("VolunteerAccount");
                 });
 #pragma warning restore 612, 618
         }
