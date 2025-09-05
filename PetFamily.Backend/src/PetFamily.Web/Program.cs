@@ -3,12 +3,10 @@ using PetFamily.Accounts.Presentation;
 using PetFamily.Volunteers.Presentation;
 using PetFamily.Volunteers.Presentation.Volunteers;
 using PetFamily.Web.Extensions;
-using PetFamily.Web.Middlewares;
+using PetFamily.Accounts.Infrastructure.Seeding;
 using Serilog;
 using Serilog.Events;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using PetFamily.Web.Middlewares;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +41,10 @@ builder.Services
     .AddAccountsModule(builder.Configuration);
 
 var app = builder.Build();
+
+var accountsSeeder = app.Services.GetRequiredService<AccountsSeeder>();
+
+await accountsSeeder.SeedAsync();
 
 app.UseExceptionMiddleware();
 app.UseSerilogRequestLogging();

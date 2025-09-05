@@ -8,6 +8,10 @@ namespace PetFamily.Accounts.Infrastructure;
 
 internal class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 {
+    public DbSet<Permission> Permissions { get; set; }
+    public DbSet<RolePermission> RolePermissions { get; set; }
+
+
     public AccountsDbContext(DbContextOptions<AccountsDbContext> options)
         : base(options)
     {
@@ -27,6 +31,8 @@ internal class AccountsDbContext : IdentityDbContext<User, Role, Guid>
             .HasMany(r => r.Permissions)
             .WithMany(p => p.Roles)
             .UsingEntity<RolePermission>();
+
+        builder.Entity<RolePermission>().ToTable("role_permission");
 
         builder
             .Entity<Permission>()

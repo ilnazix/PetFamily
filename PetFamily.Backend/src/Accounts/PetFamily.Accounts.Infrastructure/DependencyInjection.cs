@@ -6,8 +6,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application.Commands;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.Managers;
 using PetFamily.Accounts.Infrastructure.Options.Jwt;
 using PetFamily.Accounts.Infrastructure.Providers;
+using PetFamily.Accounts.Infrastructure.Seeding;
 using System.Text;
 
 namespace PetFamily.Accounts.Infrastructure;
@@ -23,7 +25,9 @@ public static class DependencyInjection
             .AddPermissionAuthentication(configuration)
             .AddDbContext(configuration)
             .AddOptions()
-            .AddProviders();
+            .AddProviders()
+            .AddSeeding()
+            .AddManagers();
 
         return services;
     }
@@ -100,6 +104,23 @@ public static class DependencyInjection
        this IServiceCollection services)
     {
         services.AddScoped<ITokenProvider, JwtTokenProvider>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddSeeding(
+       this IServiceCollection services)
+    {
+        services.AddSingleton<AccountsSeeder>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddManagers(
+       this IServiceCollection services)
+    {
+        services.AddScoped<PermissionManager>();
+        services.AddScoped<RolePermissionManager>();
 
         return services;
     }
