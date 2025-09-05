@@ -15,12 +15,12 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .HasOne(u => u.AdminAccount)
             .WithOne()
             .HasForeignKey<AdminAccount>("user_id");
-        
+
         builder
             .HasOne(u => u.ParticipantAccount)
             .WithOne()
             .HasForeignKey<ParticipantAccount>("user_id");
-        
+
         builder
             .HasOne(u => u.VolunteerAccount)
             .WithOne()

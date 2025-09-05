@@ -16,8 +16,6 @@ using PetFamily.Volunteers.Application.Volunteers.Commands.SoftDelete;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetStatus;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateRequisites;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateSocialMedias;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteersWithPagination;
 using PetFamily.Volunteers.Contracts.Requests;
 using PetFamily.Volunteers.Presentation.Volunteers.Extensions;
@@ -66,44 +64,6 @@ namespace PetFamily.Volunteers.Presentation.Volunteers
             CancellationToken cancellationToken)
         {
             var command = request.ToCommand(id);
-            var result = await handler.Handle(command, cancellationToken);
-
-            if (result.IsFailure)
-            {
-                return result.Error.ToResponse();
-            }
-
-            return Ok(result.Value);
-        }
-
-        [HttpPut("{id:guid}/social-medias")]
-        public async Task<ActionResult<Envelope>> UpdateSocialMediasList(
-            [FromRoute] Guid id,
-            [FromBody] UpdateSocialMediasRequest request,
-            [FromServices] UpdateSocialMediasCommandHandler handler,
-            CancellationToken cancellationToken)
-        {
-            var command = request.ToCommand(id);
-
-            var result = await handler.Handle(command, cancellationToken);
-
-            if (result.IsFailure)
-            {
-                return result.Error.ToResponse();
-            }
-
-            return Ok(result.Value);
-        }
-
-        [HttpPut("{id:guid}/requisites")]
-        public async Task<ActionResult<Envelope>> UpdateRequisitesList(
-            [FromRoute] Guid id,
-            [FromBody] UpdateRequisitesRequest request,
-            [FromServices] UpdateRequisitesCommandHandler handler,
-            CancellationToken cancellationToken)
-        {
-            var command = request.ToCommand(id);
-
             var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)

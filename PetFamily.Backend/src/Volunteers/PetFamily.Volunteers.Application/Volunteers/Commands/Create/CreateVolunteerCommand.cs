@@ -8,8 +8,6 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
     public record CreateVolunteerCommand(
         FullNameDto FullName,
         string PhoneNumber,
-        string Email,
-        IEnumerable<SocialMediaInfo> SocialMedias,
-        IEnumerable<RequisiteInfo> Requisites
+        string Email
         ) : ICommand;
 }

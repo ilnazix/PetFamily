@@ -41,7 +41,7 @@ internal class AccountsDbContext : IdentityDbContext<User, Role, Guid>
             .IsUnique();
 
         builder.Entity<ParticipantAccount>().ToTable("participant_accounts");
-        builder.Entity<VolunteerAccount>().ToTable("volunteer_accounts");
+        builder.ApplyConfiguration(new VolunteerAccountConfiguration());
         builder.Entity<AdminAccount>().ToTable("admin_accounts");
 
         builder
