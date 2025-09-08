@@ -39,11 +39,16 @@ internal class JwtTokenProvider : ITokenProvider
 
     private Claim[] ConfigureClaims(User user)
     {
-        return
+        List<Claim> claims = 
         [
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-            new Claim("Permission", "123")
         ];
+
+        var roleClaims = user.Roles.Select(r => new Claim("Role", r.Name!));
+
+        claims.AddRange(roleClaims);
+
+        return claims.ToArray();
     }
 }

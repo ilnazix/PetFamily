@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Accounts.Domain;
 
@@ -25,5 +26,10 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .HasOne(u => u.VolunteerAccount)
             .WithOne()
             .HasForeignKey<VolunteerAccount>("user_id");
+
+        builder
+            .HasMany(u => u.Roles)
+            .WithMany()
+            .UsingEntity<IdentityUserRole<Guid>>();
     }
 }

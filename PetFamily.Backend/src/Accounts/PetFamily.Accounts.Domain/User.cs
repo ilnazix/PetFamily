@@ -7,4 +7,5 @@ public class User : IdentityUser<Guid>
     public VolunteerAccount? VolunteerAccount { get; set; }
     public ParticipantAccount? ParticipantAccount { get; set; }
     public AdminAccount? AdminAccount { get; set; }
+    public List<Role> Roles { get; set; } = [];
 }

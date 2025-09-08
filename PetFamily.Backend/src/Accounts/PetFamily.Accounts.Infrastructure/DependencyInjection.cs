@@ -81,6 +81,8 @@ public static class DependencyInjection
             })
             .AddJwtBearer(options =>
             {
+                options.MapInboundClaims = false;
+
                 var _jwtOptions = configuration.GetSection("Jwt").Get<JwtOptions>()
                     ?? throw new ApplicationException("Missing jwt options");
 
@@ -119,6 +121,7 @@ public static class DependencyInjection
     private static IServiceCollection AddManagers(
        this IServiceCollection services)
     {
+        services.AddScoped<IPermissionManager, PermissionManager>();
         services.AddScoped<PermissionManager>();
         services.AddScoped<RolePermissionManager>();
 

@@ -1,17 +1,45 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Accounts.Contracts;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PetFamily.Framework.Auth;
 
 public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
 {
-    protected override Task HandleRequirementAsync(
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    public PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
+    {
+        _serviceScopeFactory = serviceScopeFactory;
+    }
+
+    protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context, 
         PermissionRequirement requirement)
     {
-        var permissionClaims = context.User.FindAll(x => x.Type == "Permission");
+        var userIdClaim = context.User
+            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 
-        if (permissionClaims.Any(c => c.Value == requirement.Code)) context.Succeed(requirement);
+        if(!Guid.TryParse(userIdClaim, out var userId))
+        {
+            context.Fail();
+            return;
+        }
 
-        return Task.CompletedTask;
+        using var scope = _serviceScopeFactory.CreateScope();
+
+        var accountsContract = scope.ServiceProvider
+            .GetRequiredService<IAccountsModule>();
+
+        var userPermissionCodes = await accountsContract.GetUserPermissionCodes(userId);
+
+        if (userPermissionCodes.Contains(requirement.Code))
+        {
+            context.Succeed(requirement);
+            return;
+        }
+
+        context.Fail();
     }
 }
