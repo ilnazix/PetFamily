@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Framework;
+using PetFamily.Framework.Auth;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetPet;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetPetsWithFilters;
 using PetFamily.Volunteers.Contracts.Requests;
@@ -11,6 +12,7 @@ namespace PetFamily.API.Controllers.Pets
     public class PetsController : ApplicationController
     {
         [HttpGet]
+        [HasPermission(Permissions.Pets.Read)]
         public async Task<ActionResult> GetAllPets(
             [FromQuery] PetsParameters request,
             GetPetsWithFiltersQueryHandler handler,
@@ -22,6 +24,7 @@ namespace PetFamily.API.Controllers.Pets
         }
 
         [HttpGet("{id}")]
+        [HasPermission(Permissions.Pets.Read)]
         public async Task<ActionResult> GetPetById(
             [FromRoute] Guid id,
             GetPetQueryHandler handler,

@@ -39,12 +39,5 @@ public class AccountsController : ApplicationController
 
         return Ok(result.Value);
     }
-
-    [HasPermission("123")]
-    [HttpGet("protected")]
-    public ActionResult TestAuth()
-    {
-        return Ok("authorized");
-    }
 }
  

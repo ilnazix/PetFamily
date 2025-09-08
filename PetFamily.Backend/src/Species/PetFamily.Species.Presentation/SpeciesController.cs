@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Framework;
+using PetFamily.Framework.Auth;
 using PetFamily.Species.Application.Species.Commands.AddBreed;
 using PetFamily.Species.Application.Species.Commands.Create;
 using PetFamily.Species.Application.Species.Commands.Delete;
@@ -18,6 +19,7 @@ namespace PetFamily.Species.Presentation
     public class SpeciesController : ApplicationController
     {
         [HttpGet]
+        [HasPermission(Permissions.Species.Read)]
         public async Task<ActionResult> GetAllSpecies(
             [FromQuery] GetFilteredSpeciesWithPaginationRequest request,
             [FromServices] GetFilteredSpeciesWithPaginationQueryHandler handler,
@@ -31,6 +33,7 @@ namespace PetFamily.Species.Presentation
         }
 
         [HttpGet("{speciesId:guid}")]
+        [HasPermission(Permissions.Species.Read)]
         public async Task<ActionResult> GetAllBreeds(
             [FromRoute] Guid speciesId,
             [FromQuery] GetFilteredBreedsWithPaginationRequest request,
@@ -45,6 +48,7 @@ namespace PetFamily.Species.Presentation
         }
 
         [HttpPost]
+        [HasPermission(Permissions.Species.Create)]
         public async Task<ActionResult> CreateSpecies(
             [FromBody] CreateSpeciesRequest request,
             [FromServices] CreateSpeciesCommandHandler handler,
@@ -59,6 +63,7 @@ namespace PetFamily.Species.Presentation
         }
 
         [HttpPut("{id:guid}")]
+        [HasPermission(Permissions.Species.Update)]
         public async Task<ActionResult> UpdateSpecies(
             [FromRoute] Guid id,
             [FromBody] UpdateSpeciesRequest request,
@@ -74,6 +79,7 @@ namespace PetFamily.Species.Presentation
         }
 
         [HttpDelete("{id:guid}")]
+        [HasPermission(Permissions.Species.Delete)]
         public async Task<ActionResult> DeleteSpecies(
             [FromRoute] Guid id,
             [FromServices] DeleteSpeciesCommandHandler handler,
@@ -89,6 +95,7 @@ namespace PetFamily.Species.Presentation
         }
 
         [HttpPost("{speciesId:guid}/breeds")]
+        [HasPermission(Permissions.Species.Create)]
         public async Task<ActionResult> AddBreed(
             [FromRoute] Guid speciesId,
             [FromBody] AddBreedRequest request,
@@ -104,6 +111,7 @@ namespace PetFamily.Species.Presentation
         }
 
         [HttpPost("{speciesId:guid}/breeds/{breedId:guid}")]
+        [HasPermission(Permissions.Species.Update)]
         public async Task<ActionResult> UpdateBreed(
             [FromRoute] Guid speciesId,
             [FromRoute] Guid breedId,
@@ -120,6 +128,7 @@ namespace PetFamily.Species.Presentation
         }
 
         [HttpDelete("{speciesId:guid}/breeds/{breedId:guid}")]
+        [HasPermission(Permissions.Species.Delete)]
         public async Task<ActionResult> DeleteBreed(
             [FromRoute] Guid speciesId,
             [FromRoute] Guid breedId,

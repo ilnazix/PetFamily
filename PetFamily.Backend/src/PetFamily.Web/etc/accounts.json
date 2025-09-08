@@ -1,25 +1,50 @@
 ﻿{
   "Roles": {
     "Participant": [
-      "pets.read"
+      "Pets.Read",
+      "Species.Read",
+      "Volunteers.Read"
     ],
     "Volunteer": [
-      "pets.create",
-      "pets.update",
-      "pets.delete",
-      "pets.read"
+      "Pets.Create",
+      "Pets.Update",
+      "Pets.Delete",
+      "Pets.Read",
+      "Species.Read"
     ],
     "Admin": [
-      "pets.delete",
-      "pets.read"
+      "Pets.Delete",
+      "Pets.Read",
+      "Volunteers.Create",
+      "Volunteers.Update",
+      "Volunteers.Delete",
+      "Volunteers.Read",
+      "Volunteers.Restore",
+      "Species.Create",
+      "Species.Update",
+      "Species.Delete",
+      "Species.Read"
     ]
   },
   "Permissions": {
+    "Species": [
+      "Species.Create",
+      "Species.Update",
+      "Species.Delete",
+      "Species.Read"
+    ],
+    "Volunteers": [
+      "Volunteers.Create",
+      "Volunteers.Update",
+      "Volunteers.Delete",
+      "Volunteers.Read",
+      "Volunteers.Restore"
+    ],
     "Pets": [
-      "pets.create",
-      "pets.update",
-      "pets.delete",
-      "pets.read"
+      "Pets.Create",
+      "Pets.Update",
+      "Pets.Delete",
+      "Pets.Read"
     ]
   }
 }

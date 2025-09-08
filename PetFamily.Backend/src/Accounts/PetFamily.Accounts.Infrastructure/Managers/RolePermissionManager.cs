@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Domain;
 
 namespace PetFamily.Accounts.Infrastructure.Managers;

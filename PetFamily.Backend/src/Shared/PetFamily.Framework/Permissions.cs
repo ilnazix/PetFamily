@@ -1,0 +1,37 @@
+﻿namespace PetFamily.Framework;
+
+public static class Permissions
+{
+    public static class Species
+    {
+        private const string EntityName = nameof(Species);
+
+        public const string Create = $"{EntityName}.Create";
+        public const string Update = $"{EntityName}.Update";
+        public const string Delete = $"{EntityName}.Delete";
+        public const string Read = $"{EntityName}.Read";
+    }
+
+    public static class Volunteers
+    {
+        private const string EntityName = nameof(Volunteers);
+
+        public const string Create = $"{EntityName}.Create";
+        public const string Update = $"{EntityName}.Update";
+        public const string Delete = $"{EntityName}.Delete";
+        public const string Read = $"{EntityName}.Read";
+        public const string Restore = $"{EntityName}.Restore";
+    }
+
+    public static class Pets
+    {
+        private const string EntityName = nameof(Pets);
+
+        public const string Create = $"{EntityName}.Create";
+        public const string Update = $"{EntityName}.Update";
+        public const string Delete = $"{EntityName}.Delete";
+        public const string Read = $"{EntityName}.Read";
+    }
+
+}
+

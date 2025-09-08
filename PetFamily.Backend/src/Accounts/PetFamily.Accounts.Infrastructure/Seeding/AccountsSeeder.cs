@@ -63,7 +63,7 @@ public class AccountsSeeder
         {
             var role = await roleManager.FindByNameAsync(roleName);
 
-            await rolePermissionManager.AddRangeIfNotExistAsync(role.Id, config.Roles[roleName]);
+            await rolePermissionManager.AddRangeIfNotExistAsync(role!.Id, config.Roles[roleName]);
         }
 
         _logger.LogInformation("RolePermissions added to database");
