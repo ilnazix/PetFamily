@@ -14,12 +14,6 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
 
             RuleFor(c => c.FullName)
                 .MustBeValueObject(c => FullName.Create(c.FirstName, c.LastName, c.MiddleName));
-
-            RuleForEach(c => c.SocialMedias)
-                .MustBeValueObject(smq => SocialMedia.Create(smq.Link, smq.Title));
-
-            RuleForEach(c => c.Requisites)
-                .MustBeValueObject(rq => Requisite.Create(rq.Title, rq.Description));
         }
     }
 }

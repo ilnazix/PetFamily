@@ -5,6 +5,7 @@ using PetFamily.Accounts.Application.Commands.RegisterUser;
 using PetFamily.Accounts.Contracts.Requests;
 using PetFamily.Accounts.Presentation.Extensions;
 using PetFamily.Framework;
+using PetFamily.Framework.Auth;
 
 namespace PetFamily.Accounts.Presentation;
 
@@ -37,13 +38,6 @@ public class AccountsController : ApplicationController
             return result.Error.ToResponse();
 
         return Ok(result.Value);
-    }
-
-    [Authorize]
-    [HttpGet("protected")]
-    public ActionResult TestAuth()
-    {
-        return Ok("authorized");
     }
 }
  

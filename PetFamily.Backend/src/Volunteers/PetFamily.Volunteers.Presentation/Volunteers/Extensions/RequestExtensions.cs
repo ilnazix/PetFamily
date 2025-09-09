@@ -7,8 +7,6 @@ using PetFamily.Volunteers.Application.Volunteers.Commands.Shared;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetStatus;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateRequisites;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateSocialMedias;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteersWithPagination;
 using PetFamily.Volunteers.Contracts.Requests;
 
@@ -41,9 +39,7 @@ namespace PetFamily.Volunteers.Presentation.Volunteers.Extensions
             return new CreateVolunteerCommand(
                 FullName: fullNameDto,
                 PhoneNumber: request.PhoneNumber,
-                Email: request.Email,
-                SocialMedias: request.SocialMedias.Select(sm => new SocialMediaInfo(sm.Link, sm.Title)),
-                Requisites: request.Requisites.Select(r => new RequisiteInfo(r.Title, r.Description))
+                Email: request.Email
             );
         }
 
@@ -109,18 +105,6 @@ namespace PetFamily.Volunteers.Presentation.Volunteers.Extensions
         public static UpdatePetStatusCommand ToCommand(this UpdatePetStatusRequest request, Guid volunteerId, Guid petId)
         {
             return new UpdatePetStatusCommand(volunteerId, petId, request.Status);
-        }
-
-        public static UpdateRequisitesCommand ToCommand(this UpdateRequisitesRequest request, Guid id)
-        {
-            var requisites = request.Requisites.Select(r => new RequisiteInfo(r.Title, r.Description));
-            return new UpdateRequisitesCommand(id, requisites);
-        }
-
-        public static UpdateSocialMediasCommand ToCommand(this UpdateSocialMediasRequest request, Guid id)
-        {
-            var socialMedias = request.SocialMedias.Select(sm => new SocialMediaInfo(sm.Link, sm.Title));
-            return new UpdateSocialMediasCommand(id, socialMedias);
         }
     }
 }

@@ -26,23 +26,12 @@ namespace PetFamily.Volunteers.Domain.Volunteers
         public Description? Description { get; private set; }
         public Experience WorkExperienceInYears { get; set; } = Experience.Default();
         public PhoneNumber PhoneNumber { get; private set; }
-        public IReadOnlyList<Requisite> Requisites { get; private set; } = new List<Requisite>();
-        public IReadOnlyList<SocialMedia> SocialMedias { get; private set; } = new List<SocialMedia>();
 
         public IReadOnlyList<Pet> Pets => _pets;
 
         public int PetsFoundHomeCount => _pets.Where(p => p.Status == PetStatus.FoundHome).Count();
         public int HomelessPetsCount => _pets.Where(p => p.Status == PetStatus.SearchingForHome).Count();
         public int PetsInTreatmentCount => _pets.Where(p => p.Status == PetStatus.NeedsHelp).Count();
-
-        public void UpdateSocialMedias(IEnumerable<SocialMedia> newSocialMedias)
-        {
-            SocialMedias = newSocialMedias.ToList();
-        }
-        public void UpdateRequisites(IEnumerable<Requisite> newRequiesites)
-        {
-            Requisites = newRequiesites.ToList();
-        }
 
         public void UpdateMainInfo(
             FullName fullName,

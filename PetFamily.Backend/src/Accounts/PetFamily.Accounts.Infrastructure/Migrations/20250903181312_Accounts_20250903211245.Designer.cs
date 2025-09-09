@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Accounts.Infrastructure;
@@ -11,9 +12,11 @@ using PetFamily.Accounts.Infrastructure;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsDbContext))]
-    partial class AccountsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250903181312_Accounts_20250903211245")]
+    partial class Accounts_20250903211245
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,16 +359,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Requisites")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("requisites");
-
-                    b.Property<string>("SocialMedias")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("social_medias");
-
                     b.Property<Guid?>("user_id")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
@@ -460,7 +453,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_role_permission_permissions_permission_id");
+                        .HasConstraintName("fk_role_permission_permission_permission_id");
 
                     b.HasOne("PetFamily.Accounts.Domain.Role", null)
                         .WithMany()

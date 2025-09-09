@@ -47,14 +47,6 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
 
             var volunteer = new Volunteer(volunteerId, fullName, email, phoneNumber);
 
-
-            var socialMedias = command.SocialMedias.Select(sm => SocialMedia.Create(sm.Link, sm.Title).Value);
-            volunteer.UpdateSocialMedias(socialMedias);
-
-
-            var requisites = command.Requisites.Select(r => Requisite.Create(r.Title, r.Description).Value);
-            volunteer.UpdateRequisites(requisites);
-
             var volunteerGuid = await _unitOfWork.VolunteersRepository.Add(volunteer, cancellationToken);
 
             await _unitOfWork.Commit(cancellationToken);
