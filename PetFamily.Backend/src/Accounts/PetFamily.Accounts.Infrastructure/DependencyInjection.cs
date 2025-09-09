@@ -116,6 +116,7 @@ public static class DependencyInjection
        this IServiceCollection services)
     {
         services.AddSingleton<AccountsSeeder>();
+        services.AddScoped<AccountsSeederService>();
 
         return services;
     }
