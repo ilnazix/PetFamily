@@ -42,7 +42,7 @@ internal class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 
         builder.Entity<ParticipantAccount>().ToTable("participant_accounts");
         builder.ApplyConfiguration(new VolunteerAccountConfiguration());
-        builder.Entity<AdminAccount>().ToTable("admin_accounts");
+        builder.ApplyConfiguration(new AdminAccountConfiguration());
 
         builder
             .Entity<IdentityUserClaim<Guid>>()

@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Accounts.Domain;
 
@@ -18,6 +19,7 @@ public class User : IdentityUser<Guid>
     public static Result<User, Error> CreateAdmin(
         string email,
         string userName,
+        FullName fullName,
         Role role)
     {
         var isInvalidRole = !string.Equals(
@@ -33,7 +35,7 @@ public class User : IdentityUser<Guid>
             Email = email,
             UserName = userName,
             _roles = new List<Role> { role },
-            AdminAccount = new()
+            AdminAccount = new(fullName)
         };
     }
 

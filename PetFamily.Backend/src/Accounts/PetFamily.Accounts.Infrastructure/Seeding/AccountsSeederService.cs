@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.Managers;
 using PetFamily.Accounts.Infrastructure.Options.Admin;
+using PetFamily.SharedKernel.ValueObjects;
 using System.Text.Json;
 
 namespace PetFamily.Accounts.Infrastructure.Seeding;
@@ -56,7 +57,12 @@ internal class AccountsSeederService
         var adminRole = await _roleManager.FindByNameAsync(AdminAccount.ROLE)
                     ?? throw new ApplicationException("Admin role does not exist");
 
-        var adminResult = User.CreateAdmin(_adminOptions.Email, _adminOptions.UserName, adminRole);
+        var adminFullName = FullName.Create(
+            _adminOptions.FirstName,
+            _adminOptions.LastName,
+            _adminOptions.MiddleName).Value;
+
+        var adminResult = User.CreateAdmin(_adminOptions.Email, _adminOptions.UserName, adminFullName, adminRole);
 
         if (adminResult.IsFailure) throw new ApplicationException(adminResult.Error.Message);
 
