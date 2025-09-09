@@ -10,13 +10,16 @@ namespace PetFamily.Accounts.Application.Commands.RegisterUser;
 public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
 {
     private readonly UserManager<User> _userManager;
+    private readonly RoleManager<Role> _roleManager;
     private readonly ILogger<RegisterUserCommandHandler> _logger;
 
     public RegisterUserCommandHandler(
         UserManager<User> userManager,
+        RoleManager<Role> roleManager,
         ILogger<RegisterUserCommandHandler> logger)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
         _logger = logger;
     }
 
@@ -24,11 +27,13 @@ public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
         RegisterUserCommand command,
         CancellationToken cancelationToken = default)
     {
-        var user = new User
-        {
-            Email = command.Email,
-            UserName = command.UserName
-        };
+        var role = await _roleManager.FindByNameAsync(ParticipantAccount.ROLE);
+
+        var userResult = User.CreateParticipant(command.Email, command.UserName, role!);
+
+        if (userResult.IsFailure) return userResult.Error.ToErrorList();
+
+        var user = userResult.Value;
 
         var result = await _userManager.CreateAsync(user, command.Password);
 

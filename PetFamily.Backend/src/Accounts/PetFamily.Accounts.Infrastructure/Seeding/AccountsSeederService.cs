@@ -12,27 +12,30 @@ internal class AccountsSeederService
 {
     private readonly RoleManager<Role> _roleManager;
     private readonly PermissionManager _permissionManager;
+    private readonly UserManager<User> _userManager;
     private readonly RolePermissionManager _rolePermissionManager;
     private readonly ILogger<AccountsSeederService> _logger;
-    private readonly AdminOptions _options;
+    private readonly AdminOptions _adminOptions;
 
     public AccountsSeederService(
         RoleManager<Role> roleManager,
         PermissionManager permissionManager,
+        UserManager<User> userManager,
         RolePermissionManager rolePermissionManager,
         IOptions<AdminOptions> options,
         ILogger<AccountsSeederService> logger)
     {
         _roleManager = roleManager;
         _permissionManager = permissionManager;
+        _userManager = userManager;
         _rolePermissionManager = rolePermissionManager;
         _logger = logger;
-        _options = options.Value;
+        _adminOptions = options.Value;
     }
 
     public async Task SeedAsync()
     {
-        _logger.LogInformation("Data seeding. . . "); 
+        _logger.LogInformation("Data seeding. . . ");
 
         var json = await File.ReadAllTextAsync("etc/accounts.json");
 
@@ -42,6 +45,23 @@ internal class AccountsSeederService
         await SeedPermissions(config);
         await SeedRoles(config);
         await SeedRolePermissions(config);
+        await SeedAdmin();
+    }
+
+    private async Task SeedAdmin()
+    {
+        var existingAdmin = await _userManager.FindByEmailAsync(_adminOptions.Email);
+        if (existingAdmin is not null) return;
+
+        var adminRole = await _roleManager.FindByNameAsync(AdminAccount.ROLE)
+                    ?? throw new ApplicationException("Admin role does not exist");
+
+        var adminResult = User.CreateAdmin(_adminOptions.Email, _adminOptions.UserName, adminRole);
+
+        if (adminResult.IsFailure) throw new ApplicationException(adminResult.Error.Message);
+
+        var admin = adminResult.Value;
+        await _userManager.CreateAsync(admin, _adminOptions.Password);
     }
 
     private async Task SeedRolePermissions(
