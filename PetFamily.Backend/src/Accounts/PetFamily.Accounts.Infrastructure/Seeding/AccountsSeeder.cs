@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.Managers;
+using PetFamily.Accounts.Infrastructure.Options.Admin;
 using System.Text.Json;
 
 namespace PetFamily.Accounts.Infrastructure.Seeding;
@@ -49,6 +51,8 @@ public class AccountsSeeder
         var rolePermissionManager = scope
             .ServiceProvider
             .GetRequiredService<RolePermissionManager>();
+
+        var options = scope.ServiceProvider.GetRequiredService<IOptions<AdminOptions>>().Value;
 
 
 
