@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application.Commands;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.Managers;
+using PetFamily.Accounts.Infrastructure.Options.Admin;
 using PetFamily.Accounts.Infrastructure.Options.Jwt;
 using PetFamily.Accounts.Infrastructure.Providers;
 using PetFamily.Accounts.Infrastructure.Seeding;
@@ -65,6 +66,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.ConfigureOptions<JwtOptionsSetup>();
+        services.ConfigureOptions<AdminOptionsSetup>();
         
         return services;
     }
@@ -114,6 +116,7 @@ public static class DependencyInjection
        this IServiceCollection services)
     {
         services.AddSingleton<AccountsSeeder>();
+        services.AddScoped<AccountsSeederService>();
 
         return services;
     }

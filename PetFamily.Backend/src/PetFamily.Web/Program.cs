@@ -8,6 +8,7 @@ using Serilog;
 using Serilog.Events;
 using PetFamily.Web.Middlewares;
 
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -66,6 +66,13 @@
                     "Your credentials are invalid", 
                     null);
             }
+
+            public static Error InvalidRole()
+            {
+                return Error.Failure(
+                    "invalid.role",
+                    "Invalid role");
+            }
         }
     }
 }

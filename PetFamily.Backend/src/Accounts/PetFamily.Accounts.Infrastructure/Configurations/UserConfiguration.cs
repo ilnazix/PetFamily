@@ -31,5 +31,9 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMany(u => u.Roles)
             .WithMany()
             .UsingEntity<IdentityUserRole<Guid>>();
+
+        builder.Navigation(u => u.AdminAccount).AutoInclude();
+        builder.Navigation(u => u.ParticipantAccount).AutoInclude();
+        builder.Navigation(u => u.VolunteerAccount).AutoInclude();
     }
 }
