@@ -9,6 +9,7 @@ using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.Managers;
 using PetFamily.Accounts.Infrastructure.Options.Admin;
 using PetFamily.Accounts.Infrastructure.Options.Jwt;
+using PetFamily.Accounts.Infrastructure.Options.RefreshSession;
 using PetFamily.Accounts.Infrastructure.Providers;
 using PetFamily.Accounts.Infrastructure.Seeding;
 using System.Text;
@@ -67,6 +68,7 @@ public static class DependencyInjection
     {
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<AdminOptionsSetup>();
+        services.ConfigureOptions<RefreshSessionOptionsSetup>();
         
         return services;
     }
@@ -127,6 +129,7 @@ public static class DependencyInjection
         services.AddScoped<IPermissionManager, PermissionManager>();
         services.AddScoped<PermissionManager>();
         services.AddScoped<RolePermissionManager>();
+        services.AddScoped<RefreshSessionManager>();
 
         return services;
     }

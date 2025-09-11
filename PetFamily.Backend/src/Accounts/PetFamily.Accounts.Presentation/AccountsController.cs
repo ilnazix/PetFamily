@@ -32,7 +32,8 @@ public class AccountsController : ApplicationController
         [FromServices] LoginUserCommandHandler handler,
         CancellationToken cancellationToken)
     {
-        var result = await handler.Handle(request.ToCommand());
+        var metadata = HttpContext.Request.GetLoginMetadata(request.Fingerprint);
+        var result = await handler.Handle(request.ToCommand(metadata));
 
         if (result.IsFailure)
             return result.Error.ToResponse();

@@ -2,7 +2,7 @@
 
 public class RefreshSession
 {
-    private RefreshSession() {}
+    public RefreshSession() {}
 
     public Guid Id { get; init; }
     public Guid UserId { get; init; }

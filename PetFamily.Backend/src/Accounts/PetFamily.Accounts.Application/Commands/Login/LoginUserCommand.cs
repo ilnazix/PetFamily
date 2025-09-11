@@ -2,4 +2,7 @@
 
 namespace PetFamily.Accounts.Application.Commands.Login;
 
-public record LoginUserCommand(string Email, string Password) : ICommand;
+public record LoginUserCommand(
+    string Email, 
+    string Password,
+    LoginMetadata Metadata) : ICommand;

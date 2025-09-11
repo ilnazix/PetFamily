@@ -7,7 +7,7 @@ using PetFamily.SharedKernel;
 
 namespace PetFamily.Accounts.Application.Commands.Login;
 
-public class LoginUserCommandHandler : ICommandHandler<string, LoginUserCommand>
+public class LoginUserCommandHandler : ICommandHandler<LoginUserResponse, LoginUserCommand>
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenProvider _tokenProvider;
@@ -23,7 +23,7 @@ public class LoginUserCommandHandler : ICommandHandler<string, LoginUserCommand>
         _logger = logger;
     }
 
-    public async Task<Result<string, ErrorList>> Handle(
+    public async Task<Result<LoginUserResponse, ErrorList>> Handle(
         LoginUserCommand command,
         CancellationToken cancelationToken = default)
     {
@@ -35,10 +35,18 @@ public class LoginUserCommandHandler : ICommandHandler<string, LoginUserCommand>
 
         if (!passwordConfirmed) return Errors.User.InvalidCredentials().ToErrorList();
 
-        var token = _tokenProvider.GenerateAccessToken(user,cancelationToken);
+        var accessToken = _tokenProvider.GenerateAccessToken(user, cancelationToken);
+
+        var metadata = command.Metadata;
+        var refreshToken = await _tokenProvider.GenerateRefreshTokenAsync(
+            user, 
+            metadata, 
+            cancelationToken);
+
+        var result = new LoginUserResponse(accessToken, refreshToken);
 
         _logger.LogInformation("User with email {0} successfully loged in", user.Email);
 
-        return token;
+        return result;
     }
 }
