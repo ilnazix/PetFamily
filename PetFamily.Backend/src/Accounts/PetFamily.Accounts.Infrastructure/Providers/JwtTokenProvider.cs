@@ -15,7 +15,6 @@ internal class JwtTokenProvider : ITokenProvider
 {
     private readonly JwtOptions _jwtOptions;
     private readonly RefreshSessionOptions _refreshSessionOptions;
-    private readonly RefreshSessionManager _refreshSessionManager;
 
     public JwtTokenProvider(
         IOptions<JwtOptions> jwtOptions,
@@ -24,10 +23,9 @@ internal class JwtTokenProvider : ITokenProvider
     {
         _jwtOptions = jwtOptions.Value;
         _refreshSessionOptions = refreshSessionOptions.Value;
-        _refreshSessionManager = refreshSessionManager;
     }
 
-    public string GenerateAccessToken(User user, CancellationToken cancellationToken)
+    public string GenerateAccessToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -46,10 +44,9 @@ internal class JwtTokenProvider : ITokenProvider
         return tokenValue;
     }
 
-    public async Task<string> GenerateRefreshTokenAsync(
+    public RefreshSession GenerateRefreshToken(
         User user, 
-        LoginMetadata metadata,
-        CancellationToken cancellationToken)
+        LoginMetadata metadata)
     {
         var refreshToken = Guid.NewGuid();
 
@@ -62,17 +59,16 @@ internal class JwtTokenProvider : ITokenProvider
             CreatedAt = DateTime.UtcNow,
             RefreshToken = refreshToken,
             ExpiresAt = DateTime.UtcNow.AddDays(_refreshSessionOptions.RefreshTokenLifetimeInDays),
-        };
+        }; 
 
-        await _refreshSessionManager.Save(refreshSession, cancellationToken);
-
-        return refreshToken.ToString();
+        return refreshSession;
     }
 
     private Claim[] ConfigureClaims(User user)
     {
         List<Claim> claims = 
         [
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
         ];
@@ -81,6 +77,6 @@ internal class JwtTokenProvider : ITokenProvider
 
         claims.AddRange(roleClaims);
 
-        return claims.ToArray();
+        return [.. claims];
     }
 }

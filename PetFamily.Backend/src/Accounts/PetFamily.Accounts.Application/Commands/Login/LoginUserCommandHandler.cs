@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using PetFamily.Accounts.Application.Commands.RefreshToken;
 using PetFamily.Accounts.Domain;
 using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel;
@@ -11,15 +12,18 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserResponse, LoginU
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenProvider _tokenProvider;
+    private readonly IRefreshSessionManager _refreshSessionManager;
     private readonly ILogger<LoginUserCommandHandler> _logger;
 
     public LoginUserCommandHandler(
         UserManager<User> userManager,
         ITokenProvider tokenProvider,
+        IRefreshSessionManager refreshSessionManager,
         ILogger<LoginUserCommandHandler> logger)
     {
         _userManager = userManager;
         _tokenProvider = tokenProvider;
+        _refreshSessionManager = refreshSessionManager;
         _logger = logger;
     }
 
@@ -35,15 +39,17 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserResponse, LoginU
 
         if (!passwordConfirmed) return Errors.User.InvalidCredentials().ToErrorList();
 
-        var accessToken = _tokenProvider.GenerateAccessToken(user, cancelationToken);
+        var accessToken = _tokenProvider.GenerateAccessToken(user);
 
         var metadata = command.Metadata;
-        var refreshToken = await _tokenProvider.GenerateRefreshTokenAsync(
+        var refreshSession = _tokenProvider.GenerateRefreshToken(
             user, 
-            metadata, 
-            cancelationToken);
+            metadata);
 
-        var result = new LoginUserResponse(accessToken, refreshToken);
+        var result = new LoginUserResponse(accessToken, refreshSession.RefreshToken.ToString());
+
+        await _refreshSessionManager.Add(refreshSession, cancelationToken);
+        await _refreshSessionManager.Save(cancelationToken);
 
         _logger.LogInformation("User with email {0} successfully loged in", user.Email);
 

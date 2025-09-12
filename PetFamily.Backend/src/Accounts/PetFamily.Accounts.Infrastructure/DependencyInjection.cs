@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application.Commands;
+using PetFamily.Accounts.Application.Commands.RefreshToken;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.Managers;
 using PetFamily.Accounts.Infrastructure.Options.Admin;
@@ -127,6 +128,7 @@ public static class DependencyInjection
        this IServiceCollection services)
     {
         services.AddScoped<IPermissionManager, PermissionManager>();
+        services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
         services.AddScoped<PermissionManager>();
         services.AddScoped<RolePermissionManager>();
         services.AddScoped<RefreshSessionManager>();

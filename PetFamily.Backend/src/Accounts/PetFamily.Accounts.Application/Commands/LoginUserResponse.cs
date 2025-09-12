@@ -1,7 +1,7 @@
 ﻿using PetFamily.Core.Abstractions;
 
-namespace PetFamily.Accounts.Application.Commands.Login;
+namespace PetFamily.Accounts.Application.Commands;
 
 public record LoginUserResponse(
     string AccessToken,
-    string RefreshToken): ICommand;
+    string RefreshToken) : ICommand;

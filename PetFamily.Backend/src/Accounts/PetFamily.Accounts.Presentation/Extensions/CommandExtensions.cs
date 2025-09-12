@@ -1,5 +1,6 @@
 ﻿using PetFamily.Accounts.Application.Commands;
 using PetFamily.Accounts.Application.Commands.Login;
+using PetFamily.Accounts.Application.Commands.RefreshToken;
 using PetFamily.Accounts.Application.Commands.RegisterUser;
 using PetFamily.Accounts.Contracts.Requests;
 

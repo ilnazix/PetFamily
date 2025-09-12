@@ -1,8 +1,12 @@
-﻿using PetFamily.Accounts.Domain;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
+using PetFamily.Accounts.Application.Commands.RefreshToken;
+using PetFamily.Accounts.Domain;
+using PetFamily.SharedKernel;
 
 namespace PetFamily.Accounts.Infrastructure.Managers;
 
-internal class RefreshSessionManager 
+internal class RefreshSessionManager : IRefreshSessionManager
 {
     private readonly AccountsDbContext _dbContext;
 
@@ -11,9 +15,37 @@ internal class RefreshSessionManager
         _dbContext = dbContext;
     }
 
-    public Task Save(RefreshSession session, CancellationToken cancellationToken)
+    public async Task Add(
+        RefreshSession session, 
+        CancellationToken cancellationToken)
     {
-        _dbContext.Add(session);
-        return _dbContext.SaveChangesAsync();
+        await _dbContext.RefreshSessions.AddAsync(session, cancellationToken);
+    }
+
+    public async Task<Result<RefreshSession, Error>> GetByRefreshToken(
+        string refreshToken,
+        CancellationToken cancellationToken)
+    {
+        var session = await _dbContext.RefreshSessions
+            .Include(s => s.User)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
+                rt => rt.RefreshToken == Guid.Parse(refreshToken), 
+                cancellationToken);
+
+        if (session is null) return Errors.User.TokenExpired();
+
+        return session;
+    }
+
+    public void Delete(RefreshSession session)
+    {
+        _dbContext.RefreshSessions
+            .Remove(session);
+    }
+
+    public Task Save(CancellationToken cancellationToken)
+    {
+        return _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

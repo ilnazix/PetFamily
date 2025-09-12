@@ -4,7 +4,7 @@ using PetFamily.Accounts.Domain;
 
 namespace PetFamily.Accounts.Infrastructure.Configurations;
 
-internal class ResfreshSessionConfiguration : IEntityTypeConfiguration<RefreshSession>
+internal class RefreshSessionConfiguration : IEntityTypeConfiguration<RefreshSession>
 {
     public void Configure(EntityTypeBuilder<RefreshSession> builder)
     {
