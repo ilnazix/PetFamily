@@ -73,6 +73,14 @@
                     "invalid.role",
                     "Invalid role");
             }
+
+            public static Error TokenExpired()
+            {
+                return Error.Validation(
+                    "token.expired",
+                    "Token has expired",
+                    null);
+            }
         }
     }
 }

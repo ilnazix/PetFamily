@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application.Commands;
+using PetFamily.Accounts.Application.Commands.RefreshToken;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.Managers;
 using PetFamily.Accounts.Infrastructure.Options.Admin;
 using PetFamily.Accounts.Infrastructure.Options.Jwt;
+using PetFamily.Accounts.Infrastructure.Options.RefreshSession;
 using PetFamily.Accounts.Infrastructure.Providers;
 using PetFamily.Accounts.Infrastructure.Seeding;
 using System.Text;
@@ -67,6 +69,7 @@ public static class DependencyInjection
     {
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<AdminOptionsSetup>();
+        services.ConfigureOptions<RefreshSessionOptionsSetup>();
         
         return services;
     }
@@ -125,8 +128,10 @@ public static class DependencyInjection
        this IServiceCollection services)
     {
         services.AddScoped<IPermissionManager, PermissionManager>();
+        services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
         services.AddScoped<PermissionManager>();
         services.AddScoped<RolePermissionManager>();
+        services.AddScoped<RefreshSessionManager>();
 
         return services;
     }
