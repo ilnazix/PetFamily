@@ -13,6 +13,7 @@ using PetFamily.SharedKernel;
 using System.Linq.Dynamic.Core.Tokenizer;
 using System.Runtime.CompilerServices;
 using PetFamily.Accounts.Application.Queries.GetAccountById;
+using PetFamily.Framework.Auth;
 
 namespace PetFamily.Accounts.Presentation;
 
@@ -81,6 +82,7 @@ public class AccountsController : ApplicationController
         return Ok(result.Value);
     }
 
+    [HasPermission(Permissions.Accounts.Read)]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult> GetAccountById(
         [FromRoute] Guid id,

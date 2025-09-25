@@ -1,11 +1,13 @@
 ﻿{
   "Roles": {
     "Participant": [
+      "Accounts.Read",
       "Pets.Read",
       "Species.Read",
       "Volunteers.Read"
     ],
     "Volunteer": [
+      "Accounts.Read",
       "Pets.Create",
       "Pets.Update",
       "Pets.Delete",
@@ -13,6 +15,7 @@
       "Species.Read"
     ],
     "Admin": [
+      "Accounts.Read",
       "Pets.Delete",
       "Pets.Read",
       "Volunteers.Create",
@@ -45,6 +48,9 @@
       "Pets.Update",
       "Pets.Delete",
       "Pets.Read"
+    ],
+    "Accounts": [
+      "Accounts.Read"
     ]
   }
 }
