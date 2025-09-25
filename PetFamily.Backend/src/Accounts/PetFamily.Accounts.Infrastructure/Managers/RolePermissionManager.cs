@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.DbContexts;
 
 namespace PetFamily.Accounts.Infrastructure.Managers;
 
 internal class RolePermissionManager 
 {
-    private readonly AccountsDbContext _dbContext;
+    private readonly AccountsWriteDbContext _dbContext;
 
-    public RolePermissionManager(AccountsDbContext dbContext)
+    public RolePermissionManager(AccountsWriteDbContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Accounts.Domain;
 
-namespace PetFamily.Accounts.Infrastructure.Configurations;
+namespace PetFamily.Accounts.Infrastructure.Configurations.Write;
 
 internal class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder
-             .ToTable("users");
+             .ToTable(Tables.USERS);
 
         builder
             .HasOne(u => u.AdminAccount)

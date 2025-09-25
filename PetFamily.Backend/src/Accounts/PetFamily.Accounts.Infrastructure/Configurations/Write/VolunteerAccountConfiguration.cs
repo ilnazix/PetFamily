@@ -6,13 +6,13 @@ using PetFamily.Core.Dtos;
 using PetFamily.SharedKernel.ValueObjects;
 using System.Text.Json;
 
-namespace PetFamily.Accounts.Infrastructure.Configurations;
+namespace PetFamily.Accounts.Infrastructure.Configurations.Write;
 
 internal class VolunteerAccountConfiguration : IEntityTypeConfiguration<VolunteerAccount>
 {
     public void Configure(EntityTypeBuilder<VolunteerAccount> builder)
     {
-        builder.ToTable("volunteer_accounts");
+        builder.ToTable(Tables.VOLUNTEER_ACCOUNTS);
 
         builder.Property(v => v.Requisites)
             .HasConversion(

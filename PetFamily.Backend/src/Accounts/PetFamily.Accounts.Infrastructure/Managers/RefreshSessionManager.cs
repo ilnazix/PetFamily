@@ -2,15 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Accounts.Application.Commands.RefreshToken;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.DbContexts;
 using PetFamily.SharedKernel;
 
 namespace PetFamily.Accounts.Infrastructure.Managers;
 
 internal class RefreshSessionManager : IRefreshSessionManager
 {
-    private readonly AccountsDbContext _dbContext;
+    private readonly AccountsWriteDbContext _dbContext;
 
-    public RefreshSessionManager(AccountsDbContext dbContext)
+    public RefreshSessionManager(AccountsWriteDbContext dbContext)
     {
         _dbContext = dbContext;
     }
