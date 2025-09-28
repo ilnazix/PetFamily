@@ -6,7 +6,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application.Commands;
 using PetFamily.Accounts.Application.Commands.RefreshToken;
+using PetFamily.Accounts.Application.Database;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.DbContexts;
 using PetFamily.Accounts.Infrastructure.Managers;
 using PetFamily.Accounts.Infrastructure.Options.Admin;
 using PetFamily.Accounts.Infrastructure.Options.Jwt;
@@ -44,7 +46,7 @@ public static class DependencyInjection
                      options.User.RequireUniqueEmail = true;
                  }
              )
-            .AddEntityFrameworkStores<AccountsDbContext>();
+            .AddEntityFrameworkStores<AccountsWriteDbContext>();
 
         return services;
     }
@@ -53,12 +55,21 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddDbContext<AccountsDbContext>(options =>
+        services.AddDbContext<AccountsWriteDbContext>(options =>
         {
             options
                     .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
                     .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
                     .UseSnakeCaseNamingConvention();
+        });
+
+        services.AddDbContext<IAccountsReadDbContext, AccountsReadDbContext>(options =>
+        {
+            options
+                   .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                   .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                   .UseSnakeCaseNamingConvention()
+                   .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return services;

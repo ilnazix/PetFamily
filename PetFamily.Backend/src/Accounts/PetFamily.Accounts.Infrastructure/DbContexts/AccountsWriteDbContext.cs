@@ -2,18 +2,18 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Accounts.Domain;
-using PetFamily.Accounts.Infrastructure.Configurations;
+using PetFamily.Accounts.Infrastructure.Configurations.Write;
 
-namespace PetFamily.Accounts.Infrastructure;
+namespace PetFamily.Accounts.Infrastructure.DbContexts;
 
-internal class AccountsDbContext : IdentityDbContext<User, Role, Guid>
+internal class AccountsWriteDbContext : IdentityDbContext<User, Role, Guid>
 {
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<RefreshSession> RefreshSessions { get; set; }
 
 
-    public AccountsDbContext(DbContextOptions<AccountsDbContext> options)
+    public AccountsWriteDbContext(DbContextOptions<AccountsWriteDbContext> options)
         : base(options)
     {
     }
@@ -21,7 +21,7 @@ internal class AccountsDbContext : IdentityDbContext<User, Role, Guid>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.HasDefaultSchema(Constants.SCHEMA);
 
         builder.ApplyConfiguration(new UserConfiguration());

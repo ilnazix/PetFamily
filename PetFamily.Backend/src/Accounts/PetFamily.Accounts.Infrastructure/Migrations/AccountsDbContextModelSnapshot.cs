@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Infrastructure.DbContexts;
 
 #nullable disable
 
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
-    [DbContext(typeof(AccountsDbContext))]
+    [DbContext(typeof(AccountsWriteDbContext))]
     partial class AccountsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

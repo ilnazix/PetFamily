@@ -33,5 +33,11 @@ public static class Permissions
         public const string Read = $"{EntityName}.Read";
     }
 
+    public static class Accounts 
+    {
+        private const string EntityName = nameof(Accounts);
+
+        public const string Read = $"{EntityName}.Read";
+    }
 }
 

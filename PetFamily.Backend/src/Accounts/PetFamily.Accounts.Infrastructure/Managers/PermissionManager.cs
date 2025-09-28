@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetFamily.Accounts.Application.Commands;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.DbContexts;
 
 namespace PetFamily.Accounts.Infrastructure.Managers;
 
 internal class PermissionManager : IPermissionManager
 {
-    private readonly AccountsDbContext _dbContext;
+    private readonly AccountsWriteDbContext _dbContext;
 
-    public PermissionManager(AccountsDbContext dbContext)
+    public PermissionManager(AccountsWriteDbContext dbContext)
     {
         _dbContext = dbContext;
     }

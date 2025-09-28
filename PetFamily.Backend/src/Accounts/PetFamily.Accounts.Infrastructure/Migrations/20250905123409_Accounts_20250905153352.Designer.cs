@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Infrastructure.DbContexts;
 
 #nullable disable
 
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
-    [DbContext(typeof(AccountsDbContext))]
+    [DbContext(typeof(AccountsWriteDbContext))]
     [Migration("20250905123409_Accounts_20250905153352")]
     partial class Accounts_20250905153352
     {

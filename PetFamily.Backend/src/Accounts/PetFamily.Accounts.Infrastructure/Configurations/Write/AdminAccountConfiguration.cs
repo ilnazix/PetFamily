@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Accounts.Domain;
 using PetFamily.SharedKernel.ValueObjects;
 
-namespace PetFamily.Accounts.Infrastructure.Configurations;
+namespace PetFamily.Accounts.Infrastructure.Configurations.Write;
 
 internal class AdminAccountConfiguration : IEntityTypeConfiguration<AdminAccount>
 {
     public void Configure(EntityTypeBuilder<AdminAccount> builder)
     {
-        builder.ToTable("admin_accounts");
+        builder.ToTable(Tables.ADMIN_ACCOUNTS);
 
         builder.ComplexProperty(a => a.FullName, fnb =>
         {

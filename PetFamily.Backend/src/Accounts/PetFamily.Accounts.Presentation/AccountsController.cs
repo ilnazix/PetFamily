@@ -11,6 +11,9 @@ using CSharpFunctionalExtensions;
 using PetFamily.Accounts.Application.Commands;
 using PetFamily.SharedKernel;
 using System.Linq.Dynamic.Core.Tokenizer;
+using System.Runtime.CompilerServices;
+using PetFamily.Accounts.Application.Queries.GetAccountById;
+using PetFamily.Framework.Auth;
 
 namespace PetFamily.Accounts.Presentation;
 
@@ -77,6 +80,19 @@ public class AccountsController : ApplicationController
         SetRefreshTokenInCookie(result);
 
         return Ok(result.Value);
+    }
+
+    [HasPermission(Permissions.Accounts.Read)]
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult> GetAccountById(
+        [FromRoute] Guid id,
+        [FromServices] GetAccountByIdQueryHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAccountByIdQuery(id);
+        var result = await handler.Handle(query, cancellationToken);
+
+        return Ok(result);
     }
 
     private void SetRefreshTokenInCookie(Result<LoginUserResponse, ErrorList> result)
