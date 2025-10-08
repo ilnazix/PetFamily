@@ -1,4 +1,7 @@
-﻿namespace PetFamily.SharedKernel
+﻿using static PetFamily.SharedKernel.Errors;
+using static System.Net.Mime.MediaTypeNames;
+
+namespace PetFamily.SharedKernel
 {
     public static class Errors
     {
@@ -82,5 +85,33 @@
                     null);
             }
         }
+
+        public static class Message 
+        {
+            public static Error MessageAuthorRequired()
+            {
+                return Error.Validation(
+                    code: "message.userId.required",
+                    message: "UserId is required to create a message.",
+                    "userId");
+            }
+
+            public static Error MessageTextRequired()
+            {
+                return Error.Validation(
+                code: "message.newText.required",
+                message: "Message newText cannot be empty.",
+                "text");
+            }
+
+            public static Error EditNotAllowed()
+            {
+                return Error.Validation(
+                    code: "message.edit.notAllowed",
+                    message: "User is not allowed to edit this message.",
+                    null);
+            }
+        }
+
     }
 }
