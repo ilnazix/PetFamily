@@ -7,6 +7,7 @@ using PetFamily.Accounts.Infrastructure.Seeding;
 using Serilog;
 using Serilog.Events;
 using PetFamily.Web.Middlewares;
+using PetFamily.VolunteerRequest.Presentation;
 
 DotNetEnv.Env.Load();
 
@@ -39,7 +40,8 @@ builder.Services.AddRouting(opt =>
 builder.Services
     .AddSpeciesModule(builder.Configuration)
     .AddVolunteersModule(builder.Configuration)
-    .AddAccountsModule(builder.Configuration);
+    .AddAccountsModule(builder.Configuration)
+    .AddVolunteerRequestModule(builder.Configuration);
 
 var app = builder.Build();
 

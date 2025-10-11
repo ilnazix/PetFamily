@@ -39,5 +39,12 @@ public static class Permissions
 
         public const string Read = $"{EntityName}.Read";
     }
+
+    public static class VolunteerRequests
+    {
+        private const string Base = "Volunteer.Request";
+
+        public const string Create = $"{Base}.Create";
+    }
 }
 

@@ -5,6 +5,8 @@ namespace PetFamily.VolunteerRequest.Infrastructure.DbContexts;
 
 internal class VolunteerRequestsWriteDbContext : DbContext
 {
+    public DbSet<Domain.VolunteerRequest> VolunteerRequests { get; set; }
+
     public VolunteerRequestsWriteDbContext(
         DbContextOptions<VolunteerRequestsWriteDbContext> options) 
         : base(options)

@@ -4,7 +4,8 @@
       "Accounts.Read",
       "Pets.Read",
       "Species.Read",
-      "Volunteers.Read"
+      "Volunteers.Read",
+      "Volunteer.Request.Create"
     ],
     "Volunteer": [
       "Accounts.Read",
@@ -51,6 +52,9 @@
     ],
     "Accounts": [
       "Accounts.Read"
+    ],
+    "VolunteerRequests": [
+      "Volunteer.Request.Create"
     ]
   }
 }
