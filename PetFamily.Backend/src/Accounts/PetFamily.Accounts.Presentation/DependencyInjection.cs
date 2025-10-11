@@ -5,6 +5,7 @@ using PetFamily.Accounts.Application;
 using Microsoft.AspNetCore.Authorization;
 using PetFamily.Framework.Auth;
 using PetFamily.Accounts.Contracts;
+using PetFamily.Accounts.Presentation.Utilities;
 
 namespace PetFamily.Accounts.Presentation;
 
@@ -18,6 +19,10 @@ public static class DependencyInjection
             .AddApplication()
             .AddPermissionAuthorization()
             .AddInfrastructure(configuration);
+
+        services.AddHttpContextAccessor();
+
+        services.AddScoped<IUserContext, UserContext>();
 
         services.AddScoped<IAccountsModule, AccountsModule>();
 
