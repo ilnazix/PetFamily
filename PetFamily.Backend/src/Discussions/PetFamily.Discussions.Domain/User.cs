@@ -6,35 +6,28 @@ namespace PetFamily.Discussions.Domain;
 public class User 
 {
     public Guid Id { get; private set; }
-    public string FirstName { get; private set; } = string.Empty;
-    public string LastName { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
 
     private User() { }
     private User(
         Guid id, 
-        string firstName, 
-        string lastName)
+        string email)
     {
         Id = id;
-        FirstName = firstName;
-        LastName = lastName;
+        Email = email;
     }
 
     public static Result<User, Error> Create(
         Guid id, 
-        string firstName,
-        string lastName)
+        string email)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            return Errors.General.ValueIsRequired(nameof(firstName));
-
-        if (string.IsNullOrWhiteSpace(lastName))
-            return Errors.General.ValueIsRequired(nameof(lastName));
+        if (string.IsNullOrWhiteSpace(email))
+            return Errors.General.ValueIsRequired(nameof(email));
 
         if (Guid.Empty == id)
             return Errors.General.ValueIsRequired(nameof(id));
 
-        return new User(id, firstName, lastName);
+        return new User(id, email);
     }
 }
 
