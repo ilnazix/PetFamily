@@ -27,7 +27,8 @@
       "Species.Create",
       "Species.Update",
       "Species.Delete",
-      "Species.Read"
+      "Species.Read",
+      "Volunteer.Request.TakeOnReview"
     ]
   },
   "Permissions": {
@@ -54,7 +55,8 @@
       "Accounts.Read"
     ],
     "VolunteerRequests": [
-      "Volunteer.Request.Create"
+      "Volunteer.Request.Create",
+      "Volunteer.Request.TakeOnReview"
     ]
   }
 }

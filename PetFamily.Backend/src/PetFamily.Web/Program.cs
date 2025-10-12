@@ -8,6 +8,7 @@ using Serilog;
 using Serilog.Events;
 using PetFamily.Web.Middlewares;
 using PetFamily.VolunteerRequest.Presentation;
+using PetFamily.Discussions.Presentation;
 
 DotNetEnv.Env.Load();
 
@@ -41,7 +42,8 @@ builder.Services
     .AddSpeciesModule(builder.Configuration)
     .AddVolunteersModule(builder.Configuration)
     .AddAccountsModule(builder.Configuration)
-    .AddVolunteerRequestModule(builder.Configuration);
+    .AddVolunteerRequestModule(builder.Configuration)
+    .AddDiscussionsModule(builder.Configuration);
 
 var app = builder.Build();
 

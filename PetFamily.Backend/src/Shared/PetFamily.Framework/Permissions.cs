@@ -45,6 +45,7 @@ public static class Permissions
         private const string Base = "Volunteer.Request";
 
         public const string Create = $"{Base}.Create";
+        public const string TakeOnReview = $"{Base}.TakeOnReview";
     }
 }
 

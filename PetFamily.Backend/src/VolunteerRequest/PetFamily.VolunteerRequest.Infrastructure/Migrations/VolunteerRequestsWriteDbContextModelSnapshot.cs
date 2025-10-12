@@ -47,7 +47,7 @@ namespace PetFamily.VolunteerRequest.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("status");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("AdminId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 

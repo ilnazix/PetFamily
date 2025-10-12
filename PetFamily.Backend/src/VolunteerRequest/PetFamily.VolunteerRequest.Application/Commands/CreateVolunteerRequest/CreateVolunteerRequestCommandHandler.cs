@@ -56,6 +56,8 @@ public class CreateVolunteerRequestCommandHandler : ICommandHandler<Guid, Create
         await _unitOfWork.VolunteerRequestsRepository.Add(volunteerRequest, cancelationToken);
         await _unitOfWork.Commit(cancelationToken);
 
+        _logger.LogInformation("User with id={id} created volunteer request", command.UserId);
+
         return id.Value;
     }
 }
