@@ -2,6 +2,7 @@
 using PetFamily.Framework;
 using PetFamily.Framework.Auth;
 using PetFamily.VolunteerRequest.Application.Commands.CreateVolunteerRequest;
+using PetFamily.VolunteerRequest.Application.Commands.RequireRevision;
 using PetFamily.VolunteerRequest.Application.Commands.TakeOnReview;
 using PetFamily.VolunteerRequest.Contracts.Requests;
 using PetFamily.VolunteerRequest.Presentation.Extensions;
@@ -47,6 +48,25 @@ public class VolunteerRequestsController : ApplicationController
         var adminEmail = _userContext.Current.Email;
 
         var command = new TakeRequestOnReviewCommand(id, adminId, adminEmail);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPut("{id}/require-revision")]
+    [HasPermission(Permissions.VolunteerRequests.RequireRevision)]
+    public async Task<ActionResult> RequireVolunteerRequestRevision(
+        [FromRoute] Guid id,
+        [FromBody] RequireVolunteerRequestRevisionRequest request,
+        [FromServices] RequireRevisionCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var adminId = _userContext.Current.UserId;
+        var command = new RequireRevisionCommand(id, adminId, request.RejectionComment);
 
         var result = await handler.Handle(command, cancellationToken);
 

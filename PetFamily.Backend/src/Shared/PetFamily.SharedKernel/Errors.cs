@@ -113,5 +113,17 @@ namespace PetFamily.SharedKernel
             }
         }
 
+        public static class VolunteerRequest 
+        {
+            public static Error InvalidAdmin()
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.invalidAdmin",
+                    message: "Only the admin who took the request on review can perform this action.",
+                    null
+                );
+            }
+        }
+
     }
 }

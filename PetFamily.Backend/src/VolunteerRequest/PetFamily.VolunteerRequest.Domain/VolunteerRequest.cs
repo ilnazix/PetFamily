@@ -88,8 +88,11 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
         return UnitResult.Success<Error>();
     }
 
-    public UnitResult<Error> RequestRevision(string rejectionComment)
+    public UnitResult<Error> RequestRevision(Guid adminId, string rejectionComment)
     {
+        if (adminId != AdminId)
+            return Errors.VolunteerRequest.InvalidAdmin();
+
         if (Status != VolunteerRequestStatus.OnReview)
             return Error.Validation("request.invalidStatus", "Request can only be requested to revision from 'OnReview' status", nameof(Status));
 
