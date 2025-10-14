@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.VolunteerRequest.Application.Commands;
+using PetFamily.VolunteerRequest.Application.Database;
 using PetFamily.VolunteerRequest.Infrastructure.Database;
 using PetFamily.VolunteerRequest.Infrastructure.DbContexts;
 using PetFamily.VolunteerRequest.Infrastructure.Repositories;
@@ -33,6 +34,15 @@ public static class DependencyInjection
                     .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
                     .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
                     .UseSnakeCaseNamingConvention();
+        });
+
+        services.AddDbContext<IVolunteerRequestsReadDbContext, VolunteerRequestsReadDbContext>(options =>
+        {
+            options
+                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                    .UseSnakeCaseNamingConvention()
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return services;

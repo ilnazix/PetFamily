@@ -123,6 +123,24 @@ namespace PetFamily.SharedKernel
                     null
                 );
             }
+
+            public static Error ActiveRequestExists()
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.active.exists",
+                    message: "The user already has an active volunteer request.",
+                    null
+                );
+            }
+
+            public static Error UserBannedAfterRejection(DateTime until)
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.rejected.waitPeriod",
+                    message: $"You can create a new volunteer request after {until:dd.MM.yyyy HH:mm}.",
+                    null
+                );
+            }
         }
 
     }
