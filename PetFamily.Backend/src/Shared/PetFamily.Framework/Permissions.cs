@@ -47,6 +47,7 @@ public static class Permissions
         public const string Create = $"{Base}.Create";
         public const string TakeOnReview = $"{Base}.TakeOnReview";
         public const string RequireRevision = $"{Base}.RequireRevision";
+        public const string Approve = $"{Base}.Approve";
     }
 }
 

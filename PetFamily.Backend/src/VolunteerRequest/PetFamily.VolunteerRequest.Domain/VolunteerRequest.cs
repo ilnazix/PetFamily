@@ -84,8 +84,11 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
     }
 
 
-    public UnitResult<Error> Approve()
+    public UnitResult<Error> Approve(Guid adminId)
     {
+        if (adminId != AdminId)
+            return Errors.VolunteerRequest.InvalidAdmin();
+
         if (Status != VolunteerRequestStatus.OnReview)
             return Error.Validation("request.invalidStatus", "Request can only be approved from 'OnReview' status", nameof(Status));
 

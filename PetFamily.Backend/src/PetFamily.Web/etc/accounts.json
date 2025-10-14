@@ -29,7 +29,8 @@
       "Species.Delete",
       "Species.Read",
       "Volunteer.Request.TakeOnReview",
-      "Volunteer.Request.RequireRevision"
+      "Volunteer.Request.RequireRevision",
+      "Volunteer.Request.Approve"
     ]
   },
   "Permissions": {
@@ -58,7 +59,8 @@
     "VolunteerRequests": [
       "Volunteer.Request.Create",
       "Volunteer.Request.TakeOnReview",
-      "Volunteer.Request.RequireRevision"
+      "Volunteer.Request.RequireRevision",
+      "Volunteer.Request.Approve"
     ]
   }
 }
