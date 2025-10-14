@@ -12,6 +12,7 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
     public VolunteerRequestStatus Status { get; private set; }
     public string RejectionComment { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
+    public DateTime? RejectedAt { get; private set; }
 
     //ef core
     private VolunteerRequest() { }
@@ -64,8 +65,11 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
         return UnitResult.Success<Error>();
     }
 
-    public UnitResult<Error> Reject(string rejectionComment)
+    public UnitResult<Error> Reject(Guid adminId, string rejectionComment)
     {
+        if (adminId != AdminId)
+            return Errors.VolunteerRequest.InvalidAdmin();
+
         if (Status != VolunteerRequestStatus.OnReview)
             return Error.Validation("request.invalidStatus", "Request can only be rejected from 'OnReview' status", nameof(Status));
 
@@ -74,6 +78,7 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
 
         Status = VolunteerRequestStatus.Rejected;
         RejectionComment = rejectionComment.Trim();
+        RejectedAt = DateTime.UtcNow;
 
         return UnitResult.Success<Error>();
     }
