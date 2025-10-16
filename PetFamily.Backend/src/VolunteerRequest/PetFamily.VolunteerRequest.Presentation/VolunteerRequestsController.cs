@@ -8,6 +8,7 @@ using PetFamily.VolunteerRequest.Application.Commands.RequireRevision;
 using PetFamily.VolunteerRequest.Application.Commands.SubmitVolunteerRequest;
 using PetFamily.VolunteerRequest.Application.Commands.TakeOnReview;
 using PetFamily.VolunteerRequest.Application.Commands.UpdateVolunteerRequest;
+using PetFamily.VolunteerRequest.Application.Queries.GetAllUnassignedVolunteerRequests;
 using PetFamily.VolunteerRequest.Contracts.Requests;
 using PetFamily.VolunteerRequest.Presentation.Extensions;
 
@@ -153,5 +154,18 @@ public class VolunteerRequestsController : ApplicationController
             return result.Error.ToResponse();
 
         return Ok(result.Value);
+    }
+
+    [HttpGet()]
+    public async Task<ActionResult> GetSubmittedVolunteerRequests(
+        [FromQuery] GetUnassignedVolunteerRequestsRequest request,
+        [FromServices] GetAllUnassignedVolunteerRequestsQueryHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var query = request.ToQuery();
+
+        var result = await handler.Handle(query, cancellationToken);
+
+        return Ok(result);
     }
 }
