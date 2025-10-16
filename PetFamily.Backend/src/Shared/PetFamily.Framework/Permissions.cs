@@ -48,6 +48,8 @@ public static class Permissions
         public const string TakeOnReview = $"{Base}.TakeOnReview";
         public const string RequireRevision = $"{Base}.RequireRevision";
         public const string Approve = $"{Base}.Approve";
+        public const string Submit = $"{Base}.Submit";
+        public const string Update = $"{Base}.Update";
     }
 }
 

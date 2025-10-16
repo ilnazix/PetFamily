@@ -5,7 +5,9 @@ using PetFamily.VolunteerRequest.Application.Commands.ApproveVolunteerRequest;
 using PetFamily.VolunteerRequest.Application.Commands.CreateVolunteerRequest;
 using PetFamily.VolunteerRequest.Application.Commands.RejectVolunteerRequest;
 using PetFamily.VolunteerRequest.Application.Commands.RequireRevision;
+using PetFamily.VolunteerRequest.Application.Commands.SubmitVolunteerRequest;
 using PetFamily.VolunteerRequest.Application.Commands.TakeOnReview;
+using PetFamily.VolunteerRequest.Application.Commands.UpdateVolunteerRequest;
 using PetFamily.VolunteerRequest.Contracts.Requests;
 using PetFamily.VolunteerRequest.Presentation.Extensions;
 
@@ -39,6 +41,25 @@ public class VolunteerRequestsController : ApplicationController
         return Ok(result.Value);
     }
 
+    [HttpPut("{id}")]
+    [HasPermission(Permissions.VolunteerRequests.Update)]
+    public async Task<ActionResult> UpdateVolunteerRequest(
+        [FromRoute] Guid id,
+        [FromBody] UpdateVolunteerRequestRequest request,
+        [FromServices] UpdateVolunteerRequestCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var userId = _userContext.Current.UserId;
+        var command = request.ToCommand(id, userId);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
     [HttpPut("{id}/review")]
     [HasPermission(Permissions.VolunteerRequests.TakeOnReview)]
     public async Task<ActionResult> TakeVolunteerRequestOnReview(
@@ -50,6 +71,24 @@ public class VolunteerRequestsController : ApplicationController
         var adminEmail = _userContext.Current.Email;
 
         var command = new TakeRequestOnReviewCommand(id, adminId, adminEmail);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPut("{id}/submit")]
+    [HasPermission(Permissions.VolunteerRequests.Submit)]
+    public async Task<ActionResult> SubmitVolunteerRequest(
+        [FromRoute] Guid id,
+        [FromServices] SubmitVolunteerRequestCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var userId = _userContext.Current.UserId;
+        var command = new SubmitVolunteerRequestCommand(id, userId);
 
         var result = await handler.Handle(command, cancellationToken);
 

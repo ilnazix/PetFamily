@@ -54,8 +54,11 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
         return UnitResult.Success<Error>();
     }
 
-    public UnitResult<Error> Submit()
+    public UnitResult<Error> Submit(Guid userId)
     {
+        if (userId != UserId)
+            return Errors.VolunteerRequest.InvalidUser();
+
         if (Status != VolunteerRequestStatus.Created
             && Status != VolunteerRequestStatus.RevisionRequired)
             return Error.Validation("request.invalidStatus", "Request can only be submitted from 'Created' status", nameof(Status));
@@ -109,6 +112,21 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
 
         Status = VolunteerRequestStatus.RevisionRequired;
         RejectionComment = rejectionComment.Trim();
+
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> UpdateVolunteerInfo(Guid userId, VolunteerInfo newVolunteerInfo)
+    {
+        if (userId != UserId)
+            return Errors.VolunteerRequest.InvalidUser();
+
+        if (Status != VolunteerRequestStatus.Created
+            && Status != VolunteerRequestStatus.RevisionRequired)
+            return Error.Validation("request.invalidStatus", "Request can only be submitted from 'Created' status", nameof(Status));
+
+
+        VolunteerInfo = newVolunteerInfo;
 
         return UnitResult.Success<Error>();
     }

@@ -5,7 +5,9 @@
       "Pets.Read",
       "Species.Read",
       "Volunteers.Read",
-      "Volunteer.Request.Create"
+      "Volunteer.Request.Create",
+      "Volunteer.Request.Submit",
+      "Volunteer.Request.Update"
     ],
     "Volunteer": [
       "Accounts.Read",
@@ -60,7 +62,9 @@
       "Volunteer.Request.Create",
       "Volunteer.Request.TakeOnReview",
       "Volunteer.Request.RequireRevision",
-      "Volunteer.Request.Approve"
+      "Volunteer.Request.Approve",
+      "Volunteer.Request.Submit",
+      "Volunteer.Request.Update"
     ]
   }
 }

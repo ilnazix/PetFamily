@@ -115,6 +115,14 @@ namespace PetFamily.SharedKernel
 
         public static class VolunteerRequest 
         {
+            public static Error InvalidUser()
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.invalidUser",
+                    message: "Only the user who created the request can submit it.",
+                    null
+                );
+            }
             public static Error InvalidAdmin()
             {
                 return Error.Validation(
