@@ -32,7 +32,9 @@
       "Species.Read",
       "Volunteer.Request.TakeOnReview",
       "Volunteer.Request.RequireRevision",
-      "Volunteer.Request.Approve"
+      "Volunteer.Request.Approve",
+      "Volunteer.Request.ReadUnassigned",
+      "Volunteer.Request.ReadAdmin"
     ]
   },
   "Permissions": {
@@ -64,7 +66,9 @@
       "Volunteer.Request.RequireRevision",
       "Volunteer.Request.Approve",
       "Volunteer.Request.Submit",
-      "Volunteer.Request.Update"
+      "Volunteer.Request.Update",
+      "Volunteer.Request.ReadUnassigned",
+      "Volunteer.Request.ReadAdmin"
     ]
   }
 }

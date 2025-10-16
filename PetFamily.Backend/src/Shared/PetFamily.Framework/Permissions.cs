@@ -50,6 +50,8 @@ public static class Permissions
         public const string Approve = $"{Base}.Approve";
         public const string Submit = $"{Base}.Submit";
         public const string Update = $"{Base}.Update";
+        public const string ReadUnassigned = $"{Base}.ReadUnassigned";
+        public const string ReadAdmin = $"{Base}.ReadAdmin";
     }
 }
 
