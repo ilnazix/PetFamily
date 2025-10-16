@@ -52,6 +52,7 @@ public static class Permissions
         public const string Update = $"{Base}.Update";
         public const string ReadUnassigned = $"{Base}.ReadUnassigned";
         public const string ReadAdmin = $"{Base}.ReadAdmin";
+        public const string ReadOwn = $"{Base}.ReadOwn";
     }
 }
 

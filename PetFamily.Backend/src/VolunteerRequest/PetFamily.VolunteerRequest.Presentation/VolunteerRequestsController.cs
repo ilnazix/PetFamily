@@ -10,6 +10,7 @@ using PetFamily.VolunteerRequest.Application.Commands.TakeOnReview;
 using PetFamily.VolunteerRequest.Application.Commands.UpdateVolunteerRequest;
 using PetFamily.VolunteerRequest.Application.Queries.GetAllAdminVolunteerRequests;
 using PetFamily.VolunteerRequest.Application.Queries.GetAllUnassignedVolunteerRequests;
+using PetFamily.VolunteerRequest.Application.Queries.GetMyVolunteerRequests;
 using PetFamily.VolunteerRequest.Contracts.Requests;
 using PetFamily.VolunteerRequest.Presentation.Extensions;
 
@@ -180,6 +181,21 @@ public class VolunteerRequestsController : ApplicationController
     {
         var adminId = _userContext.Current.UserId;
         var query = request.ToQuery(adminId);
+
+        var result = await handler.Handle(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("my-requests")]
+    [HasPermission(Permissions.VolunteerRequests.ReadAdmin)]
+    public async Task<ActionResult> GetMyVolunteerRequests(
+            [FromQuery] GetMyVolunteerRequestsRequest request,
+            [FromServices] GetMyVolunteerRequestsQueryHandler handler,
+            CancellationToken cancellationToken)
+    {
+        var userId = _userContext.Current.UserId;
+        var query = request.ToQuery(userId);
 
         var result = await handler.Handle(query, cancellationToken);
 

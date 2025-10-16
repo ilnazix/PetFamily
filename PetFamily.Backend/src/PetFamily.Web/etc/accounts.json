@@ -7,7 +7,8 @@
       "Volunteers.Read",
       "Volunteer.Request.Create",
       "Volunteer.Request.Submit",
-      "Volunteer.Request.Update"
+      "Volunteer.Request.Update",
+      "Volunteer.Request.ReadOwn"
     ],
     "Volunteer": [
       "Accounts.Read",
@@ -68,7 +69,8 @@
       "Volunteer.Request.Submit",
       "Volunteer.Request.Update",
       "Volunteer.Request.ReadUnassigned",
-      "Volunteer.Request.ReadAdmin"
+      "Volunteer.Request.ReadAdmin",
+      "Volunteer.Request.ReadOwn"
     ]
   }
 }
