@@ -151,5 +151,53 @@ namespace PetFamily.SharedKernel
             }
         }
 
+        public static class Discussion
+        {
+            public static Error RelationIdRequired()
+            {
+                return Error.Validation(
+                    code: "discussion.relationId.required",
+                    message: "RelationId is required to create a discussion.",
+                    "relationId"
+                );
+            }
+
+            public static Error InvalidParticipantCount(int maxCount)
+            {
+                return Error.Validation(
+                    code: "discussion.participants.invalidCount",
+                    message: $"Discussion must contain exactly {maxCount} participants.",
+                    "ParticipantIds"
+                );
+            }
+
+            public static Error MessageAuthorNotParticipant()
+            {
+                return Error.Validation(
+                    code: "discussion.message.author.notParticipant",
+                    message: "Only participants of the discussion can add messages.",
+                    null
+                );
+            }
+
+            public static Error MessageDeleteNotAuthor()
+            {
+                return Error.Validation(
+                    code: "discussion.message.delete.notAuthor",
+                    message: "Only the author of the message can delete it.",
+                    null
+                );
+            }
+
+            public static Error DiscussionClosed()
+            {
+                return Error.Validation(
+                    code: "discussion.closed",
+                    message: "Cannot perform this action because the discussion is already closed.",
+                    null
+                );
+            }
+        }
+
     }
 }
