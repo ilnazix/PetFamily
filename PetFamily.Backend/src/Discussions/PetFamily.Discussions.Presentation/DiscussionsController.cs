@@ -2,6 +2,7 @@
 using PetFamily.Discussions.Application.Commands.AddMessage;
 using PetFamily.Discussions.Application.Commands.CloseDiscussion;
 using PetFamily.Discussions.Application.Commands.DeleteMessage;
+using PetFamily.Discussions.Application.Commands.EditMessage;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.Discussions.Presentation.Extensions;
 using PetFamily.Framework;
@@ -64,6 +65,26 @@ public class DiscussionsController : ApplicationController
     {
         var userId = _userContext.Current.UserId;
         var command = new DeleteMessageCommand(discussionId, messageId, userId);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPut("{discussionId}/messages/{messageId}")]
+    [HasPermission(Permissions.Discussions.EditMessage)]
+    public async Task<ActionResult> EditMessage(
+    [FromRoute] Guid discussionId,
+    [FromRoute] Guid messageId,
+    [FromBody] EditMessageRequest request,
+    [FromServices] EditMessageCommandHandler handler,
+    CancellationToken cancellationToken)
+    {
+        var userId = _userContext.Current.UserId;
+        var command = new EditMessageCommand(discussionId, messageId, userId, request.Text);
 
         var result = await handler.Handle(command, cancellationToken);
 
