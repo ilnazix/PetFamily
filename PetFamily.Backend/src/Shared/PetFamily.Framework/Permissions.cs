@@ -60,6 +60,7 @@ public static class Permissions
         private const string EntityName = nameof(Discussions);
 
         public const string AddMessage = $"{EntityName}.AddMessage";
+        public const string Close = $"{EntityName}.Close";
     }
 }
 

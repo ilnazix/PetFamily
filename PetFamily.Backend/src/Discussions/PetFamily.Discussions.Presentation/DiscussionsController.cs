@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Discussions.Application.Commands.AddMessage;
+using PetFamily.Discussions.Application.Commands.CloseDiscussion;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.Discussions.Presentation.Extensions;
 using PetFamily.Framework;
@@ -21,7 +22,7 @@ public class DiscussionsController : ApplicationController
     [HasPermission(Permissions.Discussions.AddMessage)]
     public async Task<ActionResult> AddMessage(
         [FromRoute] Guid discussionId,
-        [FromBody] AddMessageRequest request,       
+        [FromBody] AddMessageRequest request,
         [FromServices] AddMessageCommandHandler handler,
         CancellationToken cancellationToken)
     {
@@ -33,6 +34,22 @@ public class DiscussionsController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(result.Value);  
+        return Ok(result.Value);
+    }
+
+    [HttpPut("{discussionId}/close")]
+    public async Task<ActionResult> CloseDiscussion(
+        [FromRoute] Guid discussionId,
+        [FromServices] CloseDiscussionCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new CloseDiscussionCommand(discussionId);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
     }
 }

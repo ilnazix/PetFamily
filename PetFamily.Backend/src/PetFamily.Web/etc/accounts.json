@@ -37,7 +37,8 @@
       "Volunteer.Request.Approve",
       "Volunteer.Request.ReadUnassigned",
       "Volunteer.Request.ReadAdmin",
-      "Discussions.AddMessage"
+      "Discussions.AddMessage",
+      "Discussions.Close"
     ]
   },
   "Permissions": {
@@ -75,7 +76,8 @@
       "Volunteer.Request.ReadOwn"
     ],
     "Discussions": [
-      "Discussions.AddMessage"
+      "Discussions.AddMessage",
+      "Discussions.Close"
     ]
   }
 }
