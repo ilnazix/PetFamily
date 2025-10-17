@@ -19,7 +19,7 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("volunteers")
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -141,16 +141,6 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("phone_number");
-
-                    b.Property<string>("Requisites")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("requisites");
-
-                    b.Property<string>("SocialMedias")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("social_medias");
 
                     b.Property<int>("WorkExperienceInYears")
                         .HasColumnType("integer")

@@ -4,7 +4,11 @@
       "Accounts.Read",
       "Pets.Read",
       "Species.Read",
-      "Volunteers.Read"
+      "Volunteers.Read",
+      "Volunteer.Request.Create",
+      "Volunteer.Request.Submit",
+      "Volunteer.Request.Update",
+      "Volunteer.Request.ReadOwn"
     ],
     "Volunteer": [
       "Accounts.Read",
@@ -26,7 +30,12 @@
       "Species.Create",
       "Species.Update",
       "Species.Delete",
-      "Species.Read"
+      "Species.Read",
+      "Volunteer.Request.TakeOnReview",
+      "Volunteer.Request.RequireRevision",
+      "Volunteer.Request.Approve",
+      "Volunteer.Request.ReadUnassigned",
+      "Volunteer.Request.ReadAdmin"
     ]
   },
   "Permissions": {
@@ -51,6 +60,17 @@
     ],
     "Accounts": [
       "Accounts.Read"
+    ],
+    "VolunteerRequests": [
+      "Volunteer.Request.Create",
+      "Volunteer.Request.TakeOnReview",
+      "Volunteer.Request.RequireRevision",
+      "Volunteer.Request.Approve",
+      "Volunteer.Request.Submit",
+      "Volunteer.Request.Update",
+      "Volunteer.Request.ReadUnassigned",
+      "Volunteer.Request.ReadAdmin",
+      "Volunteer.Request.ReadOwn"
     ]
   }
 }

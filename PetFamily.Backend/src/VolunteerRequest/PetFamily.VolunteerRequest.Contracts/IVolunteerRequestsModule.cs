@@ -1,6 +1,5 @@
 ﻿namespace PetFamily.VolunteerRequest.Contracts;
 
-public class Class1
+public interface IVolunteerRequestsModule
 {
-
 }

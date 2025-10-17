@@ -9,28 +9,28 @@ public class Discussion : Entity<DiscussionId>
     private const int MAX_DISCUSSION_PARTICIPANTS = 2;
     public Guid RelationId { get; private set; }
     public IReadOnlyList<Message> Messages => _messages;
-    public IReadOnlyList<User> Users => _users;
+    public IReadOnlyList<Guid> ParticipantIds => _participantIds;
     public bool IsClosed { get; private set; }
 
     private List<Message> _messages = new();
-    private List<User> _users = new();
+    private List<Guid> _participantIds = new();
 
     private Discussion(){}
     private Discussion(
         DiscussionId id,
         Guid relationId,
-        IEnumerable<User> users)
+        IEnumerable<Guid> users)
     {
         Id = id; 
         RelationId = relationId;
         IsClosed = false;
-        _users = users.ToList();
+        _participantIds = users.ToList();
     }
 
     public static Result<Discussion, Error> Create(
         DiscussionId id,
         Guid relationId,
-        IEnumerable<User> users)
+        IEnumerable<Guid> participantIds)
     {
         if (relationId == Guid.Empty)
         {
@@ -40,22 +40,22 @@ public class Discussion : Entity<DiscussionId>
                 nameof(relationId));
         }
 
-        if (users is null || users.Count() != MAX_DISCUSSION_PARTICIPANTS)
+        if (participantIds is null || participantIds.Count() != MAX_DISCUSSION_PARTICIPANTS)
         {
             return Error.Validation(
                 code: "discussion.participants.invalidCount",
                 message: $"Discussion must contain exactly {MAX_DISCUSSION_PARTICIPANTS} participants.",
-                nameof(users));
+                nameof(participantIds));
         }
 
-        return new Discussion(id, relationId, users);
+        return new Discussion(id, relationId, participantIds);
     }
 
     public UnitResult<Error> AddMessage(Message message)
     {
         var messageAuthorId = message.UserId;
 
-        if (!_users.Any(u => u.Id == messageAuthorId))
+        if (!_participantIds.Any(participantId => participantId == messageAuthorId))
         {
             return Error.Validation(
                 code: "discussion.message.author.notParticipant",

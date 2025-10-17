@@ -113,5 +113,43 @@ namespace PetFamily.SharedKernel
             }
         }
 
+        public static class VolunteerRequest 
+        {
+            public static Error InvalidUser()
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.invalidUser",
+                    message: "Only the user who created the request can submit it.",
+                    null
+                );
+            }
+            public static Error InvalidAdmin()
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.invalidAdmin",
+                    message: "Only the admin who took the request on review can perform this action.",
+                    null
+                );
+            }
+
+            public static Error ActiveRequestExists()
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.active.exists",
+                    message: "The user already has an active volunteer request.",
+                    null
+                );
+            }
+
+            public static Error UserBannedAfterRejection(DateTime until)
+            {
+                return Error.Validation(
+                    code: "volunteerRequest.rejected.waitPeriod",
+                    message: $"You can create a new volunteer request after {until:dd.MM.yyyy HH:mm}.",
+                    null
+                );
+            }
+        }
+
     }
 }
