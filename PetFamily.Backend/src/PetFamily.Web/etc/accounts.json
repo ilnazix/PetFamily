@@ -8,7 +8,8 @@
       "Volunteer.Request.Create",
       "Volunteer.Request.Submit",
       "Volunteer.Request.Update",
-      "Volunteer.Request.ReadOwn"
+      "Volunteer.Request.ReadOwn",
+      "Discussions.AddMessage"
     ],
     "Volunteer": [
       "Accounts.Read",
@@ -35,7 +36,8 @@
       "Volunteer.Request.RequireRevision",
       "Volunteer.Request.Approve",
       "Volunteer.Request.ReadUnassigned",
-      "Volunteer.Request.ReadAdmin"
+      "Volunteer.Request.ReadAdmin",
+      "Discussions.AddMessage"
     ]
   },
   "Permissions": {
@@ -71,6 +73,9 @@
       "Volunteer.Request.ReadUnassigned",
       "Volunteer.Request.ReadAdmin",
       "Volunteer.Request.ReadOwn"
+    ],
+    "Discussions": [
+      "Discussions.AddMessage"
     ]
   }
 }

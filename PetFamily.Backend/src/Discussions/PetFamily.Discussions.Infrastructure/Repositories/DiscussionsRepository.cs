@@ -1,6 +1,10 @@
-﻿using PetFamily.Discussions.Application.Commands;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
+using PetFamily.Discussions.Application.Commands;
 using PetFamily.Discussions.Domain;
 using PetFamily.Discussions.Infrastructure.DbContexts;
+using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.ValueObjects.Ids;
 
 namespace PetFamily.Discussions.Infrastructure.Repositories;
 
@@ -18,5 +22,19 @@ internal class DiscussionsRepository : IDiscussionsRepository
         await  _dbContext.AddAsync(discussion, cancellationToken);
 
         return discussion.Id;
+    }
+
+    public async Task<Result<Discussion, Error>> GetById(
+        DiscussionId id, 
+        CancellationToken cancellationToken = default)
+    {
+        var discussion = await _dbContext.Discussions
+            .Include(d => d.Messages)
+            .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
+
+        if (discussion is null)
+            return Errors.General.NotFound(id);
+
+        return discussion;
     }
 }

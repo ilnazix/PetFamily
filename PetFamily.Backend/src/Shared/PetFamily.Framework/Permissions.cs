@@ -54,5 +54,12 @@ public static class Permissions
         public const string ReadAdmin = $"{Base}.ReadAdmin";
         public const string ReadOwn = $"{Base}.ReadOwn";
     }
+
+    public static class Discussions 
+    {
+        private const string EntityName = nameof(Discussions);
+
+        public const string AddMessage = $"{EntityName}.AddMessage";
+    }
 }
 
