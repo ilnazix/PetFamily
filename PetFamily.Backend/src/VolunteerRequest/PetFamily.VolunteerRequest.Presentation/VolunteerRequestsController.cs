@@ -71,9 +71,8 @@ public class VolunteerRequestsController : ApplicationController
         CancellationToken cancellationToken)
     {
         var adminId = _userContext.Current.UserId;
-        var adminEmail = _userContext.Current.Email;
-
-        var command = new TakeRequestOnReviewCommand(id, adminId, adminEmail);
+        
+        var command = new TakeRequestOnReviewCommand(id, adminId);
 
         var result = await handler.Handle(command, cancellationToken);
 
@@ -188,7 +187,7 @@ public class VolunteerRequestsController : ApplicationController
     }
 
     [HttpGet("my-requests")]
-    [HasPermission(Permissions.VolunteerRequests.ReadAdmin)]
+    [HasPermission(Permissions.VolunteerRequests.ReadOwn)]
     public async Task<ActionResult> GetMyVolunteerRequests(
             [FromQuery] GetMyVolunteerRequestsRequest request,
             [FromServices] GetMyVolunteerRequestsQueryHandler handler,

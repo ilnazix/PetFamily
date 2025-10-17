@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Discussions.Infrastructure.DbContexts;
@@ -11,9 +12,11 @@ using PetFamily.Discussions.Infrastructure.DbContexts;
 namespace PetFamily.Discussions.Infrastructure.Migrations
 {
     [DbContext(typeof(DiscussionsWriteDbContext))]
-    partial class DiscussionsWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251017113023_VolunteerRequest_20251017142950")]
+    partial class VolunteerRequest_20251017142950
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -35,9 +35,8 @@ public class CreateDiscussionCommandHandler : ICommandHandler<Guid, CreateDiscus
             return validationResult.ToErrorList();
 
         var id = DiscussionId.NewDiscussionId();
-        var participants = command.Participants.Select(p => User.Create(p.Id, p.Email).Value);
 
-        var discussionResult = Discussion.Create(id, command.RelationId, participants);
+        var discussionResult = Discussion.Create(id, command.RelationId, command.ParticipantIds);
 
         if (discussionResult.IsFailure)
             return discussionResult.Error.ToErrorList();

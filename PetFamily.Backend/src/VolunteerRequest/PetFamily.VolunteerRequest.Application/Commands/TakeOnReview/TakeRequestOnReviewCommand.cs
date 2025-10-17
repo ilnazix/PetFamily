@@ -4,5 +4,4 @@ namespace PetFamily.VolunteerRequest.Application.Commands.TakeOnReview;
 
 public record TakeRequestOnReviewCommand(
     Guid RequestId,
-    Guid AdminId,
-    string AdminEmail) : ICommand;
+    Guid AdminId) : ICommand;

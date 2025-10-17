@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
 using PetFamily.Discussions.Contracts;
-using PetFamily.Discussions.Contracts.Models;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects.Ids;
@@ -66,11 +65,16 @@ public class TakeRequestOnReviewCommandHandler
         return volunteerRequest.Id.Value;
     }
 
-    private async Task<Result<Guid, ErrorList>> CreateDiscussion(TakeRequestOnReviewCommand command, Domain.VolunteerRequest volunteerRequest, CancellationToken cancelationToken)
+    private async Task<Result<Guid, ErrorList>> CreateDiscussion(
+        TakeRequestOnReviewCommand command,
+        Domain.VolunteerRequest volunteerRequest, 
+        CancellationToken cancelationToken)
     {
         var relationId = volunteerRequest.Id;
-        var user = new DiscussionParticipant(volunteerRequest.UserId, volunteerRequest.VolunteerInfo.Email.Value);
-        var admin = new DiscussionParticipant(command.AdminId, command.AdminEmail);
+
+        var user = volunteerRequest.UserId;
+        var admin = command.AdminId;
+
         var createDiscussionRequest = new CreateDiscussionRequest(relationId, [user, admin]);
         var createDiscussionResult = await _discussionsModule.CreateDiscussion(createDiscussionRequest, cancelationToken);
         return createDiscussionResult;
