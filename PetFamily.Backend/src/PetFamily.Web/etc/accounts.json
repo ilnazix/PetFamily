@@ -9,7 +9,8 @@
       "Volunteer.Request.Submit",
       "Volunteer.Request.Update",
       "Volunteer.Request.ReadOwn",
-      "Discussions.AddMessage"
+      "Discussions.AddMessage",
+      "Discussions.DeleteMessage"
     ],
     "Volunteer": [
       "Accounts.Read",
@@ -38,6 +39,7 @@
       "Volunteer.Request.ReadUnassigned",
       "Volunteer.Request.ReadAdmin",
       "Discussions.AddMessage",
+      "Discussions.DeleteMessage",
       "Discussions.Close"
     ]
   },
@@ -77,7 +79,8 @@
     ],
     "Discussions": [
       "Discussions.AddMessage",
-      "Discussions.Close"
+      "Discussions.Close",
+      "Discussions.DeleteMessage"
     ]
   }
 }

@@ -61,6 +61,7 @@ public static class Permissions
 
         public const string AddMessage = $"{EntityName}.AddMessage";
         public const string Close = $"{EntityName}.Close";
+        public const string DeleteMessage = $"{EntityName}.DeleteMessage";
     }
 }
 

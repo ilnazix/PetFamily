@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Discussions.Application.Commands.AddMessage;
 using PetFamily.Discussions.Application.Commands.CloseDiscussion;
+using PetFamily.Discussions.Application.Commands.DeleteMessage;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.Discussions.Presentation.Extensions;
 using PetFamily.Framework;
@@ -18,7 +19,7 @@ public class DiscussionsController : ApplicationController
         _userContext = userContext;
     }
 
-    [HttpPost("{discussionId}")]
+    [HttpPost("{discussionId}/messages")]
     [HasPermission(Permissions.Discussions.AddMessage)]
     public async Task<ActionResult> AddMessage(
         [FromRoute] Guid discussionId,
@@ -44,6 +45,25 @@ public class DiscussionsController : ApplicationController
         CancellationToken cancellationToken)
     {
         var command = new CloseDiscussionCommand(discussionId);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpDelete("{discussionId}/messages/{messageId}")]
+    [HasPermission(Permissions.Discussions.DeleteMessage)]
+    public async Task<ActionResult> DeleteMessage(
+    [FromRoute] Guid discussionId,
+    [FromRoute] Guid messageId,
+    [FromServices] DeleteMessageCommandHandler handler,
+    CancellationToken cancellationToken)
+    {
+        var userId = _userContext.Current.UserId;
+        var command = new DeleteMessageCommand(discussionId, messageId, userId);
 
         var result = await handler.Handle(command, cancellationToken);
 
