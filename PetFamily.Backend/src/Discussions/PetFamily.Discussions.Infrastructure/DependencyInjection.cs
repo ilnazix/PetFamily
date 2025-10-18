@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Discussions.Application.Commands;
+using PetFamily.Discussions.Application.Database;
 using PetFamily.Discussions.Infrastructure.Database;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Discussions.Infrastructure.Repositories;
@@ -32,6 +33,15 @@ public static class DependencyInjection
                     .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
                     .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
                     .UseSnakeCaseNamingConvention();
+        });
+
+        services.AddDbContext<IDiscussionsReadDbContext,  DiscussionsReadDbContext>(options =>
+        {
+            options
+                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                    .UseSnakeCaseNamingConvention()
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return services;

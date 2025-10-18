@@ -11,6 +11,7 @@
       "Volunteer.Request.ReadOwn",
       "Discussions.AddMessage",
       "Discussions.EditMessage",
+      "Discussions.Read",
       "Discussions.DeleteMessage"
     ],
     "Volunteer": [
@@ -42,6 +43,7 @@
       "Discussions.AddMessage",
       "Discussions.DeleteMessage",
       "Discussions.EditMessage",
+      "Discussions.Read",
       "Discussions.Close"
     ]
   },
@@ -83,7 +85,8 @@
       "Discussions.AddMessage",
       "Discussions.Close",
       "Discussions.DeleteMessage",
-      "Discussions.EditMessage"
+      "Discussions.EditMessage",
+      "Discussions.Read"
     ]
   }
 }

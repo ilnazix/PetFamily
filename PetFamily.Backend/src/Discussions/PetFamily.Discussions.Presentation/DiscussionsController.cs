@@ -3,6 +3,7 @@ using PetFamily.Discussions.Application.Commands.AddMessage;
 using PetFamily.Discussions.Application.Commands.CloseDiscussion;
 using PetFamily.Discussions.Application.Commands.DeleteMessage;
 using PetFamily.Discussions.Application.Commands.EditMessage;
+using PetFamily.Discussions.Application.Queries.GetDiscussionByRelationId;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.Discussions.Presentation.Extensions;
 using PetFamily.Framework;
@@ -58,10 +59,10 @@ public class DiscussionsController : ApplicationController
     [HttpDelete("{discussionId}/messages/{messageId}")]
     [HasPermission(Permissions.Discussions.DeleteMessage)]
     public async Task<ActionResult> DeleteMessage(
-    [FromRoute] Guid discussionId,
-    [FromRoute] Guid messageId,
-    [FromServices] DeleteMessageCommandHandler handler,
-    CancellationToken cancellationToken)
+        [FromRoute] Guid discussionId,
+        [FromRoute] Guid messageId,
+        [FromServices] DeleteMessageCommandHandler handler,
+        CancellationToken cancellationToken)
     {
         var userId = _userContext.Current.UserId;
         var command = new DeleteMessageCommand(discussionId, messageId, userId);
@@ -77,11 +78,11 @@ public class DiscussionsController : ApplicationController
     [HttpPut("{discussionId}/messages/{messageId}")]
     [HasPermission(Permissions.Discussions.EditMessage)]
     public async Task<ActionResult> EditMessage(
-    [FromRoute] Guid discussionId,
-    [FromRoute] Guid messageId,
-    [FromBody] EditMessageRequest request,
-    [FromServices] EditMessageCommandHandler handler,
-    CancellationToken cancellationToken)
+        [FromRoute] Guid discussionId,
+        [FromRoute] Guid messageId,
+        [FromBody] EditMessageRequest request,
+        [FromServices] EditMessageCommandHandler handler,
+        CancellationToken cancellationToken)
     {
         var userId = _userContext.Current.UserId;
         var command = new EditMessageCommand(discussionId, messageId, userId, request.Text);
@@ -93,4 +94,19 @@ public class DiscussionsController : ApplicationController
 
         return Ok(result.Value);
     }
+
+    [HttpGet("{relationId}")]
+    [HasPermission(Permissions.Discussions.Read)]
+    public async Task<ActionResult> GetDiscussionByRelationId(
+        [FromRoute] Guid relationId,
+        [FromServices] GetDiscussionByRelationIdQueryHandler handler, 
+        CancellationToken cancellationToken)
+    {
+        var query = new GetDiscussionByRelationIdQuery(relationId);
+
+        var result = await handler.Handle(query, cancellationToken);
+
+        return Ok(result);
+    }
+
 }
