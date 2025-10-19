@@ -3,4 +3,3 @@
 public record CreateDiscussionRequest(
     Guid RelationId, 
     IEnumerable<Guid> ParticipantIds);
-

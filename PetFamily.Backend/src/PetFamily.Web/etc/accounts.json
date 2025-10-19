@@ -8,7 +8,11 @@
       "Volunteer.Request.Create",
       "Volunteer.Request.Submit",
       "Volunteer.Request.Update",
-      "Volunteer.Request.ReadOwn"
+      "Volunteer.Request.ReadOwn",
+      "Discussions.AddMessage",
+      "Discussions.EditMessage",
+      "Discussions.Read",
+      "Discussions.DeleteMessage"
     ],
     "Volunteer": [
       "Accounts.Read",
@@ -35,7 +39,12 @@
       "Volunteer.Request.RequireRevision",
       "Volunteer.Request.Approve",
       "Volunteer.Request.ReadUnassigned",
-      "Volunteer.Request.ReadAdmin"
+      "Volunteer.Request.ReadAdmin",
+      "Discussions.AddMessage",
+      "Discussions.DeleteMessage",
+      "Discussions.EditMessage",
+      "Discussions.Read",
+      "Discussions.Close"
     ]
   },
   "Permissions": {
@@ -71,6 +80,13 @@
       "Volunteer.Request.ReadUnassigned",
       "Volunteer.Request.ReadAdmin",
       "Volunteer.Request.ReadOwn"
+    ],
+    "Discussions": [
+      "Discussions.AddMessage",
+      "Discussions.Close",
+      "Discussions.DeleteMessage",
+      "Discussions.EditMessage",
+      "Discussions.Read"
     ]
   }
 }
