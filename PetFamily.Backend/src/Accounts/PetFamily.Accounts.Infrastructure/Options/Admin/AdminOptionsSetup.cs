@@ -5,7 +5,7 @@ namespace PetFamily.Accounts.Infrastructure.Options.Admin;
 
 internal class AdminOptionsSetup : IConfigureOptions<AdminOptions>
 {
-    private const string SECTION_NAME = "ADMIN";
+    private const string SECTION_NAME = "Admin";
 
     private readonly IConfiguration _configuration;
 

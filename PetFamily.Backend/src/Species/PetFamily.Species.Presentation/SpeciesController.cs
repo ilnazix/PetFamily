@@ -15,7 +15,7 @@ using PetFamily.Species.Presentation.Extensions;
 
 namespace PetFamily.Species.Presentation
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SpeciesController : ApplicationController
     {
         [HttpGet]

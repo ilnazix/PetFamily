@@ -17,7 +17,7 @@ using PetFamily.Framework.Auth;
 
 namespace PetFamily.Accounts.Presentation;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AccountsController : ApplicationController
 {
     private const string REFRESH_TOKEN_COOKIE = "refreshToken";

@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PetFamily.Core.Database;
 using PetFamily.Discussions.Application.Commands;
 using PetFamily.Discussions.Application.Database;
 using PetFamily.Discussions.Infrastructure.Database;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Discussions.Infrastructure.Repositories;
+using PetFamily.Discussions.Infrastructure.Utilities;
 
 namespace PetFamily.Discussions.Infrastructure;
 
@@ -19,6 +21,8 @@ public static class DependencyInjection
         services
             .AddRepositories()
             .AddDbContexts(configuration);
+
+        services.AddScoped<IDbMigrator, DiscussionsDbMigrator>();
 
         return services;
     }

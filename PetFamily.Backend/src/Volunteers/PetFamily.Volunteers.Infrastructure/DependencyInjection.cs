@@ -10,11 +10,13 @@ using PetFamily.Volunteers.Infrastructure.Options;
 using PetFamily.Volunteers.Infrastructure.Providers;
 using PetFamily.Volunteers.Infrastructure.Repositories;
 using Minio;
+using PetFamily.Core.Database;
 using PetFamily.Volunteers.Infrastructure.Services;
 using PetFamily.Volunteers.Infrastructure.BackgroundServices;
 using PetFamily.Core.Messaging;
 using PetFamily.Volunteers.Infrastructure.MessageQueues;
 using PetFamily.Volunteers.Infrastructure.Database;
+using PetFamily.Volunteers.Infrastructure.Utilities;
 
 namespace PetFamily.Volunteers.Infrastructure
 {
@@ -36,6 +38,8 @@ namespace PetFamily.Volunteers.Infrastructure
             services.AddScoped<DeleteExpiredVolunteersService>();
 
             services.AddScoped<IVolunteersUnitOfWork, VolunteersUnitOfWork>();
+
+            services.AddScoped<IDbMigrator, VolunteersDbMigrator>();
 
             return services;
         }

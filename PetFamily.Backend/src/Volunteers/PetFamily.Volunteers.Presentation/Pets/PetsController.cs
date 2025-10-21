@@ -8,7 +8,7 @@ using PetFamily.Volunteers.Presentation.Pets.Extensions;
 
 namespace PetFamily.API.Controllers.Pets
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PetsController : ApplicationController
     {
         [HttpGet]

@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PetFamily.Core.Database;
 using PetFamily.VolunteerRequest.Application.Commands;
 using PetFamily.VolunteerRequest.Application.Database;
 using PetFamily.VolunteerRequest.Infrastructure.Database;
 using PetFamily.VolunteerRequest.Infrastructure.DbContexts;
 using PetFamily.VolunteerRequest.Infrastructure.Repositories;
+using PetFamily.VolunteerRequest.Infrastructure.Utilities;
 using static CSharpFunctionalExtensions.Result;
 
 namespace PetFamily.VolunteerRequest.Infrastructure;
@@ -20,6 +22,8 @@ public static class DependencyInjection
         services
             .AddRepositories()
             .AddDbContexts(configuration);
+
+        services.AddScoped<IDbMigrator, VolunteerRequestsDbMigrator>();
 
         return services;
     }
