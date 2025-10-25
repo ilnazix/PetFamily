@@ -18,99 +18,98 @@ using PetFamily.Volunteers.Infrastructure.MessageQueues;
 using PetFamily.Volunteers.Infrastructure.Database;
 using PetFamily.Volunteers.Infrastructure.Utilities;
 
-namespace PetFamily.Volunteers.Infrastructure
+namespace PetFamily.Volunteers.Infrastructure;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructure(
-            this IServiceCollection services,
-            IConfiguration configuration)
+        services.Configure<VolunteerEntityOptions>(configuration.GetSection("VolunteerEntityOptions"));
+
+        services
+            .AddDbContexts(configuration)
+            .AddRepositories()
+            .AddMinio(configuration)
+            .AddHostedServices()
+            .AddMessaging();
+
+        services.AddScoped<DeleteExpiredVolunteersService>();
+
+        services.AddScoped<IVolunteersUnitOfWork, VolunteersUnitOfWork>();
+
+        services.AddScoped<IDbMigrator, VolunteersDbMigrator>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddRepositories(
+        this IServiceCollection services)
+    {
+        services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDbContexts(
+        this IServiceCollection services, 
+        IConfiguration configuration)
+    {
+        services.AddDbContext<VolunteersWriteDbContext>(options =>
         {
-            services.Configure<VolunteerEntityOptions>(configuration.GetSection("VolunteerEntityOptions"));
+            options
+                .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                .UseSnakeCaseNamingConvention();
+        });
 
-            services
-                .AddDbContexts(configuration)
-                .AddRepositories()
-                .AddMinio(configuration)
-                .AddHostedServices()
-                .AddMessaging();
-
-            services.AddScoped<DeleteExpiredVolunteersService>();
-
-            services.AddScoped<IVolunteersUnitOfWork, VolunteersUnitOfWork>();
-
-            services.AddScoped<IDbMigrator, VolunteersDbMigrator>();
-
-            return services;
-        }
-
-        private static IServiceCollection AddRepositories(
-            this IServiceCollection services)
+        services.AddDbContext<IVolunteersReadDbContext, VolunteersReadDbContext>(options =>
         {
-            services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+            options
+                .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                .UseSnakeCaseNamingConvention()
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddDbContexts(
-            this IServiceCollection services, 
-            IConfiguration configuration)
+    private static IServiceCollection AddMinio(
+        this IServiceCollection services, 
+        IConfiguration configuration)
+    {
+        services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.MINIO));
+
+        services.AddMinio(options =>
         {
-            services.AddDbContext<VolunteersWriteDbContext>(options =>
-            {
-                options
-                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
-                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
-                    .UseSnakeCaseNamingConvention();
-            });
+            var minioOptions = configuration.GetSection(MinioOptions.MINIO).Get<MinioOptions>()
+                ?? throw new ApplicationException("Missing minio configuration");
 
-            services.AddDbContext<IVolunteersReadDbContext, VolunteersReadDbContext>(options =>
-            {
-                options
-                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
-                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
-                    .UseSnakeCaseNamingConvention()
-                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
+            options.WithEndpoint(minioOptions.Endpoint);
+            options.WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey);
+            options.WithSSL(minioOptions.WithSSL);
+        });
 
-            return services;
-        }
+        services.AddScoped<IFilesProvider, MinioProvider>();
 
-        private static IServiceCollection AddMinio(
-            this IServiceCollection services, 
-            IConfiguration configuration)
-        {
-            services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.MINIO));
+        return services;
+    }
 
-            services.AddMinio(options =>
-            {
-                var minioOptions = configuration.GetSection(MinioOptions.MINIO).Get<MinioOptions>()
-                    ?? throw new ApplicationException("Missing minio configuration");
+    private static IServiceCollection AddHostedServices(this IServiceCollection services)
+    {
+        services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
+        services.AddHostedService<FilesCleanerBackgroundService>();
 
-                options.WithEndpoint(minioOptions.Endpoint);
-                options.WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey);
-                options.WithSSL(minioOptions.WithSSL);
-            });
+        return services;
+    }
 
-            services.AddScoped<IFilesProvider, MinioProvider>();
+    private static IServiceCollection AddMessaging(this IServiceCollection services)
+    {
+        services.AddSingleton<IMessageQueue<IEnumerable<FileMetadata>>,
+            InMemoryMessageQueue<IEnumerable<FileMetadata>>>();
 
-            return services;
-        }
-
-        private static IServiceCollection AddHostedServices(this IServiceCollection services)
-        {
-            services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
-            services.AddHostedService<FilesCleanerBackgroundService>();
-
-            return services;
-        }
-
-        private static IServiceCollection AddMessaging(this IServiceCollection services)
-        {
-            services.AddSingleton<IMessageQueue<IEnumerable<FileMetadata>>,
-                InMemoryMessageQueue<IEnumerable<FileMetadata>>>();
-
-            return services;
-        }
+        return services;
     }
 }

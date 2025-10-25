@@ -1,42 +1,41 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Text.Json.Serialization;
 
-namespace PetFamily.SharedKernel.ValueObjects
+namespace PetFamily.SharedKernel.ValueObjects;
+
+public class Requisite : ComparableValueObject
 {
-    public class Requisite : ComparableValueObject
+    public const int REQUISITE_TITLE_MAX_LENGTH = 100;
+    public const int REQUISITE_DESCRIPTION_MAX_LENGTH = 2000;
+
+    public string Title { get; }
+    public string Description { get; }
+
+    [JsonConstructor]
+    private Requisite(string title, string description)
     {
-        public const int REQUISITE_TITLE_MAX_LENGTH = 100;
-        public const int REQUISITE_DESCRIPTION_MAX_LENGTH = 2000;
+        Title = title;
+        Description = description;
+    }
 
-        public string Title { get; }
-        public string Description { get; }
-
-        [JsonConstructor]
-        private Requisite(string title, string description)
+    public static Result<Requisite, Error> Create(string title, string description)
+    {
+        if (string.IsNullOrWhiteSpace(title) || title.Length > REQUISITE_TITLE_MAX_LENGTH)
         {
-            Title = title;
-            Description = description;
+            return Errors.General.ValueIsInvalid(nameof(title));
         }
 
-        public static Result<Requisite, Error> Create(string title, string description)
+        if (string.IsNullOrWhiteSpace(description) || description.Length > REQUISITE_DESCRIPTION_MAX_LENGTH)
         {
-            if (string.IsNullOrWhiteSpace(title) || title.Length > REQUISITE_TITLE_MAX_LENGTH)
-            {
-                return Errors.General.ValueIsInvalid(nameof(title));
-            }
-
-            if (string.IsNullOrWhiteSpace(description) || description.Length > REQUISITE_DESCRIPTION_MAX_LENGTH)
-            {
-                return Errors.General.ValueIsInvalid(nameof(description));
-            }
-
-            return new Requisite(title, description);
+            return Errors.General.ValueIsInvalid(nameof(description));
         }
 
-        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
-        {
-            yield return Title;
-            yield return Description;
-        }
+        return new Requisite(title, description);
+    }
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Title;
+        yield return Description;
     }
 }

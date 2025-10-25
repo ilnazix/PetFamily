@@ -10,47 +10,46 @@ using PetFamily.Species.Infrastructure.DbContexts;
 using PetFamily.Species.Infrastructure.Repositories;
 using PetFamily.Species.Infrastructure.Utilities;
 
-namespace PetFamily.Species.Infrastructure
+namespace PetFamily.Species.Infrastructure;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructure(
-            this IServiceCollection services,
-            IConfiguration configuration)
+        services
+            .AddDbContexts(configuration);
+
+        services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+        services.AddScoped<ISpeciesUnitOfWork, SpeciesUnitOfWork>();
+
+        services.AddScoped<IDbMigrator, SpeciesDbMigrator>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDbContexts(
+       this IServiceCollection services,
+       IConfiguration configuration)
+    {
+        services.AddDbContext<SpeciesWriteDbContext>(options =>
         {
-            services
-                .AddDbContexts(configuration);
+            options
+                .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                .UseSnakeCaseNamingConvention();
+        });
 
-            services.AddScoped<ISpeciesRepository, SpeciesRepository>();
-            services.AddScoped<ISpeciesUnitOfWork, SpeciesUnitOfWork>();
-
-            services.AddScoped<IDbMigrator, SpeciesDbMigrator>();
-
-            return services;
-        }
-
-        private static IServiceCollection AddDbContexts(
-           this IServiceCollection services,
-           IConfiguration configuration)
+        services.AddDbContext<ISpeciesReadDbContext, SpeciesReadDbContext>(options =>
         {
-            services.AddDbContext<SpeciesWriteDbContext>(options =>
-            {
-                options
-                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
-                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
-                    .UseSnakeCaseNamingConvention();
-            });
+            options
+                .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
+                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                .UseSnakeCaseNamingConvention()
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
 
-            services.AddDbContext<ISpeciesReadDbContext, SpeciesReadDbContext>(options =>
-            {
-                options
-                    .UseNpgsql(configuration.GetConnectionString(Constants.DB_CONFIGURATION_SECTION))
-                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
-                    .UseSnakeCaseNamingConvention()
-                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
-
-            return services;
-        }
+        return services;
     }
 }

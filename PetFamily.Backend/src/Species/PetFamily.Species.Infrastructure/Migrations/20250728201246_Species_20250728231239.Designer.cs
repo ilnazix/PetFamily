@@ -9,79 +9,78 @@ using PetFamily.Species.Infrastructure.DbContexts;
 
 #nullable disable
 
-namespace PetFamily.Species.Infrastructure.Migrations
+namespace PetFamily.Species.Infrastructure.Migrations;
+
+[DbContext(typeof(SpeciesWriteDbContext))]
+[Migration("20250728201246_Species_20250728231239")]
+partial class Species_20250728231239
 {
-    [DbContext(typeof(SpeciesWriteDbContext))]
-    [Migration("20250728201246_Species_20250728231239")]
-    partial class Species_20250728231239
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("species")
-                .HasAnnotation("ProductVersion", "9.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+        modelBuilder
+            .HasDefaultSchema("species")
+            .HasAnnotation("ProductVersion", "9.0.0")
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+        modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("title");
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)")
+                    .HasColumnName("title");
 
-                    b.Property<Guid?>("species_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("species_id");
+                b.Property<Guid?>("species_id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("species_id");
 
-                    b.HasKey("Id")
-                        .HasName("pk_breeds");
+                b.HasKey("Id")
+                    .HasName("pk_breeds");
 
-                    b.HasIndex("species_id")
-                        .HasDatabaseName("ix_breeds_species_id");
+                b.HasIndex("species_id")
+                    .HasDatabaseName("ix_breeds_species_id");
 
-                    b.ToTable("breeds", "species");
-                });
+                b.ToTable("breeds", "species");
+            });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+        modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("title");
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)")
+                    .HasColumnName("title");
 
-                    b.HasKey("Id")
-                        .HasName("pk_species");
+                b.HasKey("Id")
+                    .HasName("pk_species");
 
-                    b.ToTable("species", "species");
-                });
+                b.ToTable("species", "species");
+            });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
-                {
-                    b.HasOne("PetFamily.Species.Domain.Models.Species", null)
-                        .WithMany("Breeds")
-                        .HasForeignKey("species_id")
-                        .HasConstraintName("fk_breeds_species_species_id");
-                });
+        modelBuilder.Entity("PetFamily.Species.Domain.Models.Breed", b =>
+            {
+                b.HasOne("PetFamily.Species.Domain.Models.Species", null)
+                    .WithMany("Breeds")
+                    .HasForeignKey("species_id")
+                    .HasConstraintName("fk_breeds_species_species_id");
+            });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
-                {
-                    b.Navigation("Breeds");
-                });
+        modelBuilder.Entity("PetFamily.Species.Domain.Models.Species", b =>
+            {
+                b.Navigation("Breeds");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

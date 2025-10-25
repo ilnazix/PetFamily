@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Framework.Response;
 
-namespace PetFamily.Framework
-{
-    [ApiController]
-    public abstract class ApplicationController : ControllerBase
-    {
-        public override OkObjectResult Ok(object? value)
-        {
-            var envelope = Envelope.Ok(value);
+namespace PetFamily.Framework;
 
-            return new OkObjectResult(envelope);
-        }
+[ApiController]
+public abstract class ApplicationController : ControllerBase
+{
+    public override OkObjectResult Ok(object? value)
+    {
+        var envelope = Envelope.Ok(value);
+
+        return new OkObjectResult(envelope);
     }
 }

@@ -5,19 +5,18 @@ using PetFamily.Species.Domain.Models;
 
 
 
-namespace PetFamily.Species.Infrastructure.Configurations.Write
+namespace PetFamily.Species.Infrastructure.Configurations.Write;
+
+public class BreedConfiguration : IEntityTypeConfiguration<Breed>
 {
-    public class BreedConfiguration : IEntityTypeConfiguration<Breed>
+    public void Configure(EntityTypeBuilder<Breed> builder)
     {
-        public void Configure(EntityTypeBuilder<Breed> builder)
-        {
-            builder.ToTable("breeds");
+        builder.ToTable("breeds");
 
-            builder.HasKey(b => b.Id);
+        builder.HasKey(b => b.Id);
 
-            builder.Property(b => b.Id).HasConversion(id => id.Value, value => BreedId.Create(value));
+        builder.Property(b => b.Id).HasConversion(id => id.Value, value => BreedId.Create(value));
 
-            builder.Property(b => b.Title).IsRequired().HasMaxLength(Breed.MAX_BREED_TITLE_LENGTH);
-        }
+        builder.Property(b => b.Title).IsRequired().HasMaxLength(Breed.MAX_BREED_TITLE_LENGTH);
     }
 }

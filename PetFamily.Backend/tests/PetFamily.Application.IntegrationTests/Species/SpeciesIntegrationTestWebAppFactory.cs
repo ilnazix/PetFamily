@@ -10,89 +10,88 @@ using Respawn;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
 
-namespace PetFamily.Application.IntegrationTests.Species
+namespace PetFamily.Application.IntegrationTests.Species;
+
+public class SpeciesIntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    public class SpeciesIntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
+        .WithImage("postgres:17")
+        .WithDatabase("pet_fmily")
+        .WithUsername("postgres")
+        .WithPassword("postgres")
+        .Build();
+
+    private Respawner _respawner = default!;
+    private DbConnection _dbConnection = default!;
+
+    public async Task InitializeAsync()
     {
-        private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
-            .WithImage("postgres:17")
-            .WithDatabase("pet_fmily")
-            .WithUsername("postgres")
-            .WithPassword("postgres")
-            .Build();
+        await _dbContainer.StartAsync();
 
-        private Respawner _respawner = default!;
-        private DbConnection _dbConnection = default!;
+        var scope = Services.CreateScope();
 
-        public async Task InitializeAsync()
+        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
+        await InitializeRespawner();
+    }
+
+    private async Task InitializeRespawner()
+    {
+        await _dbConnection.OpenAsync();
+
+        _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
         {
-            await _dbContainer.StartAsync();
+            DbAdapter = DbAdapter.Postgres,
+            SchemasToInclude = ["species"]
+        });
+    }
 
-            var scope = Services.CreateScope();
+    public async Task ResetDatabaseAsync()
+    {
+        await _respawner.ResetAsync(_dbConnection);
+    }
 
-            _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
-            await InitializeRespawner();
-        }
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureTestServices(ConfigureDefaultServices);
+    }
 
-        private async Task InitializeRespawner()
+    private void ConfigureDefaultServices(IServiceCollection services)
+    {
+        var writeDbContext = services.SingleOrDefault(s =>
+            s.ServiceType == typeof(SpeciesWriteDbContext));
+
+        if (writeDbContext is not null)
+            services.Remove(writeDbContext);
+
+        var readDbContext = services.SingleOrDefault(s =>
+            s.ServiceType == typeof(SpeciesReadDbContext));
+
+        if (readDbContext is not null)
+            services.Remove(readDbContext);
+
+        services.AddDbContext<SpeciesWriteDbContext>(options =>
         {
-            await _dbConnection.OpenAsync();
+            options
+                .UseNpgsql(_dbContainer.GetConnectionString())
+                .UseSnakeCaseNamingConvention();
+        });
 
-            _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
-            {
-                DbAdapter = DbAdapter.Postgres,
-                SchemasToInclude = ["species"]
-            });
-        }
-
-        public async Task ResetDatabaseAsync()
+        services.AddDbContext<SpeciesReadDbContext>(options =>
         {
-            await _respawner.ResetAsync(_dbConnection);
-        }
+            options
+                .UseNpgsql(_dbContainer.GetConnectionString())
+                .UseSnakeCaseNamingConvention();
+        });
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.ConfigureTestServices(ConfigureDefaultServices);
-        }
+        var provider = services.BuildServiceProvider();
+        using var scope = provider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
 
-        private void ConfigureDefaultServices(IServiceCollection services)
-        {
-            var writeDbContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(SpeciesWriteDbContext));
+        context.Database.Migrate();
+    }
 
-            if (writeDbContext is not null)
-                services.Remove(writeDbContext);
-
-            var readDbContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(SpeciesReadDbContext));
-
-            if (readDbContext is not null)
-                services.Remove(readDbContext);
-
-            services.AddDbContext<SpeciesWriteDbContext>(options =>
-            {
-                options
-                    .UseNpgsql(_dbContainer.GetConnectionString())
-                    .UseSnakeCaseNamingConvention();
-            });
-
-            services.AddDbContext<SpeciesReadDbContext>(options =>
-            {
-                options
-                    .UseNpgsql(_dbContainer.GetConnectionString())
-                    .UseSnakeCaseNamingConvention();
-            });
-
-            var provider = services.BuildServiceProvider();
-            using var scope = provider.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
-
-            context.Database.Migrate();
-        }
-
-        public new Task DisposeAsync()
-        {
-            return _dbContainer.StopAsync();
-        }
+    public new Task DisposeAsync()
+    {
+        return _dbContainer.StopAsync();
     }
 }

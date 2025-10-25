@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace PetFamily.Volunteers.Application.Volunteers.Commands.Restore
+namespace PetFamily.Volunteers.Application.Volunteers.Commands.Restore;
+
+public class RestoreVolunteerCommandValidator : AbstractValidator<RestoreVolunteerCommand>
 {
-    public class RestoreVolunteerCommandValidator : AbstractValidator<RestoreVolunteerCommand>
+    public RestoreVolunteerCommandValidator()
     {
-        public RestoreVolunteerCommandValidator()
-        {
-            RuleFor(c => c.Id).NotEmpty();
-        }
+        RuleFor(c => c.Id).NotEmpty();
     }
 }

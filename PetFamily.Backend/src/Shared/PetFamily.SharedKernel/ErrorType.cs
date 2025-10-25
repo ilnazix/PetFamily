@@ -1,11 +1,10 @@
-﻿namespace PetFamily.SharedKernel
+﻿namespace PetFamily.SharedKernel;
+
+public enum ErrorType
 {
-    public enum ErrorType
-    {
-        None,
-        Validation,
-        NotFound,
-        Failure,
-        Conflict
-    }
+    None,
+    Validation,
+    NotFound,
+    Failure,
+    Conflict
 }
