@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
@@ -16,18 +17,21 @@ public class TakeRequestOnReviewCommandHandler
     private readonly IVolunteerRequestUnitOfWork _unitOfWork;
     private readonly IDiscussionsModule _discussionsModule;
     private readonly IValidator<TakeRequestOnReviewCommand> _validator;
+    private readonly IPublisher _publisher;
     private readonly ILogger<TakeRequestOnReviewCommandHandler> _logger;
 
     public TakeRequestOnReviewCommandHandler(
         IVolunteerRequestUnitOfWork unitOfWork,
         IDiscussionsModule discussionsModule,
         IValidator<TakeRequestOnReviewCommand> validator,
-        ILogger<TakeRequestOnReviewCommandHandler> logger)
+        ILogger<TakeRequestOnReviewCommandHandler> logger,
+        IPublisher publisher)
     {
         _unitOfWork = unitOfWork;
         _discussionsModule = discussionsModule;
         _validator = validator;
         _logger = logger;
+        _publisher = publisher;
     }
 
     public async Task<Result<Guid, ErrorList>> Handle(
@@ -57,6 +61,9 @@ public class TakeRequestOnReviewCommandHandler
 
         if (createDiscussionResult.IsFailure)
             return createDiscussionResult.Error;
+
+
+        await _publisher.PublishDomainEvents(volunteerRequest, cancelationToken);
 
         await _unitOfWork.Commit(cancelationToken);
 
