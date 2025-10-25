@@ -1,16 +1,18 @@
 #!/bin/bash
 
-timestamp=$(date +"%Y%m%d%H%M%S")
+CONTEXT="AccountsWriteDbContext"
+STARTUP_PROJECT="PetFamily.Web/"
+PROJECT="Accounts/PetFamily.Accounts.Infrastructure"
+TIMESTAMP=$(date +"%Y%m%d%H%M%S")
 
-# Генерация миграции
-dotnet ef migrations add Accounts_$timestamp \
-    --context AccountsDbContext \
-    --startup-project PetFamily.Web/ \
-    --project Accounts/PetFamily.Accounts.Infrastructure
+dotnet ef migrations add "${CONTEXT}_${TIMESTAMP}" \
+    --context "$CONTEXT" \
+    --startup-project "$STARTUP_PROJECT" \
+    --project "$PROJECT"
 
-# Применение миграции
 dotnet ef database update \
-    --context AccountsDbContext \
-    --startup-project PetFamily.Web/ \
-    --project Accounts/PetFamily.Accounts.Infrastructure
+    --context "$CONTEXT" \
+    --startup-project "$STARTUP_PROJECT" \
+    --project "$PROJECT"
+
 

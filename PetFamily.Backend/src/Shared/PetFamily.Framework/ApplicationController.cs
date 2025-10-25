@@ -3,7 +3,6 @@ using PetFamily.Framework.Response;
 
 namespace PetFamily.Framework
 {
-    [Route("api/")]
     [ApiController]
     public abstract class ApplicationController : ControllerBase
     {

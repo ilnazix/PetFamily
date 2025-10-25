@@ -11,7 +11,7 @@ using PetFamily.Framework.Auth;
 
 namespace PetFamily.Discussions.Presentation;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class DiscussionsController : ApplicationController
 {
     private readonly IUserContext _userContext;

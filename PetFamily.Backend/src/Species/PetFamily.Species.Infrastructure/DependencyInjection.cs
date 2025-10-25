@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PetFamily.Core.Database;
 using PetFamily.Species.Application.Database;
 using PetFamily.Species.Application.Species.Commands;
 using PetFamily.Species.Infrastructure.Database;
 using PetFamily.Species.Infrastructure.DbContexts;
 using PetFamily.Species.Infrastructure.Repositories;
+using PetFamily.Species.Infrastructure.Utilities;
 
 namespace PetFamily.Species.Infrastructure
 {
@@ -21,6 +23,8 @@ namespace PetFamily.Species.Infrastructure
 
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
             services.AddScoped<ISpeciesUnitOfWork, SpeciesUnitOfWork>();
+
+            services.AddScoped<IDbMigrator, SpeciesDbMigrator>();
 
             return services;
         }

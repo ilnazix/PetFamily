@@ -16,7 +16,7 @@ using PetFamily.VolunteerRequest.Presentation.Extensions;
 
 namespace PetFamily.VolunteerRequest.Presentation;
 
-[Route("volunteer-requests")]
+[Route("api/volunteer-requests")]
 public class VolunteerRequestsController : ApplicationController
 {
     protected readonly IUserContext _userContext;

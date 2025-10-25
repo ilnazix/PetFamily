@@ -16,6 +16,8 @@ using PetFamily.Accounts.Infrastructure.Options.RefreshSession;
 using PetFamily.Accounts.Infrastructure.Providers;
 using PetFamily.Accounts.Infrastructure.Seeding;
 using System.Text;
+using PetFamily.Accounts.Infrastructure.Utilities;
+using PetFamily.Core.Database;
 
 namespace PetFamily.Accounts.Infrastructure;
 
@@ -34,6 +36,7 @@ public static class DependencyInjection
             .AddSeeding()
             .AddManagers();
 
+        services.AddScoped<IDbMigrator, AccountsDbMigrator>();
         return services;
     }
 

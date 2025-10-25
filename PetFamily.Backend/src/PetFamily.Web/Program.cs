@@ -47,19 +47,19 @@ builder.Services
 
 var app = builder.Build();
 
-var accountsSeeder = app.Services.GetRequiredService<AccountsSeeder>();
-
-await accountsSeeder.SeedAsync();
-
 app.UseExceptionMiddleware();
 app.UseSerilogRequestLogging();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsDocker())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
+var accountsSeeder = app.Services.GetRequiredService<AccountsSeeder>();
+await accountsSeeder.SeedAsync();
+    
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

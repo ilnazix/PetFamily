@@ -24,7 +24,7 @@ using PetFamily.Volunteers.Presentation.Volunteers.Extensions;
 
 namespace PetFamily.Volunteers.Presentation.Volunteers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class VolunteersController : ApplicationController
     {
         [HttpGet]
