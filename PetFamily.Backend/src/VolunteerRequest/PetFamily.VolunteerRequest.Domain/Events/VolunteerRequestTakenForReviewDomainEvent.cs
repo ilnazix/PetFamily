@@ -4,6 +4,6 @@ using PetFamily.SharedKernel.ValueObjects.Ids;
 namespace PetFamily.VolunteerRequest.Domain.Events;
 
 public record VolunteerRequestTakenForReviewDomainEvent(
-    VolunteerRequestId volunteerId,
+    VolunteerRequestId VolunteerRequestId,
     Guid UserId,
     Guid AdminId) : IDomainEvent;

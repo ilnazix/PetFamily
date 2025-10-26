@@ -1,14 +1,15 @@
-using PetFamily.Species.Presentation;
+using MassTransit;
+using PetFamily.Accounts.Infrastructure.Seeding;
 using PetFamily.Accounts.Presentation;
+using PetFamily.Discussions.Presentation;
+using PetFamily.Species.Presentation;
+using PetFamily.VolunteerRequest.Presentation;
 using PetFamily.Volunteers.Presentation;
 using PetFamily.Volunteers.Presentation.Volunteers;
 using PetFamily.Web.Extensions;
-using PetFamily.Accounts.Infrastructure.Seeding;
+using PetFamily.Web.Middlewares;
 using Serilog;
 using Serilog.Events;
-using PetFamily.Web.Middlewares;
-using PetFamily.VolunteerRequest.Presentation;
-using PetFamily.Discussions.Presentation;
 
 DotNetEnv.Env.Load();
 
@@ -44,6 +45,9 @@ builder.Services
     .AddAccountsModule(builder.Configuration)
     .AddVolunteerRequestModule(builder.Configuration)
     .AddDiscussionsModule(builder.Configuration);
+
+
+builder.Services.AddMessageBroker(builder.Configuration);
 
 var app = builder.Build();
 

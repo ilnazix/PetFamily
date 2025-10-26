@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Database;
 using PetFamily.Discussions.Application.Commands;
 using PetFamily.Discussions.Application.Database;
+using PetFamily.Discussions.Infrastructure.Consumers;
 using PetFamily.Discussions.Infrastructure.Database;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Discussions.Infrastructure.Repositories;
