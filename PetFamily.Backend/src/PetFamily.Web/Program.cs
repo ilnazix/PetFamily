@@ -46,9 +46,6 @@ builder.Services
     .AddVolunteerRequestModule(builder.Configuration)
     .AddDiscussionsModule(builder.Configuration);
 
-
-builder.Services.AddMessageBroker(builder.Configuration);
-
 var app = builder.Build();
 
 app.UseExceptionMiddleware();

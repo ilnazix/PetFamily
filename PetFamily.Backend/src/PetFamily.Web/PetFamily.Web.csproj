@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Accounts\PetFamily.Accounts.Presentation\PetFamily.Accounts.Presentation.csproj" />
-    <ProjectReference Include="..\Discussions\PetFamily.Discussions.Infrastructure\PetFamily.Discussions.Infrastructure.csproj" />
     <ProjectReference Include="..\Discussions\PetFamily.Discussions.Presentation\PetFamily.Discussions.Presentation.csproj" />
     <ProjectReference Include="..\Species\PetFamily.Species.Presentation\PetFamily.Species.Presentation.csproj" />
     <ProjectReference Include="..\VolunteerRequest\PetFamily.VolunteerRequest.Presentation\PetFamily.VolunteerRequest.Presentation.csproj" />

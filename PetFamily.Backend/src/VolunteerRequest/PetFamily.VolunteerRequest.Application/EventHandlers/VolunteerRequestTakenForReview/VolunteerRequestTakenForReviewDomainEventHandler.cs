@@ -1,5 +1,5 @@
-﻿using MassTransit;
-using MediatR;
+﻿using MediatR;
+using PetFamily.VolunteerRequest.Application.Database;
 using PetFamily.VolunteerRequest.Contracts.Messaging;
 using PetFamily.VolunteerRequest.Domain.Events;
 
@@ -8,11 +8,11 @@ namespace PetFamily.VolunteerRequest.Application.EventHandlers.VolunteerRequestT
 internal class VolunteerRequestTakenForReviewDomainEventHandler 
     : INotificationHandler<VolunteerRequestTakenForReviewDomainEvent>
 {
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IOutboxRepository _outboxRepository;
 
-    public VolunteerRequestTakenForReviewDomainEventHandler(IPublishEndpoint publishEndpoint)
+    public VolunteerRequestTakenForReviewDomainEventHandler(IOutboxRepository outboxRepository)
     {
-        _publishEndpoint = publishEndpoint;
+        _outboxRepository = outboxRepository;
     }
 
     public async Task Handle(
@@ -26,6 +26,6 @@ internal class VolunteerRequestTakenForReviewDomainEventHandler
            AdminId: notification.AdminId
        );
 
-        await _publishEndpoint.Publish(integrationEvent, cancellationToken);
+        await _outboxRepository.Add(integrationEvent, cancellationToken);
     }
 }
