@@ -40,6 +40,7 @@ public static class DependencyInjection
             configure.SetKebabCaseEndpointNameFormatter();
 
             configure.AddConsumer<VolunteerRequestTakenForReviewEventConsumer>();
+            configure.AddConsumer<VolunteerRequestProcessedEventConsumer>();
 
             configure.UsingRabbitMq((context, cfg) =>
             {

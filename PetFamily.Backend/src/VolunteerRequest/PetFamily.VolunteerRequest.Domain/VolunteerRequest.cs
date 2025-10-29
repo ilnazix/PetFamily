@@ -89,6 +89,9 @@ public class VolunteerRequest : AggregateRoot<VolunteerRequestId>
         RejectionComment = rejectionComment.Trim();
         RejectedAt = DateTime.UtcNow;
 
+        var @event = new VolunteerRequestProcessedDomainEvent(Id);
+        AddDomainEvent(@event);
+
         return UnitResult.Success<Error>();
     }
 
@@ -103,11 +106,14 @@ public class VolunteerRequest : AggregateRoot<VolunteerRequestId>
 
         Status = VolunteerRequestStatus.Approved;
 
-        var @event = new VolunteerRequestApprovedDomainEvent(
+        IDomainEvent @event = new VolunteerRequestApprovedDomainEvent(
             Id,
             UserId,
             VolunteerInfo);
 
+        AddDomainEvent(@event);
+
+        @event = new VolunteerRequestProcessedDomainEvent(Id);
         AddDomainEvent(@event);
 
         return UnitResult.Success<Error>();

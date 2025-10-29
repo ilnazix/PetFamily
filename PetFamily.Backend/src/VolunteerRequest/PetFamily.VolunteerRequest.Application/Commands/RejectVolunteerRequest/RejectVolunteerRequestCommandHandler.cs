@@ -5,6 +5,8 @@ using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel.ValueObjects.Ids;
 using PetFamily.SharedKernel;
 using PetFamily.Core.Extensions;
+using PetFamily.VolunteerRequest.Application.Database;
+using MediatR;
 
 namespace PetFamily.VolunteerRequest.Application.Commands.RejectVolunteerRequest;
 
@@ -12,15 +14,18 @@ public class RejectVolunteerRequestCommandHandler : ICommandHandler<Guid, Reject
 {
     private readonly IVolunteerRequestUnitOfWork _unitOfWork;
     private readonly IValidator<RejectVolunteerRequestCommand> _validator;
+    private readonly IPublisher _publisher;
     private readonly ILogger<RejectVolunteerRequestCommandHandler> _logger;
 
     public RejectVolunteerRequestCommandHandler(
         IVolunteerRequestUnitOfWork unitOfWork,
         IValidator<RejectVolunteerRequestCommand> validator,
+        IPublisher publisher,
         ILogger<RejectVolunteerRequestCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _validator = validator;
+        _publisher = publisher;
         _logger = logger;
     }
 
@@ -46,6 +51,8 @@ public class RejectVolunteerRequestCommandHandler : ICommandHandler<Guid, Reject
 
         if (result.IsFailure)
             return result.Error.ToErrorList();
+
+        await _publisher.PublishDomainEvents(volunteerRequest, cancelationToken);
 
         await _unitOfWork.Commit(cancelationToken);
 
