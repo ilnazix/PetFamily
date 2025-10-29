@@ -17,6 +17,8 @@ using PetFamily.Core.Messaging;
 using PetFamily.Volunteers.Infrastructure.MessageQueues;
 using PetFamily.Volunteers.Infrastructure.Database;
 using PetFamily.Volunteers.Infrastructure.Utilities;
+using MassTransit;
+using PetFamily.Volunteers.Infrastructure.Consumers;
 
 namespace PetFamily.Volunteers.Infrastructure;
 
@@ -32,6 +34,7 @@ public static class DependencyInjection
             .AddDbContexts(configuration)
             .AddRepositories()
             .AddMinio(configuration)
+            .AddMessageBus(configuration)
             .AddHostedServices()
             .AddMessaging();
 
@@ -101,6 +104,32 @@ public static class DependencyInjection
     {
         services.AddHostedService<DeleteExpiredVolunteersBackgroundService>();
         services.AddHostedService<FilesCleanerBackgroundService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMessageBus(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddMassTransit<IVolunteersBus>(configure =>
+        {
+            configure.SetKebabCaseEndpointNameFormatter();
+
+            configure.AddConsumer<VolunteerRequestApprovedEventConsumer>()
+                .Endpoint(x => x.InstanceId = "volunteers");
+
+            configure.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(new Uri(configuration["RabbitMQ:HostName"]!), cfg =>
+                {
+                    cfg.Username(configuration["RabbitMQ:UserName"]!);
+                    cfg.Password(configuration["RabbitMQ:Password"]!);
+                });
+                cfg.Durable = true;
+                cfg.ConfigureEndpoints(context);
+            });
+        });
 
         return services;
     }

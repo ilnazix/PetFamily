@@ -102,6 +102,14 @@ public class VolunteerRequest : AggregateRoot<VolunteerRequestId>
             return Error.Validation("request.invalidStatus", "Request can only be approved from 'OnReview' status", nameof(Status));
 
         Status = VolunteerRequestStatus.Approved;
+
+        var @event = new VolunteerRequestApprovedDomainEvent(
+            Id,
+            UserId,
+            VolunteerInfo);
+
+        AddDomainEvent(@event);
+
         return UnitResult.Success<Error>();
     }
 

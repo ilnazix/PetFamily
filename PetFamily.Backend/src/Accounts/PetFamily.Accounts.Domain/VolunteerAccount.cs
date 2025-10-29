@@ -4,6 +4,7 @@ namespace PetFamily.Accounts.Domain;
 
 public class VolunteerAccount 
 {
+    public const string ROLE = "volunteer";
     public Guid Id { get; set; }
 
     public IReadOnlyList<Requisite> Requisites { get; private set; } = new List<Requisite>();
