@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePermanently
+namespace PetFamily.Volunteers.Application.Volunteers.Commands.DeletePermanently;
+
+public class DeleteVolunteerPermanentlyCommandValidator : AbstractValidator<DeleteVolunteerPermanentlyCommand>
 {
-    public class DeleteVolunteerPermanentlyCommandValidator : AbstractValidator<DeleteVolunteerPermanentlyCommand>
+    public DeleteVolunteerPermanentlyCommandValidator()
     {
-        public DeleteVolunteerPermanentlyCommandValidator()
-        {
-            RuleFor(c => c.Id).NotEmpty();
-        }
+        RuleFor(c => c.Id).NotEmpty();
     }
 }

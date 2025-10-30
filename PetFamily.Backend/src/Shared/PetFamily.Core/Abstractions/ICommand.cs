@@ -1,4 +1,3 @@
-﻿namespace PetFamily.Core.Abstractions
-{
-    public interface ICommand;
-}
+﻿namespace PetFamily.Core.Abstractions;
+
+public interface ICommand;

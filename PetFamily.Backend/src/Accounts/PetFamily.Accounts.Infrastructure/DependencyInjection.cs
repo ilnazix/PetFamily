@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,16 +9,18 @@ using PetFamily.Accounts.Application.Commands;
 using PetFamily.Accounts.Application.Commands.RefreshToken;
 using PetFamily.Accounts.Application.Database;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.Consumers;
 using PetFamily.Accounts.Infrastructure.DbContexts;
 using PetFamily.Accounts.Infrastructure.Managers;
+using PetFamily.Accounts.Infrastructure.Messaging;
 using PetFamily.Accounts.Infrastructure.Options.Admin;
 using PetFamily.Accounts.Infrastructure.Options.Jwt;
 using PetFamily.Accounts.Infrastructure.Options.RefreshSession;
 using PetFamily.Accounts.Infrastructure.Providers;
 using PetFamily.Accounts.Infrastructure.Seeding;
-using System.Text;
 using PetFamily.Accounts.Infrastructure.Utilities;
 using PetFamily.Core.Database;
+using System.Text;
 
 namespace PetFamily.Accounts.Infrastructure;
 
@@ -31,12 +34,39 @@ public static class DependencyInjection
             .AddIdentity()
             .AddPermissionAuthentication(configuration)
             .AddDbContext(configuration)
+            .AddMessageBus(configuration)
             .AddOptions()
             .AddProviders()
             .AddSeeding()
             .AddManagers();
 
         services.AddScoped<IDbMigrator, AccountsDbMigrator>();
+        return services;
+    }
+
+    private static IServiceCollection AddMessageBus(
+       this IServiceCollection services,
+       IConfiguration configuration)
+    {
+        services.AddMassTransit<IAccountsBus>(configure =>
+        {
+            configure.SetKebabCaseEndpointNameFormatter();
+
+            configure.AddConsumer<VolunteerRequestApprovedEventConsumer>()
+                .Endpoint(x => x.InstanceId = "accounts");
+
+            configure.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(new Uri(configuration["RabbitMQ:HostName"]!), cfg =>
+                {
+                    cfg.Username(configuration["RabbitMQ:UserName"]!);
+                    cfg.Password(configuration["RabbitMQ:Password"]!);
+                });
+                cfg.Durable = true;
+                cfg.ConfigureEndpoints(context);
+            });
+        });
+
         return services;
     }
 

@@ -1,19 +1,18 @@
 ﻿using System.Collections;
 
-namespace PetFamily.SharedKernel
+namespace PetFamily.SharedKernel;
+
+public class ErrorList : IEnumerable<Error>
 {
-    public class ErrorList : IEnumerable<Error>
+    private readonly List<Error> _errors = [];
+
+    public ErrorList(IEnumerable<Error> errors)
     {
-        private readonly List<Error> _errors = [];
-
-        public ErrorList(IEnumerable<Error> errors)
-        {
-            _errors = [.. errors];
-        }
-
-        public IEnumerator<Error> GetEnumerator() => _errors.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public static implicit operator ErrorList(Error error) => new([error]);
+        _errors = [.. errors];
     }
+
+    public IEnumerator<Error> GetEnumerator() => _errors.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public static implicit operator ErrorList(Error error) => new([error]);
 }

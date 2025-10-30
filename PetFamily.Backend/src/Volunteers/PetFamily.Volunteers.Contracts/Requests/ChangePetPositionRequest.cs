@@ -1,7 +1,6 @@
-﻿namespace PetFamily.Volunteers.Contracts.Requests
+﻿namespace PetFamily.Volunteers.Contracts.Requests;
+
+public record ChangePetPositionRequest
 {
-    public record ChangePetPositionRequest
-    {
-        public int NewPosition { get; init; }
-    }
+    public int NewPosition { get; init; }
 }

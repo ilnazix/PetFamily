@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Database;
 using PetFamily.Discussions.Application.Commands;
 using PetFamily.Discussions.Application.Database;
+using PetFamily.Discussions.Application.Messaging;
+using PetFamily.Discussions.Infrastructure.Consumers;
 using PetFamily.Discussions.Infrastructure.Database;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Discussions.Infrastructure.Repositories;
@@ -20,9 +23,37 @@ public static class DependencyInjection
     {
         services
             .AddRepositories()
-            .AddDbContexts(configuration);
+            .AddDbContexts(configuration)
+            .AddMessageBus(configuration);
 
         services.AddScoped<IDbMigrator, DiscussionsDbMigrator>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMessageBus(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddMassTransit<IDiscussionsBus>(configure =>
+        {
+            configure.SetKebabCaseEndpointNameFormatter();
+
+            configure.AddConsumer<VolunteerRequestTakenForReviewEventConsumer>();
+            configure.AddConsumer<VolunteerRequestProcessedEventConsumer>();
+
+            configure.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(new Uri(configuration["RabbitMQ:HostName"]!), cfg =>
+                {
+                    cfg.Username(configuration["RabbitMQ:UserName"]!);
+                    cfg.Password(configuration["RabbitMQ:Password"]!);
+                });
+
+                cfg.Durable = true;
+                cfg.ConfigureEndpoints(context);
+            });
+        });
 
         return services;
     }

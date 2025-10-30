@@ -6,41 +6,40 @@ using PetFamily.Volunteers.Infrastructure.Options;
 using PetFamily.Volunteers.Infrastructure.Services;
 
 
-namespace PetFamily.Volunteers.Infrastructure.BackgroundServices
+namespace PetFamily.Volunteers.Infrastructure.BackgroundServices;
+
+public class DeleteExpiredVolunteersBackgroundService : BackgroundService
 {
-    public class DeleteExpiredVolunteersBackgroundService : BackgroundService
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<DeleteExpiredVolunteersBackgroundService> _logger;
+    private readonly VolunteerEntityOptions _options;
+
+    public DeleteExpiredVolunteersBackgroundService(
+        IServiceScopeFactory scopeFactory,
+        ILogger<DeleteExpiredVolunteersBackgroundService> logger,
+        IOptions<VolunteerEntityOptions> options)
     {
-        private readonly IServiceScopeFactory _scopeFactory;
-        private readonly ILogger<DeleteExpiredVolunteersBackgroundService> _logger;
-        private readonly VolunteerEntityOptions _options;
+        _scopeFactory = scopeFactory;
+        _logger = logger;
+        _options = options.Value;
+    }
 
-        public DeleteExpiredVolunteersBackgroundService(
-            IServiceScopeFactory scopeFactory,
-            ILogger<DeleteExpiredVolunteersBackgroundService> logger,
-            IOptions<VolunteerEntityOptions> options)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("DeleteExpiredVolunteersService is started");
+
+        while (!stoppingToken.IsCancellationRequested)
         {
-            _scopeFactory = scopeFactory;
-            _logger = logger;
-            _options = options.Value;
-        }
+            await using var scope = _scopeFactory.CreateAsyncScope();
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            _logger.LogInformation("DeleteExpiredVolunteersService is started");
+            var service = scope.ServiceProvider.GetRequiredService<DeleteExpiredVolunteersService>();
 
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await using var scope = _scopeFactory.CreateAsyncScope();
+            _logger.LogInformation("DeleteExpiredVolunteersService is working");
 
-                var service = scope.ServiceProvider.GetRequiredService<DeleteExpiredVolunteersService>();
+            await service.Process(stoppingToken);
 
-                _logger.LogInformation("DeleteExpiredVolunteersService is working");
-
-                await service.Process(stoppingToken);
-
-                await Task.Delay(TimeSpan.FromHours(_options.DeleteExpiredVolunteersServiceReductionDays),
-                    stoppingToken);
-            }
+            await Task.Delay(TimeSpan.FromHours(_options.DeleteExpiredVolunteersServiceReductionDays),
+                stoppingToken);
         }
     }
 }

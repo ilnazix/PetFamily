@@ -9,125 +9,124 @@ using PetFamily.VolunteerRequest.Infrastructure.DbContexts;
 
 #nullable disable
 
-namespace PetFamily.VolunteerRequest.Infrastructure.Migrations
+namespace PetFamily.VolunteerRequest.Infrastructure.Migrations;
+
+[DbContext(typeof(VolunteerRequestsWriteDbContext))]
+[Migration("20251019115725_VolunteerRequest_20251019145719")]
+partial class VolunteerRequest_20251019145719
 {
-    [DbContext(typeof(VolunteerRequestsWriteDbContext))]
-    [Migration("20251019115725_VolunteerRequest_20251019145719")]
-    partial class VolunteerRequest_20251019145719
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("volunteer_requests")
-                .HasAnnotation("ProductVersion", "9.0.1")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+        modelBuilder
+            .HasDefaultSchema("volunteer_requests")
+            .HasAnnotation("ProductVersion", "9.0.1")
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.VolunteerRequest.Domain.VolunteerRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+        modelBuilder.Entity("PetFamily.VolunteerRequest.Domain.VolunteerRequest", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
 
-                    b.Property<Guid?>("AdminId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("admin_id");
+                b.Property<Guid?>("AdminId")
+                    .HasColumnType("uuid")
+                    .HasColumnName("admin_id");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("timestamp with time zone")
+                    .HasColumnName("created_at");
 
-                    b.Property<DateTime?>("RejectedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("rejected_at");
+                b.Property<DateTime?>("RejectedAt")
+                    .HasColumnType("timestamp with time zone")
+                    .HasColumnName("rejected_at");
 
-                    b.Property<string>("RejectionComment")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("rejection_comment");
+                b.Property<string>("RejectionComment")
+                    .IsRequired()
+                    .HasColumnType("text")
+                    .HasColumnName("rejection_comment");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("status");
+                b.Property<string>("Status")
+                    .IsRequired()
+                    .HasColumnType("text")
+                    .HasColumnName("status");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uuid")
+                    .HasColumnName("user_id");
 
-                    b.HasKey("Id")
-                        .HasName("pk_volunteer_requests");
+                b.HasKey("Id")
+                    .HasName("pk_volunteer_requests");
 
-                    b.ToTable("volunteer_requests", "volunteer_requests");
-                });
+                b.ToTable("volunteer_requests", "volunteer_requests");
+            });
 
-            modelBuilder.Entity("PetFamily.VolunteerRequest.Domain.VolunteerRequest", b =>
-                {
-                    b.OwnsOne("PetFamily.VolunteerRequest.Domain.VolunteerInfo", "VolunteerInfo", b1 =>
-                        {
-                            b1.Property<Guid>("VolunteerRequestId")
-                                .HasColumnType("uuid");
+        modelBuilder.Entity("PetFamily.VolunteerRequest.Domain.VolunteerRequest", b =>
+            {
+                b.OwnsOne("PetFamily.VolunteerRequest.Domain.VolunteerInfo", "VolunteerInfo", b1 =>
+                    {
+                        b1.Property<Guid>("VolunteerRequestId")
+                            .HasColumnType("uuid");
 
-                            b1.Property<string>("Email")
-                                .IsRequired()
-                                .HasColumnType("text");
+                        b1.Property<string>("Email")
+                            .IsRequired()
+                            .HasColumnType("text");
 
-                            b1.Property<string>("PhoneNumber")
-                                .IsRequired()
-                                .HasColumnType("text");
+                        b1.Property<string>("PhoneNumber")
+                            .IsRequired()
+                            .HasColumnType("text");
 
-                            b1.HasKey("VolunteerRequestId");
+                        b1.HasKey("VolunteerRequestId");
 
-                            b1.ToTable("volunteer_requests", "volunteer_requests");
+                        b1.ToTable("volunteer_requests", "volunteer_requests");
 
-                            b1.ToJson("volunteer_info");
+                        b1.ToJson("volunteer_info");
 
-                            b1.WithOwner()
-                                .HasForeignKey("VolunteerRequestId")
-                                .HasConstraintName("fk_volunteer_requests_volunteer_requests_id");
+                        b1.WithOwner()
+                            .HasForeignKey("VolunteerRequestId")
+                            .HasConstraintName("fk_volunteer_requests_volunteer_requests_id");
 
-                            b1.OwnsOne("PetFamily.SharedKernel.ValueObjects.FullName", "FullName", b2 =>
-                                {
-                                    b2.Property<Guid>("VolunteerInfoVolunteerRequestId")
-                                        .HasColumnType("uuid");
+                        b1.OwnsOne("PetFamily.SharedKernel.ValueObjects.FullName", "FullName", b2 =>
+                            {
+                                b2.Property<Guid>("VolunteerInfoVolunteerRequestId")
+                                    .HasColumnType("uuid");
 
-                                    b2.Property<string>("FirstName")
-                                        .IsRequired()
-                                        .HasColumnType("text")
-                                        .HasColumnName("first_name");
+                                b2.Property<string>("FirstName")
+                                    .IsRequired()
+                                    .HasColumnType("text")
+                                    .HasColumnName("first_name");
 
-                                    b2.Property<string>("LastName")
-                                        .IsRequired()
-                                        .HasColumnType("text")
-                                        .HasColumnName("last_name");
+                                b2.Property<string>("LastName")
+                                    .IsRequired()
+                                    .HasColumnType("text")
+                                    .HasColumnName("last_name");
 
-                                    b2.Property<string>("MiddleName")
-                                        .IsRequired()
-                                        .HasColumnType("text")
-                                        .HasColumnName("middle_name");
+                                b2.Property<string>("MiddleName")
+                                    .IsRequired()
+                                    .HasColumnType("text")
+                                    .HasColumnName("middle_name");
 
-                                    b2.HasKey("VolunteerInfoVolunteerRequestId");
+                                b2.HasKey("VolunteerInfoVolunteerRequestId");
 
-                                    b2.ToTable("volunteer_requests", "volunteer_requests");
+                                b2.ToTable("volunteer_requests", "volunteer_requests");
 
-                                    b2.ToJson("volunteer_info");
+                                b2.ToJson("volunteer_info");
 
-                                    b2.WithOwner()
-                                        .HasForeignKey("VolunteerInfoVolunteerRequestId")
-                                        .HasConstraintName("fk_volunteer_requests_volunteer_requests_volunteer_info_voluntee");
-                                });
+                                b2.WithOwner()
+                                    .HasForeignKey("VolunteerInfoVolunteerRequestId")
+                                    .HasConstraintName("fk_volunteer_requests_volunteer_requests_volunteer_info_voluntee");
+                            });
 
-                            b1.Navigation("FullName")
-                                .IsRequired();
-                        });
+                        b1.Navigation("FullName")
+                            .IsRequired();
+                    });
 
-                    b.Navigation("VolunteerInfo")
-                        .IsRequired();
-                });
+                b.Navigation("VolunteerInfo")
+                    .IsRequired();
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

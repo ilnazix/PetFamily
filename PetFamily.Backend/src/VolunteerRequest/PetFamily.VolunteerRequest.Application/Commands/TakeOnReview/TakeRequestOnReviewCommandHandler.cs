@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
 using PetFamily.Discussions.Contracts;
-using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects.Ids;
 
@@ -14,20 +14,21 @@ public class TakeRequestOnReviewCommandHandler
     : ICommandHandler<Guid, TakeRequestOnReviewCommand>
 {
     private readonly IVolunteerRequestUnitOfWork _unitOfWork;
-    private readonly IDiscussionsModule _discussionsModule;
     private readonly IValidator<TakeRequestOnReviewCommand> _validator;
+    private readonly IPublisher _publisher;
     private readonly ILogger<TakeRequestOnReviewCommandHandler> _logger;
 
     public TakeRequestOnReviewCommandHandler(
         IVolunteerRequestUnitOfWork unitOfWork,
         IDiscussionsModule discussionsModule,
         IValidator<TakeRequestOnReviewCommand> validator,
-        ILogger<TakeRequestOnReviewCommandHandler> logger)
+        ILogger<TakeRequestOnReviewCommandHandler> logger,
+        IPublisher publisher)
     {
         _unitOfWork = unitOfWork;
-        _discussionsModule = discussionsModule;
         _validator = validator;
         _logger = logger;
+        _publisher = publisher;
     }
 
     public async Task<Result<Guid, ErrorList>> Handle(
@@ -53,30 +54,12 @@ public class TakeRequestOnReviewCommandHandler
         if (result.IsFailure)
             return result.Error.ToErrorList();
 
-        var createDiscussionResult = await CreateDiscussion(command, volunteerRequest, cancelationToken);
-
-        if (createDiscussionResult.IsFailure)
-            return createDiscussionResult.Error;
+        await _publisher.PublishDomainEvents(volunteerRequest, cancelationToken);
 
         await _unitOfWork.Commit(cancelationToken);
 
         _logger.LogInformation("Volunteer request (id = {id}) has been taken on review", volunteerRequest.Id.Value);
 
         return volunteerRequest.Id.Value;
-    }
-
-    private async Task<Result<Guid, ErrorList>> CreateDiscussion(
-        TakeRequestOnReviewCommand command,
-        Domain.VolunteerRequest volunteerRequest, 
-        CancellationToken cancelationToken)
-    {
-        var relationId = volunteerRequest.Id;
-
-        var user = volunteerRequest.UserId;
-        var admin = command.AdminId;
-
-        var createDiscussionRequest = new CreateDiscussionRequest(relationId, [user, admin]);
-        var createDiscussionResult = await _discussionsModule.CreateDiscussion(createDiscussionRequest, cancelationToken);
-        return createDiscussionResult;
     }
 }

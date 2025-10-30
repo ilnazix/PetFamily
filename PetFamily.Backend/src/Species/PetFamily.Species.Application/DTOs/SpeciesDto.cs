@@ -1,8 +1,7 @@
-﻿namespace PetFamily.Species.Application.DTOs
+﻿namespace PetFamily.Species.Application.DTOs;
+
+public class SpeciesDto
 {
-    public class SpeciesDto
-    {
-        public Guid Id { get; init; }
-        public string Title { get; init; } = string.Empty;
-    }
+    public Guid Id { get; init; }
+    public string Title { get; init; } = string.Empty;
 }

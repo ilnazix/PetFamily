@@ -4,21 +4,20 @@ using PetFamily.Species.Application;
 using PetFamily.Species.Contracts;
 using PetFamily.Species.Infrastructure;
 
-namespace PetFamily.Species.Presentation
+namespace PetFamily.Species.Presentation;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddSpeciesModule(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        public static IServiceCollection AddSpeciesModule(
-            this IServiceCollection services,
-            IConfiguration configuration)
-        {
-            services
-                .AddApplication()
-                .AddInfrastructure(configuration);
+        services
+            .AddApplication()
+            .AddInfrastructure(configuration);
 
-            services.AddScoped<ISpeciesModule, SpeciesModule>();
+        services.AddScoped<ISpeciesModule, SpeciesModule>();
 
-            return services;
-        }
+        return services;
     }
 }

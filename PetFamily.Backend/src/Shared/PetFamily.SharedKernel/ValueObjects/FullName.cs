@@ -1,47 +1,46 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace PetFamily.SharedKernel.ValueObjects
+namespace PetFamily.SharedKernel.ValueObjects;
+
+public class FullName : ComparableValueObject
 {
-    public class FullName : ComparableValueObject
+    public const int NAME_MAX_LENGTH = 50;
+
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string MiddleName { get; }
+
+    private FullName(string firstName, string lastName, string middleName)
     {
-        public const int NAME_MAX_LENGTH = 50;
+        FirstName = firstName;
+        LastName = lastName;
+        MiddleName = middleName;
+    }
 
-        public string FirstName { get; }
-        public string LastName { get; }
-        public string MiddleName { get; }
-
-        private FullName(string firstName, string lastName, string middleName)
+    public static Result<FullName, Error> Create(string firstName, string lastName, string middleName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > NAME_MAX_LENGTH)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            MiddleName = middleName;
+            return Errors.General.ValueIsInvalid(nameof(firstName));
         }
 
-        public static Result<FullName, Error> Create(string firstName, string lastName, string middleName)
+        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > NAME_MAX_LENGTH)
         {
-            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > NAME_MAX_LENGTH)
-            {
-                return Errors.General.ValueIsInvalid(nameof(firstName));
-            }
-
-            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > NAME_MAX_LENGTH)
-            {
-                return Errors.General.ValueIsInvalid(nameof(lastName));
-            }
-
-            if (string.IsNullOrWhiteSpace(middleName) || middleName.Length > NAME_MAX_LENGTH)
-            {
-                return Errors.General.ValueIsInvalid(nameof(middleName));
-            }
-
-            return new FullName(firstName, lastName, middleName);
+            return Errors.General.ValueIsInvalid(nameof(lastName));
         }
 
-        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+        if (string.IsNullOrWhiteSpace(middleName) || middleName.Length > NAME_MAX_LENGTH)
         {
-            yield return FirstName;
-            yield return LastName;
-            yield return MiddleName;
+            return Errors.General.ValueIsInvalid(nameof(middleName));
         }
+
+        return new FullName(firstName, lastName, middleName);
+    }
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return FirstName;
+        yield return LastName;
+        yield return MiddleName;
     }
 }

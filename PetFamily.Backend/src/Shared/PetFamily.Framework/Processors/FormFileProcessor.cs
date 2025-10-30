@@ -1,31 +1,30 @@
 ﻿using Microsoft.AspNetCore.Http;
 using PetFamily.Core.Models;
 
-namespace PetFamily.Framework.Processors
+namespace PetFamily.Framework.Processors;
+
+public class FormFileProcessor : IAsyncDisposable
 {
-    public class FormFileProcessor : IAsyncDisposable
+    public List<UploadFileCommand> _fileCommands = [];
+
+    public List<UploadFileCommand> Process(IFormFileCollection files)
     {
-        public List<UploadFileCommand> _fileCommands = [];
-
-        public List<UploadFileCommand> Process(IFormFileCollection files)
+        foreach (var file in files)
         {
-            foreach (var file in files)
-            {
-                var stream = file.OpenReadStream();
-                var uploadFileCommand = new UploadFileCommand(stream, file.FileName);
+            var stream = file.OpenReadStream();
+            var uploadFileCommand = new UploadFileCommand(stream, file.FileName);
 
-                _fileCommands.Add(uploadFileCommand);
-            }
-
-            return _fileCommands;
+            _fileCommands.Add(uploadFileCommand);
         }
 
-        public async ValueTask DisposeAsync()
+        return _fileCommands;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        foreach (var file in _fileCommands)
         {
-            foreach (var file in _fileCommands)
-            {
-                await file.Content.DisposeAsync();
-            }
+            await file.Content.DisposeAsync();
         }
     }
 }

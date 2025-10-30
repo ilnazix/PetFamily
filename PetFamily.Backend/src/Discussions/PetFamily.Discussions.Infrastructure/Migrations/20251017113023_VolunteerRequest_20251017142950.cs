@@ -2,29 +2,28 @@
 
 #nullable disable
 
-namespace PetFamily.Discussions.Infrastructure.Migrations
+namespace PetFamily.Discussions.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class VolunteerRequest_20251017142950 : Migration
 {
     /// <inheritdoc />
-    public partial class VolunteerRequest_20251017142950 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.RenameColumn(
-                name: "users",
-                schema: "discussions",
-                table: "discussions",
-                newName: "participant_ids");
-        }
+        migrationBuilder.RenameColumn(
+            name: "users",
+            schema: "discussions",
+            table: "discussions",
+            newName: "participant_ids");
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.RenameColumn(
-                name: "participant_ids",
-                schema: "discussions",
-                table: "discussions",
-                newName: "users");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.RenameColumn(
+            name: "participant_ids",
+            schema: "discussions",
+            table: "discussions",
+            newName: "users");
     }
 }

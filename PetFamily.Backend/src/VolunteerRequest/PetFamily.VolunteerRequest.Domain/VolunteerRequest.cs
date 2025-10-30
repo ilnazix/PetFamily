@@ -1,10 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.VolunteerRequest.Domain.Events;
 
 namespace PetFamily.VolunteerRequest.Domain;
 
-public class VolunteerRequest : Entity<VolunteerRequestId>
+public class VolunteerRequest : AggregateRoot<VolunteerRequestId>
 {
     public Guid? AdminId { get; private set; }
     public Guid UserId { get; private set; }
@@ -15,14 +16,13 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
     public DateTime? RejectedAt { get; private set; }
 
     //ef core
-    private VolunteerRequest() { }
+    private VolunteerRequest(VolunteerRequestId id) : base(id) { }
 
     private VolunteerRequest(
         VolunteerRequestId id,
         Guid userId,
-        VolunteerInfo volunteerInfo)
+        VolunteerInfo volunteerInfo) : base(id)
     {
-        Id = id;
         UserId = userId;
         VolunteerInfo = volunteerInfo;
         Status = VolunteerRequestStatus.Created;
@@ -50,6 +50,12 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
 
         AdminId = adminId;
         Status = VolunteerRequestStatus.OnReview;
+
+        VolunteerRequestTakenForReviewDomainEvent @event = new(
+            Id,
+            UserId,
+            adminId);
+        AddDomainEvent(@event);
 
         return UnitResult.Success<Error>();
     }
@@ -83,6 +89,9 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
         RejectionComment = rejectionComment.Trim();
         RejectedAt = DateTime.UtcNow;
 
+        var @event = new VolunteerRequestProcessedDomainEvent(Id);
+        AddDomainEvent(@event);
+
         return UnitResult.Success<Error>();
     }
 
@@ -96,6 +105,17 @@ public class VolunteerRequest : Entity<VolunteerRequestId>
             return Error.Validation("request.invalidStatus", "Request can only be approved from 'OnReview' status", nameof(Status));
 
         Status = VolunteerRequestStatus.Approved;
+
+        IDomainEvent @event = new VolunteerRequestApprovedDomainEvent(
+            Id,
+            UserId,
+            VolunteerInfo);
+
+        AddDomainEvent(@event);
+
+        @event = new VolunteerRequestProcessedDomainEvent(Id);
+        AddDomainEvent(@event);
+
         return UnitResult.Success<Error>();
     }
 

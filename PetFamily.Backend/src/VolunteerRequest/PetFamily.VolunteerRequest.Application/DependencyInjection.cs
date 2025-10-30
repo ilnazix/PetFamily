@@ -12,7 +12,17 @@ public static class DependencyInjection
         services
             .AddCommandHandlers()
             .AddQueryHandlers()
-            .AddValidators();
+            .AddValidators()
+            .AddDomainEventHandlers();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDomainEventHandlers(
+       this IServiceCollection services)
+    {
+        services.AddMediatR(
+            cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
         return services;
     }

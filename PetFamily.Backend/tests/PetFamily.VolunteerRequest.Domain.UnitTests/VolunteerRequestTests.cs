@@ -1,4 +1,5 @@
 using FluentAssertions;
+using PetFamily.VolunteerRequest.Domain.Events;
 using PetFamily.VolunteerRequest.Domain.UnitTests.Builders;
 
 namespace PetFamily.VolunteerRequest.Domain.UnitTests;
@@ -24,8 +25,10 @@ public class VolunteerRequestTests
 
         //Assert
         var newStatus = volunteerRequestWithSubmittedStatus.Status;
+        var events = volunteerRequestWithSubmittedStatus.DomainEvents;
 
         result.IsSuccess.Should().BeTrue();
+        events.Should().ContainSingle(e => e is VolunteerRequestTakenForReviewDomainEvent);
         newStatus.Should().Be(VolunteerRequestStatus.OnReview);
     }
 
@@ -34,9 +37,10 @@ public class VolunteerRequestTests
     {
         //Arrange
         var volunteerRequest = _builder.CreateDefault();
+        var userId = volunteerRequest.UserId;
 
         //Act
-        var result = volunteerRequest.Submit();
+        var result = volunteerRequest.Submit(userId);
 
         //Assert
         var newStatus = volunteerRequest.Status;
@@ -51,9 +55,10 @@ public class VolunteerRequestTests
         //Arrange
         var volunteerRequestWithOnReviewStatus = _builder.CreateWithOnReviewStatus(Guid.NewGuid());
         var rejectionComment = "some rejection comment";
+        var adminId = volunteerRequestWithOnReviewStatus.AdminId!.Value;
 
         //Act
-        var result = volunteerRequestWithOnReviewStatus.Reject(rejectionComment);
+        var result = volunteerRequestWithOnReviewStatus.Reject(adminId, rejectionComment);
 
         //Assert
         var newStatus = volunteerRequestWithOnReviewStatus.Status;
@@ -67,9 +72,10 @@ public class VolunteerRequestTests
     {
         //Arrange
         var volunteerRequestWithOnReviewStatus = _builder.CreateWithOnReviewStatus(Guid.NewGuid());
+        var adminId = volunteerRequestWithOnReviewStatus.AdminId!.Value;
 
         //Act
-        var result = volunteerRequestWithOnReviewStatus.Approve();
+        var result = volunteerRequestWithOnReviewStatus.Approve(adminId);
 
         //Assert
         var newStatus = volunteerRequestWithOnReviewStatus.Status;
@@ -84,9 +90,10 @@ public class VolunteerRequestTests
         //Arrange
         var volunteerRequestWithOnReviewStatus = _builder.CreateWithOnReviewStatus(Guid.NewGuid());
         var rejectionComment = "some rejection comment";
+        var adminId = volunteerRequestWithOnReviewStatus.AdminId!.Value;
 
         //Act
-        var result = volunteerRequestWithOnReviewStatus.RequestRevision(rejectionComment);
+        var result = volunteerRequestWithOnReviewStatus.RequestRevision(adminId, rejectionComment);
 
         //Assert
         var newStatus = volunteerRequestWithOnReviewStatus.Status;
@@ -127,9 +134,10 @@ public class VolunteerRequestTests
         var status = VolunteerRequestStatus.Create(statusName).Value;
         var request = new VolunteerRequestBuilder().CreateWithStatus(status);
         var oldStatus = request.Status;
+        var adminId = request.AdminId!.Value;
 
         // Act
-        var result = request.Submit();
+        var result = request.Submit(adminId);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -149,9 +157,10 @@ public class VolunteerRequestTests
         var status = VolunteerRequestStatus.Create(statusName).Value;
         var request = new VolunteerRequestBuilder().CreateWithStatus(status);
         var oldStatus = request.Status;
+        var adminId = request.AdminId ?? Guid.Empty;
 
         // Act
-        var result = request.Reject("Some comment");
+        var result = request.Reject(adminId, "Some comment");
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -171,9 +180,10 @@ public class VolunteerRequestTests
         var status = VolunteerRequestStatus.Create(statusName).Value;
         var request = new VolunteerRequestBuilder().CreateWithStatus(status);
         var oldStatus = request.Status;
+        var adminId = request.AdminId ?? Guid.Empty;
 
         // Act
-        var result = request.Approve();
+        var result = request.Approve(adminId);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -191,9 +201,10 @@ public class VolunteerRequestTests
         var request = new VolunteerRequestBuilder()
             .CreateWithOnReviewStatus(Guid.NewGuid());
         var oldStatus = request.Status;
+        var adminId = request.AdminId!.Value;
 
         // Act
-        var result = request.RequestRevision(invalidComment);
+        var result = request.RequestRevision(adminId, invalidComment);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -213,9 +224,10 @@ public class VolunteerRequestTests
         var status = VolunteerRequestStatus.Create(statusName).Value;
         var request = new VolunteerRequestBuilder().CreateWithStatus(status);
         var oldStatus = request.Status;
+        var adminId = request.AdminId ?? Guid.Empty;
 
         // Act
-        var result = request.RequestRevision("Some comment");
+        var result = request.RequestRevision(adminId, "Some comment");
 
         // Assert
         result.IsFailure.Should().BeTrue();

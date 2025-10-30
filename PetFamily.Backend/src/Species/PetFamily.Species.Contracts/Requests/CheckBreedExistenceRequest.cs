@@ -1,4 +1,3 @@
-﻿namespace PetFamily.Species.Contracts.Requests
-{
-    public record CheckBreedExistenceRequest(Guid SpeciesId, Guid BreedId);
-}
+﻿namespace PetFamily.Species.Contracts.Requests;
+
+public record CheckBreedExistenceRequest(Guid SpeciesId, Guid BreedId);

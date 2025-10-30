@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace PetFamily.Volunteers.Infrastructure.Migrations
+namespace PetFamily.Volunteers.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class Volunteers_20251019143148 : Migration
 {
     /// <inheritdoc />
-    public partial class Volunteers_20251019143148 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }

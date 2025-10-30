@@ -1,4 +1,3 @@
-﻿namespace PetFamily.Species.Contracts.Requests
-{
-    public record AddBreedRequest(string Title);
-}
+﻿namespace PetFamily.Species.Contracts.Requests;
+
+public record AddBreedRequest(string Title);

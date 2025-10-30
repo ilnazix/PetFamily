@@ -1,9 +1,8 @@
-﻿namespace PetFamily.Core.Dtos
+﻿namespace PetFamily.Core.Dtos;
+
+public class PhotoDto
 {
-    public class PhotoDto
-    {
-        public string Path { get; init; } = string.Empty;
-        public string FileName { get; init; } = string.Empty;
-        public bool IsMain { get; set; }
-    }
+    public string Path { get; init; } = string.Empty;
+    public string FileName { get; init; } = string.Empty;
+    public bool IsMain { get; set; }
 }

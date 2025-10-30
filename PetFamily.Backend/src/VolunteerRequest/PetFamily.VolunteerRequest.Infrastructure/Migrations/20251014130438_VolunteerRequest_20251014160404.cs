@@ -3,29 +3,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace PetFamily.VolunteerRequest.Infrastructure.Migrations
+namespace PetFamily.VolunteerRequest.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class VolunteerRequest_20251014160404 : Migration
 {
     /// <inheritdoc />
-    public partial class VolunteerRequest_20251014160404 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "rejected_at",
-                schema: "volunteer_requests",
-                table: "volunteer_requests",
-                type: "timestamp with time zone",
-                nullable: true);
-        }
+        migrationBuilder.AddColumn<DateTime>(
+            name: "rejected_at",
+            schema: "volunteer_requests",
+            table: "volunteer_requests",
+            type: "timestamp with time zone",
+            nullable: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "rejected_at",
-                schema: "volunteer_requests",
-                table: "volunteer_requests");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "rejected_at",
+            schema: "volunteer_requests",
+            table: "volunteer_requests");
     }
 }

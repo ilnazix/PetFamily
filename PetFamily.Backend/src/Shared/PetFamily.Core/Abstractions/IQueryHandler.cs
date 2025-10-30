@@ -1,7 +1,6 @@
-﻿namespace PetFamily.Core.Abstractions
+﻿namespace PetFamily.Core.Abstractions;
+
+public interface IQueryHandler<TResponse, in TQuery> where TQuery : IQuery
 {
-    public interface IQueryHandler<TResponse, in TQuery> where TQuery : IQuery
-    {
-        public Task<TResponse> Handle(TQuery query, CancellationToken cancelationToken = default);
-    }
+    public Task<TResponse> Handle(TQuery query, CancellationToken cancelationToken = default);
 }

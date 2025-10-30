@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace PetFamily.Accounts.Infrastructure.Migrations
+namespace PetFamily.Accounts.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class AccountsWriteDbContext_20251019145619 : Migration
 {
     /// <inheritdoc />
-    public partial class AccountsWriteDbContext_20251019145619 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }

@@ -3,41 +3,40 @@ using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects.Ids;
 
 
-namespace PetFamily.Species.Domain.Models
+namespace PetFamily.Species.Domain.Models;
+
+public class Breed : Entity<BreedId>
 {
-    public class Breed : Entity<BreedId>
+    public const int MAX_BREED_TITLE_LENGTH = 100;
+
+    //ef core
+    private Breed(BreedId id) : base(id) { }
+    private Breed(BreedId id, string title) : base(id)
     {
-        public const int MAX_BREED_TITLE_LENGTH = 100;
+        Title = title;
+    }
 
-        //ef core
-        private Breed(BreedId id) : base(id) { }
-        private Breed(BreedId id, string title) : base(id)
+    public string Title { get; private set; }
+
+    public static Result<Breed, Error> Create(BreedId id, string breedTitle)
+    {
+        if (string.IsNullOrWhiteSpace(breedTitle) || breedTitle.Length > MAX_BREED_TITLE_LENGTH)
         {
-            Title = title;
+            return Errors.General.ValueIsInvalid(nameof(breedTitle));
         }
 
-        public string Title { get; private set; }
+        return new Breed(id, breedTitle);
+    }
 
-        public static Result<Breed, Error> Create(BreedId id, string breedTitle)
+    internal UnitResult<Error> UpdateTitle(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title) || title.Length > MAX_BREED_TITLE_LENGTH)
         {
-            if (string.IsNullOrWhiteSpace(breedTitle) || breedTitle.Length > MAX_BREED_TITLE_LENGTH)
-            {
-                return Errors.General.ValueIsInvalid(nameof(breedTitle));
-            }
-
-            return new Breed(id, breedTitle);
+            return Errors.General.ValueIsInvalid(nameof(title));
         }
 
-        internal UnitResult<Error> UpdateTitle(string title)
-        {
-            if (string.IsNullOrWhiteSpace(title) || title.Length > MAX_BREED_TITLE_LENGTH)
-            {
-                return Errors.General.ValueIsInvalid(nameof(title));
-            }
+        Title = title;
 
-            Title = title;
-
-            return UnitResult.Success<Error>();
-        }
+        return UnitResult.Success<Error>();
     }
 }

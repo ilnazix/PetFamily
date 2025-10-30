@@ -4,55 +4,54 @@ using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.Volunteers.Domain.Volunteers;
 
 
-namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo
+namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdatePetInfo;
+
+public class UpdatePetInfoCommandValidator : AbstractValidator<UpdatePetInfoCommand>
 {
-    public class UpdatePetInfoCommandValidator : AbstractValidator<UpdatePetInfoCommand>
+    public UpdatePetInfoCommandValidator()
     {
-        public UpdatePetInfoCommandValidator()
+        RuleFor(c => c.PetName).MustBeValueObject(PetName.Create);
+
+        RuleFor(c => c.Description).MustBeValueObject(Description.Create);
+
+        RuleFor(c => c.OwnerPhoneNumber).MustBeValueObject(PhoneNumber.Create);
+
+        RuleFor(c => c.Color).MustBeValueObject(Color.Create);
+
+        RuleForEach(c => c.Requisites)
+            .MustBeValueObject(r => Requisite.Create(r.Title, r.Description));
+
+        RuleFor(c => new
         {
-            RuleFor(c => c.PetName).MustBeValueObject(PetName.Create);
+            c.IsCastrated,
+            c.IsVaccinated,
+            c.HealthInformation,
+            c.Height,
+            c.Weight,
+        }).MustBeValueObject(mi =>
+            MedicalInformation.Create(
+                mi.HealthInformation,
+                mi.Height,
+                mi.Weight,
+                mi.IsVaccinated,
+                mi.IsCastrated));
 
-            RuleFor(c => c.Description).MustBeValueObject(Description.Create);
+        RuleFor(c => new
+        {
+            c.Country,
+            c.State,
+            c.City,
+            c.Street,
+            c.HouseNumber,
+            c.ApartmentNumber
+        }).MustBeValueObject(a =>
+            Address.Create(
+                a.Country,
+                a.State,
+                a.City,
+                a.Street,
+                a.HouseNumber,
+                a.ApartmentNumber));
 
-            RuleFor(c => c.OwnerPhoneNumber).MustBeValueObject(PhoneNumber.Create);
-
-            RuleFor(c => c.Color).MustBeValueObject(Color.Create);
-
-            RuleForEach(c => c.Requisites)
-                .MustBeValueObject(r => Requisite.Create(r.Title, r.Description));
-
-            RuleFor(c => new
-            {
-                c.IsCastrated,
-                c.IsVaccinated,
-                c.HealthInformation,
-                c.Height,
-                c.Weight,
-            }).MustBeValueObject(mi =>
-                MedicalInformation.Create(
-                    mi.HealthInformation,
-                    mi.Height,
-                    mi.Weight,
-                    mi.IsVaccinated,
-                    mi.IsCastrated));
-
-            RuleFor(c => new
-            {
-                c.Country,
-                c.State,
-                c.City,
-                c.Street,
-                c.HouseNumber,
-                c.ApartmentNumber
-            }).MustBeValueObject(a =>
-                Address.Create(
-                    a.Country,
-                    a.State,
-                    a.City,
-                    a.Street,
-                    a.HouseNumber,
-                    a.ApartmentNumber));
-
-        }
     }
 }

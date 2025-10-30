@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PetFamily.VolunteerRequest.Infrastructure.Outbox;
 
 
 namespace PetFamily.VolunteerRequest.Infrastructure.DbContexts;
@@ -6,6 +7,8 @@ namespace PetFamily.VolunteerRequest.Infrastructure.DbContexts;
 internal class VolunteerRequestsWriteDbContext : DbContext
 {
     public DbSet<Domain.VolunteerRequest> VolunteerRequests { get; set; }
+
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     public VolunteerRequestsWriteDbContext(
         DbContextOptions<VolunteerRequestsWriteDbContext> options) 

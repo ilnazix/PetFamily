@@ -4,31 +4,30 @@ using PetFamily.Species.Application.Database;
 using PetFamily.Species.Application.DTOs;
 using PetFamily.Core.Extensions;
 
-namespace PetFamily.Species.Application.Species.Queries.GetFilteredSpeciesWithPagination
+namespace PetFamily.Species.Application.Species.Queries.GetFilteredSpeciesWithPagination;
+
+public class GetFilteredSpeciesWithPaginationQueryHandler
+    : IQueryHandler<PagedList<SpeciesDto>, GetFilteredSpeciesWithPaginationQuery>
 {
-    public class GetFilteredSpeciesWithPaginationQueryHandler
-        : IQueryHandler<PagedList<SpeciesDto>, GetFilteredSpeciesWithPaginationQuery>
+    private readonly ISpeciesReadDbContext _readDbContext;
+
+    public GetFilteredSpeciesWithPaginationQueryHandler(
+        ISpeciesReadDbContext readDbContext)
     {
-        private readonly ISpeciesReadDbContext _readDbContext;
+        _readDbContext = readDbContext;
+    }
 
-        public GetFilteredSpeciesWithPaginationQueryHandler(
-            ISpeciesReadDbContext readDbContext)
-        {
-            _readDbContext = readDbContext;
-        }
+    public Task<PagedList<SpeciesDto>> Handle(
+        GetFilteredSpeciesWithPaginationQuery query,
+        CancellationToken cancelationToken = default)
+    {
+        var species = _readDbContext.Species;
 
-        public Task<PagedList<SpeciesDto>> Handle(
-            GetFilteredSpeciesWithPaginationQuery query,
-            CancellationToken cancelationToken = default)
-        {
-            var species = _readDbContext.Species;
+        species = species.WhereIf(!string.IsNullOrEmpty(query.Title),
+            s => s.Title.ToLower().Contains(query.Title!.ToLower()));
 
-            species = species.WhereIf(!string.IsNullOrEmpty(query.Title),
-                s => s.Title.ToLower().Contains(query.Title!.ToLower()));
+        var result = species.ToPagedList(query.Page, query.PageSize, cancelationToken);
 
-            var result = species.ToPagedList(query.Page, query.PageSize, cancelationToken);
-
-            return result;
-        }
+        return result;
     }
 }

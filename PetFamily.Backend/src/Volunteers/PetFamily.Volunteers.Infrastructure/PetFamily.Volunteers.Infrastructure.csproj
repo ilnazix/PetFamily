@@ -8,10 +8,12 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
+		<ProjectReference Include="..\..\VolunteerRequest\PetFamily.VolunteerRequest.Contracts\PetFamily.VolunteerRequest.Contracts.csproj" />
 		<ProjectReference Include="..\PetFamily.Volunteers.Application\PetFamily.Volunteers.Application.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.5.5" />
 		<PackageReference Include="Minio.AspNetCore" Version="6.0.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
 	</ItemGroup>

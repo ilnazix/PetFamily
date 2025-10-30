@@ -2,47 +2,46 @@
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions;
 
-namespace PetFamily.Species.Application
+namespace PetFamily.Species.Application;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddApplication(
+        this IServiceCollection services)
     {
-        public static IServiceCollection AddApplication(
-            this IServiceCollection services)
-        {
-            services
-                .AddCommandHandlers()
-                .AddQueryHandlers()
-                .AddValidators();
+        services
+            .AddCommandHandlers()
+            .AddQueryHandlers()
+            .AddValidators();
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddCommandHandlers(this IServiceCollection services)
-        {
-            services.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
-                .AddClasses(classes => classes
-                    .AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
-                .AsSelfWithInterfaces()
-                .WithScopedLifetime());
+    private static IServiceCollection AddCommandHandlers(this IServiceCollection services)
+    {
+        services.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
+            .AddClasses(classes => classes
+                .AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddQueryHandlers(this IServiceCollection services)
-        {
-            services.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
-                .AddClasses(classes => classes
-                    .AssignableTo(typeof(IQueryHandler<,>)))
-                .AsSelfWithInterfaces()
-                .WithScopedLifetime());
+    private static IServiceCollection AddQueryHandlers(this IServiceCollection services)
+    {
+        services.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
+            .AddClasses(classes => classes
+                .AssignableTo(typeof(IQueryHandler<,>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddValidators(this IServiceCollection services)
-        {
-            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-            return services;
-        }
+    private static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        return services;
     }
 }
