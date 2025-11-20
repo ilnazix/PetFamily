@@ -61,6 +61,48 @@ namespace PetFamily.VolunteerRequest.Infrastructure.Migrations
                     b.ToTable("volunteer_requests", "volunteer_requests");
                 });
 
+            modelBuilder.Entity("PetFamily.VolunteerRequest.Infrastructure.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<DateTime>("OccurredOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occurred_on_utc");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("payload");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_outbox_messages");
+
+                    b.HasIndex("ProcessedOnUtc", "OccurredOnUtc")
+                        .HasDatabaseName("idx_outbox_messages_unprocessed")
+                        .HasFilter("processed_on_utc IS NULL");
+
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("ProcessedOnUtc", "OccurredOnUtc"), new[] { "Id", "Type", "Payload" });
+
+                    b.ToTable("outbox_messages", "volunteer_requests");
+                });
+
             modelBuilder.Entity("PetFamily.VolunteerRequest.Domain.VolunteerRequest", b =>
                 {
                     b.OwnsOne("PetFamily.VolunteerRequest.Domain.VolunteerInfo", "VolunteerInfo", b1 =>

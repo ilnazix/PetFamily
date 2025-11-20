@@ -6,7 +6,6 @@ using PetFamily.VolunteerRequest.Application.Commands;
 using PetFamily.VolunteerRequest.Infrastructure.DbContexts;
 
 namespace PetFamily.VolunteerRequest.Infrastructure.Repositories;
-
 internal class VolunteerRequestsRepository : IVolunteerRequestsRepository
 {
     private readonly VolunteerRequestsWriteDbContext _dbContext;

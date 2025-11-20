@@ -9,52 +9,51 @@ using PetFamily.SharedKernel.ValueObjects.Ids;
 using PetFamily.Volunteers.Domain.Volunteers;
 
 
-namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
+namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create;
+
+public class CreateVolunteerCommandHandler : ICommandHandler<Guid, CreateVolunteerCommand>
 {
-    public class CreateVolunteerCommandHandler : ICommandHandler<Guid, CreateVolunteerCommand>
+    private readonly IVolunteersUnitOfWork _unitOfWork;
+    private readonly IValidator<CreateVolunteerCommand> _validator;
+    private readonly ILogger<CreateVolunteerCommandHandler> _logger;
+
+    public CreateVolunteerCommandHandler(
+        IVolunteersUnitOfWork unitOfWork,
+        IValidator<CreateVolunteerCommand> validator,
+        ILogger<CreateVolunteerCommandHandler> logger)
     {
-        private readonly IVolunteersUnitOfWork _unitOfWork;
-        private readonly IValidator<CreateVolunteerCommand> _validator;
-        private readonly ILogger<CreateVolunteerCommandHandler> _logger;
+        _unitOfWork = unitOfWork;
+        _validator = validator;
+        _logger = logger;
+    }
 
-        public CreateVolunteerCommandHandler(
-            IVolunteersUnitOfWork unitOfWork,
-            IValidator<CreateVolunteerCommand> validator,
-            ILogger<CreateVolunteerCommandHandler> logger)
+    public async Task<Result<Guid, ErrorList>> Handle(
+        CreateVolunteerCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+        if (validationResult.IsValid == false)
         {
-            _unitOfWork = unitOfWork;
-            _validator = validator;
-            _logger = logger;
+            return validationResult.ToErrorList();
         }
 
-        public async Task<Result<Guid, ErrorList>> Handle(
-            CreateVolunteerCommand command,
-            CancellationToken cancellationToken = default)
-        {
-            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
-            if (validationResult.IsValid == false)
-            {
-                return validationResult.ToErrorList();
-            }
+        var volunteerId = VolunteerId.NewVolunteerId();
+        var fullName = FullName.Create(command.FullName.FirstName, command.FullName.LastName, command.FullName.MiddleName).Value;
+        var email = Email.Create(command.Email).Value;
+        var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
 
 
-            var volunteerId = VolunteerId.NewVolunteerId();
-            var fullName = FullName.Create(command.FullName.FirstName, command.FullName.LastName, command.FullName.MiddleName).Value;
-            var email = Email.Create(command.Email).Value;
-            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+        var volunteer = new Volunteer(volunteerId, fullName, email, phoneNumber);
 
+        var volunteerGuid = await _unitOfWork.VolunteersRepository.Add(volunteer, cancellationToken);
 
-            var volunteer = new Volunteer(volunteerId, fullName, email, phoneNumber);
+        await _unitOfWork.Commit(cancellationToken);
 
-            var volunteerGuid = await _unitOfWork.VolunteersRepository.Add(volunteer, cancellationToken);
+        _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {Id})",
+            fullName.FirstName, fullName.LastName, fullName.MiddleName, volunteerGuid);
 
-            await _unitOfWork.Commit(cancellationToken);
-
-            _logger.LogInformation("Created new volunteer {firstName} {lastName} {middleName}. (Id = {Id})",
-                fullName.FirstName, fullName.LastName, fullName.MiddleName, volunteerGuid);
-
-            return volunteerGuid;
-        }
+        return volunteerGuid;
     }
 }

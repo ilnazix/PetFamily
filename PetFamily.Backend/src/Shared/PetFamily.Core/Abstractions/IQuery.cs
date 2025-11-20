@@ -1,4 +1,3 @@
-﻿namespace PetFamily.Core.Abstractions
-{
-    public interface IQuery;
-}
+﻿namespace PetFamily.Core.Abstractions;
+
+public interface IQuery;

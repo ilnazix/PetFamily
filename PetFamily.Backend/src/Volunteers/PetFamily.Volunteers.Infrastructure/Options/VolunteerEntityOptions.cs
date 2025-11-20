@@ -1,7 +1,6 @@
-﻿namespace PetFamily.Volunteers.Infrastructure.Options
+﻿namespace PetFamily.Volunteers.Infrastructure.Options;
+
+public class VolunteerEntityOptions
 {
-    public class VolunteerEntityOptions
-    {
-        public int DeleteExpiredVolunteersServiceReductionDays { get; set; } = 30;
-    }
+    public int DeleteExpiredVolunteersServiceReductionDays { get; set; } = 30;
 }

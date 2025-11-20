@@ -1,34 +1,33 @@
 ﻿using CSharpFunctionalExtensions;
 
 
-namespace PetFamily.SharedKernel.ValueObjects
+namespace PetFamily.SharedKernel.ValueObjects;
+
+public class Position : ComparableValueObject
 {
-    public class Position : ComparableValueObject
+    public int Value { get; }
+
+    private Position(int value)
     {
-        public int Value { get; }
+        Value = value;
+    }
 
-        private Position(int value)
+    public Result<Position, Error> MoveForward() => Create(Value + 1);
+
+    public Result<Position, Error> MoveBack() => Create(Value - 1);
+
+    public static Result<Position, Error> Create(int position)
+    {
+        if (position < 1)
         {
-            Value = value;
+            return Errors.General.ValueIsInvalid(nameof(position));
         }
 
-        public Result<Position, Error> MoveForward() => Create(Value + 1);
+        return new Position(position);
+    }
 
-        public Result<Position, Error> MoveBack() => Create(Value - 1);
-
-        public static Result<Position, Error> Create(int position)
-        {
-            if (position < 1)
-            {
-                return Errors.General.ValueIsInvalid(nameof(position));
-            }
-
-            return new Position(position);
-        }
-
-        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
-        {
-            yield return Value;
-        }
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
     }
 }

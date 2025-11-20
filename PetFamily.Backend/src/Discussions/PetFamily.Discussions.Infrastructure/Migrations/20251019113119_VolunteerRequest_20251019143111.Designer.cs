@@ -9,99 +9,98 @@ using PetFamily.Discussions.Infrastructure.DbContexts;
 
 #nullable disable
 
-namespace PetFamily.Discussions.Infrastructure.Migrations
+namespace PetFamily.Discussions.Infrastructure.Migrations;
+
+[DbContext(typeof(DiscussionsWriteDbContext))]
+[Migration("20251019113119_VolunteerRequest_20251019143111")]
+partial class VolunteerRequest_20251019143111
 {
-    [DbContext(typeof(DiscussionsWriteDbContext))]
-    [Migration("20251019113119_VolunteerRequest_20251019143111")]
-    partial class VolunteerRequest_20251019143111
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("discussions")
-                .HasAnnotation("ProductVersion", "9.0.1")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+        modelBuilder
+            .HasDefaultSchema("discussions")
+            .HasAnnotation("ProductVersion", "9.0.1")
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Discussions.Domain.Discussion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+        modelBuilder.Entity("PetFamily.Discussions.Domain.Discussion", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
 
-                    b.Property<bool>("IsClosed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_closed");
+                b.Property<bool>("IsClosed")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("boolean")
+                    .HasDefaultValue(false)
+                    .HasColumnName("is_closed");
 
-                    b.Property<string>("ParticipantIds")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("participant_ids");
+                b.Property<string>("ParticipantIds")
+                    .IsRequired()
+                    .HasColumnType("text")
+                    .HasColumnName("participant_ids");
 
-                    b.Property<Guid>("RelationId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("relation_id");
+                b.Property<Guid>("RelationId")
+                    .HasColumnType("uuid")
+                    .HasColumnName("relation_id");
 
-                    b.HasKey("Id")
-                        .HasName("pk_discussions");
+                b.HasKey("Id")
+                    .HasName("pk_discussions");
 
-                    b.ToTable("discussions", "discussions");
-                });
+                b.ToTable("discussions", "discussions");
+            });
 
-            modelBuilder.Entity("PetFamily.Discussions.Domain.Message", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+        modelBuilder.Entity("PetFamily.Discussions.Domain.Message", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("timestamp with time zone")
+                    .HasColumnName("created_at");
 
-                    b.Property<bool>("IsEdited")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_edited");
+                b.Property<bool>("IsEdited")
+                    .HasColumnType("boolean")
+                    .HasColumnName("is_edited");
 
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("text");
+                b.Property<string>("Text")
+                    .IsRequired()
+                    .HasColumnType("text")
+                    .HasColumnName("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uuid")
+                    .HasColumnName("user_id");
 
-                    b.Property<Guid?>("discussion_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("discussion_id");
+                b.Property<Guid?>("discussion_id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("discussion_id");
 
-                    b.HasKey("Id")
-                        .HasName("pk_messages");
+                b.HasKey("Id")
+                    .HasName("pk_messages");
 
-                    b.HasIndex("discussion_id")
-                        .HasDatabaseName("ix_messages_discussion_id");
+                b.HasIndex("discussion_id")
+                    .HasDatabaseName("ix_messages_discussion_id");
 
-                    b.ToTable("messages", "discussions");
-                });
+                b.ToTable("messages", "discussions");
+            });
 
-            modelBuilder.Entity("PetFamily.Discussions.Domain.Message", b =>
-                {
-                    b.HasOne("PetFamily.Discussions.Domain.Discussion", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("discussion_id")
-                        .HasConstraintName("fk_messages_discussions_discussion_id");
-                });
+        modelBuilder.Entity("PetFamily.Discussions.Domain.Message", b =>
+            {
+                b.HasOne("PetFamily.Discussions.Domain.Discussion", null)
+                    .WithMany("Messages")
+                    .HasForeignKey("discussion_id")
+                    .HasConstraintName("fk_messages_discussions_discussion_id");
+            });
 
-            modelBuilder.Entity("PetFamily.Discussions.Domain.Discussion", b =>
-                {
-                    b.Navigation("Messages");
-                });
+        modelBuilder.Entity("PetFamily.Discussions.Domain.Discussion", b =>
+            {
+                b.Navigation("Messages");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

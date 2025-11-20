@@ -1,32 +1,31 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Text.RegularExpressions;
 
-namespace PetFamily.SharedKernel.ValueObjects
+namespace PetFamily.SharedKernel.ValueObjects;
+
+public class Email : ComparableValueObject
 {
-    public class Email : ComparableValueObject
+    public string Value { get; }
+
+    private Email(string value)
     {
-        public string Value { get; }
+        Value = value;
+    }
 
-        private Email(string value)
+    public static Result<Email, Error> Create(string email)
+    {
+        Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+
+        if (!regex.IsMatch(email))
         {
-            Value = value;
+            Errors.General.ValueIsInvalid(nameof(email));
         }
 
-        public static Result<Email, Error> Create(string email)
-        {
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+        return new Email(email);
+    }
 
-            if (!regex.IsMatch(email))
-            {
-                Errors.General.ValueIsInvalid(nameof(email));
-            }
-
-            return new Email(email);
-        }
-
-        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
-        {
-            yield return Value;
-        }
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
     }
 }

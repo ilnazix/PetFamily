@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
@@ -15,18 +16,18 @@ public class ApproveVolunteerRequestCommandHandler
 {
     private readonly IValidator<ApproveVolunteerRequestCommand> _validator;
     private readonly IVolunteerRequestUnitOfWork _unitOfWork;
-    private readonly IVolunteersModule _volunteersModule;
+    private readonly IPublisher _publisher;
     private readonly ILogger<ApproveVolunteerRequestCommandHandler> _logger;
 
     public ApproveVolunteerRequestCommandHandler(
         IValidator<ApproveVolunteerRequestCommand> validator,
         IVolunteerRequestUnitOfWork unitOfWork,
-        IVolunteersModule volunteersModule, 
+        IPublisher publisher,
         ILogger<ApproveVolunteerRequestCommandHandler> logger)
     {
         _validator = validator;
         _unitOfWork = unitOfWork;
-        _volunteersModule = volunteersModule;
+        _publisher = publisher;
         _logger = logger;
     }
 
@@ -53,12 +54,8 @@ public class ApproveVolunteerRequestCommandHandler
             return result.Error.ToErrorList();
 
         var volunteerInfo = volunteerRequest.VolunteerInfo;
-        var createVolunteerRequest = MapToCreateVolunteerRequest(volunteerInfo);
-
-        var createVolunteerResult = await _volunteersModule.CreateVolunteer(createVolunteerRequest, cancelationToken);
-
-        if (createVolunteerResult.IsFailure)
-            return createVolunteerResult.Error;
+        
+        await _publisher.PublishDomainEvents(volunteerRequest, cancelationToken);
 
         await _unitOfWork.Commit(cancelationToken);
 
@@ -70,16 +67,5 @@ public class ApproveVolunteerRequestCommandHandler
 
 
         return id.Value;
-    }
-
-    private static Volunteers.Contracts.Requests.CreateVolunteerRequest MapToCreateVolunteerRequest(VolunteerInfo volunteerInfo)
-    {
-        return new Volunteers.Contracts.Requests.CreateVolunteerRequest(
-            volunteerInfo.FullName.FirstName,
-            volunteerInfo.FullName.LastName,
-            volunteerInfo.FullName.MiddleName,
-            volunteerInfo.PhoneNumber.Value,
-            volunteerInfo.Email.Value
-            );
     }
 }

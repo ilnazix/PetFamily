@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.5" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\VolunteerRequest\PetFamily.VolunteerRequest.Contracts\PetFamily.VolunteerRequest.Contracts.csproj" />
     <ProjectReference Include="..\PetFamily.Discussions.Application\PetFamily.Discussions.Application.csproj" />
   </ItemGroup>
 

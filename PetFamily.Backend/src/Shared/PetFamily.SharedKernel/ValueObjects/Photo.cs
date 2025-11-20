@@ -1,50 +1,49 @@
 ﻿using CSharpFunctionalExtensions;
 
 
-namespace PetFamily.SharedKernel.ValueObjects
+namespace PetFamily.SharedKernel.ValueObjects;
+
+public class Photo : ValueObject
 {
-    public class Photo : ValueObject
+    public static readonly IReadOnlyList<string> ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".img", ".png"];
+
+    public string Path { get; }
+    public string FileName { get; }
+    public bool IsMain { get; }
+
+    private Photo(string path, string fileName, bool isMain)
     {
-        public static readonly IReadOnlyList<string> ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".img", ".png"];
+        Path = path;
+        FileName = fileName;
+        IsMain = isMain;
+    }
 
-        public string Path { get; }
-        public string FileName { get; }
-        public bool IsMain { get; }
-
-        private Photo(string path, string fileName, bool isMain)
+    public static Result<Photo, Error> Create(string path, string fileName, bool isMain)
+    {
+        if (string.IsNullOrEmpty(path))
         {
-            Path = path;
-            FileName = fileName;
-            IsMain = isMain;
+            return Errors.General.ValueIsInvalid(nameof(path));
         }
 
-        public static Result<Photo, Error> Create(string path, string fileName, bool isMain)
+        if (string.IsNullOrEmpty(fileName))
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                return Errors.General.ValueIsInvalid(nameof(path));
-            }
-
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return Errors.General.ValueIsInvalid(nameof(fileName));
-            }
-
-            var extension = System.IO.Path.GetExtension(path)?.ToLower();
-
-            if (string.IsNullOrEmpty(extension) || !ALLOWED_EXTENSIONS.Contains(extension))
-            {
-                return Errors.General.ValueIsInvalid(nameof(extension));
-            }
-
-            return new Photo(path, fileName, isMain);
+            return Errors.General.ValueIsInvalid(nameof(fileName));
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        var extension = System.IO.Path.GetExtension(path)?.ToLower();
+
+        if (string.IsNullOrEmpty(extension) || !ALLOWED_EXTENSIONS.Contains(extension))
         {
-            yield return Path;
-            yield return FileName;
-            yield return IsMain;
+            return Errors.General.ValueIsInvalid(nameof(extension));
         }
+
+        return new Photo(path, fileName, isMain);
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Path;
+        yield return FileName;
+        yield return IsMain;
     }
 }

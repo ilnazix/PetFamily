@@ -1,32 +1,31 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Text.RegularExpressions;
 
-namespace PetFamily.SharedKernel.ValueObjects
+namespace PetFamily.SharedKernel.ValueObjects;
+
+public class PhoneNumber : ComparableValueObject
 {
-    public class PhoneNumber : ComparableValueObject
+    public string Value { get; }
+
+    private PhoneNumber(string value)
     {
-        public string Value { get; }
+        Value = value;
+    }
 
-        private PhoneNumber(string value)
+    public static Result<PhoneNumber, Error> Create(string phoneNumber)
+    {
+        string pattern = @"^\+?\d{1,4}?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$";
+
+        if (!Regex.IsMatch(phoneNumber, pattern))
         {
-            Value = value;
+            return Errors.General.ValueIsInvalid(nameof(phoneNumber));
         }
 
-        public static Result<PhoneNumber, Error> Create(string phoneNumber)
-        {
-            string pattern = @"^\+?\d{1,4}?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$";
+        return new PhoneNumber(phoneNumber);
+    }
 
-            if (!Regex.IsMatch(phoneNumber, pattern))
-            {
-                return Errors.General.ValueIsInvalid(nameof(phoneNumber));
-            }
-
-            return new PhoneNumber(phoneNumber);
-        }
-
-        protected override IEnumerable<IComparable> GetComparableEqualityComponents()
-        {
-            yield return Value;
-        }
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
     }
 }
